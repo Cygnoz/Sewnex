@@ -1,15 +1,22 @@
 import React, { forwardRef } from "react";
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   required?: boolean;
   label?: string;
   error?: string;
   placeholder?: string;
   readOnly?: boolean;
+  size?: "sm" | "md" | "lg"; 
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, placeholder, required, readOnly, ...props }, ref) => {
+  ({ label, error, placeholder, required, readOnly, size = "md",  ...props }, ref) => {
+    const sizeClasses: Record<string, string> = {
+      sm: "h-7 py-1 text-[10px] px-2",
+      md: "h-9 py-2 px-3 text-sm",
+      lg: "h-11 py-3 px-4 text-base",
+    };
+
     return (
       <div className="">
         {label && (
@@ -23,16 +30,16 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           </label>
         )}
         <input
-          ref={ref} // Forward ref to the input element
+          ref={ref}
           id={props.name}
           readOnly={readOnly}
-          className={`w-full py-2 px-3 text-sm border rounded-[4px] font-[400] h-9 text-[#495160] ${
-            error ? "border-red-500" : "border-gray-300"
+          className={` ${sizeClasses[size]} rounded-[40px] text-textPrimary border px-2 ${
+            error ? "border-[#BC0000]" : "border-borderColor focus:border-primary-default focus:outline-none  focus:ring-primary-default"
           }`}
           placeholder={placeholder}
-          {...props} // Spread all other props such as 'onChange', 'value', etc.
+          {...props}
         />
-        {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+        {error && <p className="text-[#BC0000] text-sm mt-1">{error}</p>}
       </div>
     );
   }

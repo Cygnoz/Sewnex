@@ -1,8 +1,10 @@
-type Props = {}
 
-function Settings({}: Props) {
+
+const Settings = () => {
   return (
-    <div>Settings</div>
+    <div>
+
+    </div>
   )
 }
 
