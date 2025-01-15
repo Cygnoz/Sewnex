@@ -42,13 +42,13 @@ const SettingsSidebar = ({}: Props) => {
   };
 
   return (
-    <div className="overflow-y-scroll pt-6 hide-scrollbar col-span-3 border-neutral-300 text-textColor h-auto border-r-2 px-7 bg-white w-[27%]">
-      <button onClick={handleBackClick}>
-        <ChevronLeft color="currentColor" className="h-5 w-5" strokeWidth="2" />
-        <p className="text-sm font-medium">Back</p>
+    <div className="overflow-y-scroll pt-6 hide-scrollbar col-span-3 border-neutral-300 text-textColor h-auto border-r-2 px-7 border  bg-white w-[27%]">
+      <button onClick={handleBackClick} className="flex border border-[#CECECE] py-[12px] px-[12px]  rounded-lg ">
+        <ChevronLeft color="#495160" className="h-5 w-5 me-2" strokeWidth="2" />
+        <p className="text-sm text-[#495160] text-[14px] font-semibold">Back</p>
       </button>
       <div className="relative mt-6">
-        <p className="text-xl">
+        <p className="text-[16px] text-[#0B1320] ">
           <b>Settings</b>
         </p>
         <div className="mt-4">
@@ -71,7 +71,7 @@ const SettingsSidebar = ({}: Props) => {
               }`}
             >
               {/* Ensure that main.icon is a valid component or element */}
-              {main.icon && <main.icon />}
+              {main.icon && <main.icon color={"#495160"} />}
               <p className="font-semibold text-base text-textColor">{main.nav}</p>
             </div>
 

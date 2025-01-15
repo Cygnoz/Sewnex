@@ -16,7 +16,7 @@ console.log(location)
       <SideBar activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
       <div className="w-[100%] h-[100vh] overflow-y-scroll hide-scrollbar">
         <Header />
-        <div className="flex">
+        <div className="flex gap-6 m-6">
           {location.pathname !== "/settings" && <SettingsSidebar />}
           <div className="w-full bg-[#F3F3F3] p-7">
           <Outlet />

@@ -1,7 +1,10 @@
+import Building from "../../assets/icons/Building";
+import Frame from "../../assets/icons/Frame";
+
 export const settingsList = [
     {
       nav: "Organization",
-      icon: "",
+      icon: Building,
       subhead: [
         { headName: "Profile", subRoute: "/settings/organization/profile" },
         { headName: "Currencies", subRoute: "/settings/organization/currencies" },
@@ -14,7 +17,7 @@ export const settingsList = [
     },
     {
       nav: "Items",
-      icon: "",
+      icon: Frame,
       subhead: [
         { headName: "Item", subRoute: "/settings/items/item" },
         {
