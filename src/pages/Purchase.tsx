@@ -1,9 +1,13 @@
-type Props = {}
+import React from "react";
+import { Link } from "react-router-dom";
 
-function Purchase({}: Props) {
+const Purchase: React.FC = () => {
   return (
-    <div>Purchase</div>
-  )
-}
+    <div>
+      <h1>Purchase Page</h1>
+      <Link to="/purchase/purchase-order">Go to Purchase Order</Link>
+    </div>
+  );
+};
 
-export default Purchase
+export default Purchase;

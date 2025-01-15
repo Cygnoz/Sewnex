@@ -29,6 +29,7 @@ export default {
           disabled: "#F7ECD9",
         },
         textPrimary:"#F7ECD9",
+        textSecondary:"#818894",
         borderColor:"#CECECE"
       },
     },

@@ -1,21 +1,24 @@
+import {  useState } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "./header/Header";
 import SideBar from "./sideBar/SideBar";
+type Props = {
+};
+ 
+const Layout = ({}: Props) => { 
 
-type Props = {}
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-function Layout({ }: Props) {
+
   return (
-    <div className="flex h-screen">
-      <SideBar />
-      <div className="flex flex-col w-full h-full">
+    <div className="flex">
+      <SideBar  activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
+      <div className="w-[100%] h-[100vh] overflow-y-scroll hide-scrollbar">
         <Header />
-        <div className="flex-grow p-7 flex overflow-y-scroll hide-scrollbar">
-          <Outlet />
-        </div>
+      <div className="p-7">  <Outlet /></div>
       </div>
     </div>
   );
-}
-
+};
+ 
 export default Layout;

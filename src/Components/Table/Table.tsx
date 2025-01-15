@@ -3,8 +3,7 @@ import TableSkelton from "./TableSkelton";
 import Eye from "../../assets/icons/Eye";
 import Trash2 from "../../assets/icons/Trash";
 import Pen from "../../assets/icons/Pen";
-import SearchBar from "../Serachbar";
-
+import SearchBar from "../SerachBar";
 
 interface Column {
   id: string;
