@@ -34,6 +34,8 @@ const Settings = () => {
       img: itemImg,
       imgH: 69.14,
       imgW: 43.74,
+      route: "/settings/items/item",
+
     },
     {
       page: "Tax And Complaints",
@@ -42,6 +44,8 @@ const Settings = () => {
       img: taxImg,
       imgH: 47,
       imgW: 48,
+      route: "/settings/tax-compliance/taxes",
+
     },
     {
       page: "Preferences",
@@ -50,6 +54,8 @@ const Settings = () => {
       img: prefImg,
       imgH: 60,
       imgW: 58,
+      route: "/settings/preferences/customer-vendor",
+
     },
     {
       page: "Rewards Settings",
@@ -58,6 +64,8 @@ const Settings = () => {
       img: rewardImg,
       imgH: 54,
       imgW: 57,
+      route: "/settings/rewards-settings/rewards",
+
     },
     {
       page: "Sales",
@@ -66,6 +74,8 @@ const Settings = () => {
       img: saleImg,
       imgH: 51,
       imgW: 51,
+      route: "/settings/sales/sales-order",
+
     },
     {
       page: "Purchase",
@@ -74,6 +84,8 @@ const Settings = () => {
       img: purchaseImg,
       imgH: 59,
       imgW: 60,
+      route: "/settings/purchases/purchase-orders",
+
     },
     {
       page: "Customization",
@@ -82,20 +94,22 @@ const Settings = () => {
       img: customizationImg,
       imgH: 92,
       imgW: 65,
+      route: "/settings/customization/transaction-number-series",
+
     },
   ];
 
   return (
     <div>
       <p className="head1">Settings</p>
-      <p className="text-textSecondary  text-[16px] ">
+      <p className="text-[#818894]  text-[16px]  ">
         Lorem ipsum dolor sit amet consectetur. Commodo enim odio fringilla{" "}
       </p>
-      <div className="my-4 grid grid-cols-5 gap-6 items-center justify-center">
+      <div className="my-4 -mx-5 grid grid-cols-5 gap-y-5 items-center justify-center">
         {data?.map((data, index) => (
           <div
             key={index}
-            className="w-52 h-48 border rounded-xl border-[#DADBDD] p-4 flex flex-col justify-between mx-auto"
+            className="w-56 h-48 border rounded-xl border-[#DADBDD] p-4 flex flex-col justify-between mx-auto"
           >
             <div className="flex justify-end">
               <data.icon />
@@ -108,7 +122,7 @@ const Settings = () => {
             </div>
             {/* Bottom arrow and image alignment */}
             <div className="flex justify-between items-end">
-              <Link to={"/settings/organization/profile"}>
+              <Link to={data?.route}>
                 <ArrowRight size={20} color="#004D4D" />
               </Link>{" "}
               <img

@@ -10,7 +10,6 @@ type Props = {
 const SettingsLayout = ({}: Props) => {
   const location = useLocation()
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-console.log(location)
   return (
     <div className="flex ">
       <SideBar activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
@@ -18,7 +17,7 @@ console.log(location)
         <Header />
         <div className="flex gap-6 m-6">
           {location.pathname !== "/settings" && <SettingsSidebar />}
-          <div className="w-full bg-[#F3F3F3] p-7">
+          <div className="w-full ">
           <Outlet />
           </div>
         </div>

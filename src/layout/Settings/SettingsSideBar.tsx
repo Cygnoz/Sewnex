@@ -42,7 +42,7 @@ const SettingsSidebar = ({}: Props) => {
   };
 
   return (
-    <div className="overflow-y-scroll pt-6 hide-scrollbar col-span-3 border-neutral-300 text-textColor h-auto border-r-2 px-7 border  bg-white w-[27%]">
+    <div className="overflow-y-scroll h-[100vh]  py-6 hide-scrollbar col-span-3 border-neutral-300 text-textColor border-r-2 px-7 border  bg-white w-[27%]">
       <button onClick={handleBackClick} className="flex border border-[#CECECE] py-[12px] px-[12px]  rounded-lg ">
         <ChevronLeft color="#495160" className="h-5 w-5 me-2" strokeWidth="2" />
         <p className="text-sm text-[#495160] text-[14px] font-semibold">Back</p>
@@ -60,33 +60,32 @@ const SettingsSidebar = ({}: Props) => {
         </div>
       </div>
 
-      <div className="h-[100vh]">
+      <div className=" ">
         {settingsList.map((main, mainIndex) => (
           <div key={main.nav}>
             <div
-              className={`relative flex items-center text-lg gap-3 p-2 my-2 rounded-lg cursor-pointer ${
+              className={`relative flex items-center text-lg gap-3 -mx-2 p-2 mt-5 mb-2 rounded-lg cursor-pointer ${
                 selectedMain === mainIndex || selectedSub.mainIndex === mainIndex
-                  ? "bg-[#F3E6E6]"
+                  ? "bg-[#F7ECD9]"
                   : ""
               }`}
             >
-              {/* Ensure that main.icon is a valid component or element */}
               {main.icon && <main.icon color={"#495160"} />}
-              <p className="font-semibold text-base text-textColor">{main.nav}</p>
+              <p className="font-bold text-sm text-[#495160]">{main.nav}</p>
             </div>
 
             <ul>
               {main.subhead.map((sub, subIndex) => (
                 <Link to={sub.subRoute || "#"} key={sub.headName}>
                   <li
-                    className={`my-3 text-sm cursor-pointer ${
+                    className={`my-4 text-sm cursor-pointer ${
                       selectedSub.mainIndex === mainIndex && selectedSub.subIndex === subIndex
-                        ? "text-[#820000] font-bold"
-                        : "font-semibold text-dropdownText"
+                        ? "text-[#004D4D] font-bold"
+                        : "font-semibold text-dropdownText text-[#495160]"
                     }`}
                     onClick={() => handleSubClick(mainIndex, subIndex)}
                   >
-                    {sub.headName}
+                   <div className=""> {sub.headName}</div>
                   </li>
                 </Link>
               ))}

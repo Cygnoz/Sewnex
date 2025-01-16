@@ -1,5 +1,10 @@
+import BarChart from "../../assets/icons/BarChart";
 import Building from "../../assets/icons/Building";
 import Frame from "../../assets/icons/Frame";
+import ListFilter from "../../assets/icons/ListFilter";
+import Paint from "../../assets/icons/Paint";
+import ShoppingBag from "../../assets/icons/ShoppingBag";
+import WalletIcon from "../../assets/icons/WalletIcon";
 
 export const settingsList = [
     {
@@ -10,7 +15,7 @@ export const settingsList = [
         { headName: "Currencies", subRoute: "/settings/organization/currencies" },
         // {headName:"Accounts",subRoute:"/settings/organization/accounts"},
         {
-          headName: "Additional Details",
+          headName: "Invoice",
           subRoute: "/settings/organization/invoice",
         },
       ],
@@ -20,121 +25,76 @@ export const settingsList = [
       icon: Frame,
       subhead: [
         { headName: "Item", subRoute: "/settings/items/item" },
-        {
-          headName: "Inventory Adjustment",
-          subRoute: "/settings/inventory-adjustment",
-        },
+       
       ],
     },
     {
       nav: "Tax & Compliance",
-      icon: "",
+      icon: Building,
       subhead: [
-        { headName: "Taxes", subRoute: "/settings/taxes" },
-        { headName: "MSME Settings", subRoute: "/settings/taxes/msme" },
+        { headName: "Taxes", subRoute: "/settings/tax-compliance/taxes" },
+        { headName: "MSME Settings", subRoute: "/settings/tax-compliance/msme-settings" },
+      ],
+    },
+    {
+      nav: "Preferences",
+      icon: ListFilter,
+      subhead: [
+     
+        {
+          headName: "Customer & Vendor",
+          subRoute: "/settings/preferences/customer-vendor",
+        },
+      
       ],
     },
     {
       nav: "Rewards Settings",
-      icon: "",
+      icon: WalletIcon,
       subhead: [
-        { headName: "Rewards", subRoute: "/settings/rewards" },
-        { headName: "Refer & Earn", subRoute: "/settings/rewards/refferandearn" },
+        { headName: "Rewards", subRoute: "/settings/rewards-settings/rewards" },
+        { headName: "Refer & Earn", subRoute: "/settings/rewards-settings/refer-earn" },
         {
           headName: "Membership Card",
-          subRoute: "/settings/rewards/membershipcard",
+          subRoute: "/settings/rewards-settings/membership-card",
         },
       ],
     },
     {
       nav: "Sales",
-      icon: "",
+      icon: BarChart,
       subhead: [
-        { headName: "Sales Order", subRoute: "/settings/sales/salesOrder" },
+        { headName: "Sales Order", subRoute: "/settings/sales/sales-order" },
         { headName: "Shipments", subRoute: "/settings/sales/shipments" },
         { headName: "Invoices", subRoute: "/settings/sales/invoices" },
         {
           headName: "Delivery Challans",
-          subRoute: "/settings/sales/deliverychallans",
+          subRoute: "/settings/sales/delivery-challans",
         },
-        { headName: "Credit Notes", subRoute: "/settings/sales/CreditNotes" },
+        { headName: "Credit Notes", subRoute: "/settings/sales/Credit-notes" },
       ],
     },
   
     {
       nav: "Purchases",
-      icon: "",
+      icon: ShoppingBag,
       subhead: [
         {
           headName: "Purchase Orders",
-          subRoute: "/settings/purchase/puschaseOrder",
+          subRoute: "/settings/purchases/purchase-orders",
         },
-        { headName: "Expense", subRoute: "/settings/purchases/expenses" },
+        { headName: "Expense", subRoute: "/settings/purchases/expense" },
       ],
     },
     {
       nav: "Customization",
-      icon: "",
+      icon: Paint,
       subhead: [
-        { headName: "Reporting Tags", subRoute: "/settings/reporting-tags" },
-        { headName: "Web Tabs", subRoute: "/settings/web-tabs" },
-        {
-          headName: "Digital Signature",
-          subRoute: "/settings/digital-signature",
-        },
+     
         {
           headName: "Transaction Number Series",
-          subRoute: "/settings/transaction-number-series",
+          subRoute: "/settings/customization/transaction-number-series",
         },
-        { headName: "PDF Templates", subRoute: "/settings/pdf-templates" },
       ],
-    },
-    {
-      nav: "Users & Roles",
-      icon: "",
-      subhead: [
-        { headName: "Users", subRoute: "/settings/users" },
-        { headName: "Roles", subRoute: "/settings/roles" },
-        { headName: "User Preferences", subRoute: "/settings/user-preferences" },
-      ],
-    },
-    {
-      nav: "Preferences",
-      icon: "",
-      subhead: [
-        { headName: "General", subRoute: "/settings/general" },
-        {
-          headName: "Customer & Supplier",
-          subRoute: "/settings/preferences/CustomerAndSupplier",
-        },
-        { headName: "Accountant", subRoute: "/settings/accountant" },
-        { headName: "Projects", subRoute: "/settings/projects" },
-        { headName: "Timesheets", subRoute: "/settings/timesheets" },
-        { headName: "Customer Portal", subRoute: "/settings/customer-portal" },
-        { headName: "Vendor Portal", subRoute: "/settings/vendor-portal" },
-      ],
-    },
-    {
-      nav: "Reminder & Notification",
-      icon: "",
-      subhead: [
-        { headName: "Reminders", subRoute: "/settings/reminders" },
-        {
-          headName: "Email Notification",
-          subRoute: "/settings/email-notification",
-        },
-        { headName: "SMS Notification", subRoute: "/settings/sms-notification" },
-      ],
-    },
-    {
-      nav: "Online Payments",
-      icon: "",
-      subhead: [
-        {
-          headName: "Customer Payments",
-          subRoute: "/settings/customer-payments",
-        },
-        { headName: "Vendor Payments", subRoute: "/settings/vendor-payments" },
-      ],
-    },
+    }
   ];

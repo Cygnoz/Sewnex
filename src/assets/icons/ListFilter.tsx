@@ -1,6 +1,7 @@
+type Props = {color?:any};
 
 
-const ListFilter = () => {
+const ListFilter = ({color}:Props) => {
   return (
     <div>
       <svg
@@ -12,7 +13,8 @@ const ListFilter = () => {
       >
         <path
           d="M2.5 5H17.5M5.83333 10H14.1667M8.33333 15H11.6667"
-          stroke="#818894"
+          stroke={color?color:"#818894"}
+       
           stroke-width="2"
           stroke-linecap="round"
           stroke-linejoin="round"

@@ -33,6 +33,10 @@ export default {
         outlineButton_secondary: "#0B9C56",
 
 
+        text_primary:"#303F58",
+        text_secondary:"#4B5C79",
+        text_tertiary:"#495160"
+
       },
   
     },

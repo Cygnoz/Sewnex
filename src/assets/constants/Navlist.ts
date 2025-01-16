@@ -42,7 +42,25 @@ export const navList = [
   {
     nav: "Sales",
     icon: BarChartIcon,
-    route: "/sales",
+    route: "/sales/invoice",
+    subhead: [
+      {
+        headName: "Invoice",
+        subRoute: "/sales/invoice",
+      },
+      {
+        headName: "Receipt",
+        subRoute: "/sales/receipt",
+      },
+      {
+        headName: "Sales Return",
+        subRoute: "/sales/salesreturn",
+      },
+      {
+        headName: "Credit Note",
+        subRoute: "/sales/credit-note",
+      },
+    ],
   },
   {
     nav: "POS",
@@ -52,7 +70,21 @@ export const navList = [
   {
     nav: "Purchase",
     icon: ShoppingBarIcon,
-    route: "/purchase",
+    route: "/purchase/bills",
+    subhead:[
+      {
+        headName: "Bills",
+        subRoute: "/purchase/bills",
+      },
+      {
+        headName: "Payment Made",
+        subRoute: "/purchase/payment-made",
+      },
+      {
+        headName: "Debit Note",
+        subRoute: "/purchase/debitnote",
+      },
+    ]
   },
   {
     nav: "Accountant",

@@ -7,6 +7,11 @@ import ItemMasterRoutes from "./Routes/ItemMasterRoutes";
 import OrderRoutes from "./Routes/OrderRoutes";
 import InternalOrderRoutes from "./Routes/InternalOrderRoutes";
 import SaleRoutes from "./Routes/SaleRoutes";
+import AccountsRoutes from "./Routes/AccountsRoutes";
+import ExpenseRoutes from "./Routes/ExpenseRoutes";
+import SupplierRoutes from "./Routes/SpplierRoutes";
+import StaffRoutes from "./Routes/StaffRoutes";
+import ReportRoutes from "./Routes/ReportRoutes";
 
 const Layout = lazy(() => import("./layout/Layout"));
 const Dashboard = lazy(() => import("./pages/DashBoard"));
@@ -26,12 +31,19 @@ const App: React.FC = () => {
         { path: "order/*", element: <OrderRoutes /> },
         { path: "internalOrder/*", element: <InternalOrderRoutes /> },
         { path: "sales/*", element: <SaleRoutes /> },
+        { path: "accountant/*", element: <AccountsRoutes /> },
+        { path: "expense/*", element: <ExpenseRoutes /> },
+        { path: "supplier/*", element: <SupplierRoutes /> },
+        { path: "staffs/*", element: <StaffRoutes /> },
+        { path: "report/*", element: <ReportRoutes /> },
+        
       ],
     },
     {
       path: "/",
-      element: <SettingsLayout />, 
+      element: <SettingsLayout />,
       children: [
+        { path: "", element: <div></div> },
         { path: "settings/*", element: <SettingsRoutes /> },
       ],
     },
