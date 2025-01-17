@@ -13,8 +13,8 @@ const SearchBar = ({ searchValue, onSearchChange, placeholder = "search" }: Prop
   };
 
   return (
-    <div className="relative w-full flex items-center">
-      <SearchIcon />
+    <div className="relative w-[418px] h-[44px] rounded-lg flex items-center">
+      <SearchIcon/>
       <input
         className="pl-9 text-sm w-full rounded-md text-start text-gray-800 h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400"
         style={{
