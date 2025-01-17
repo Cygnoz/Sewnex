@@ -22,7 +22,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={props.name}
-            className="block text-sm mb-2 font-normal text-deepStateBlue"
+            className="block text-sm text-[#495160] mb-1 font-normal text-deepStateBlue"
           >
             <p>
               {label} {required && <span className="text-red-500">*</span>}
@@ -33,8 +33,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={props.name}
           readOnly={readOnly}
-          className={` ${sizeClasses[size]} rounded-[40px] text-textPrimary border px-2 ${
-            error ? "border-[#BC0000]" : "border-borderColor focus:border-primary-default focus:outline-none  focus:ring-primary-default"
+          className={`w-full ${sizeClasses[size]} rounded-[40px] text-textPrimary border px-2 ${
+            error ? "border-[#BC0000]" : "border-borderColor focus:border-primary-default focus:outline-none focus:ring-primary-default"
           }`}
           placeholder={placeholder}
           {...props}

@@ -23,7 +23,7 @@ const Select: React.FC<SelectProps> = ({
   readOnly,
   value,
   onChange,
-  size = "lg",
+  size = "md",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -88,13 +88,13 @@ const Select: React.FC<SelectProps> = ({
       case "md":
         return "h-9 py-2 px-3 text-sm";
       case "lg":
-        return "h-11 py-3 px-4 pr-12 text-base"; // Added padding to the right to avoid overlap
+        return "h-11 py-3 px-4 pr-12 text-base";
     }
   };
 
   return (
     <div className="relative w-full" ref={dropdownRef}>
-      <label className={`block text-sm font-medium ${label && "mb-2"}`}>
+      <label className={`block text-sm text-[#495160]  ${label && "mb-1"}`}>
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <div
@@ -102,7 +102,7 @@ const Select: React.FC<SelectProps> = ({
         onClick={() => !readOnly && setIsOpen(!isOpen)}
       >
         <div
-          className={`block ${getSizeClasses(size)} text-[#818894] bg-white border w-full
+          className={`block ${getSizeClasses(size)} text-[#818894] bg-white border w-full 
           ${error ? "border-[#BC0000]" : "border-borderColor focus:border-primary-default focus:outline-none focus:ring-primary-default"}
           rounded-[40px] leading-tight`}
         >
@@ -115,33 +115,37 @@ const Select: React.FC<SelectProps> = ({
         </div>
       </div>
       {isOpen && (
-        <div
-          className={`absolute z-10 p-1 bg-white border border-gray-300 rounded-[4px] shadow-lg
-          ${dropdownPosition === "top" ? "bottom-full mb-1" : "top-full mt-1"}`}
-          tabIndex={0}
-        >
-          {/* <SearchBar searchValue={searchValue} onSearchChange={setSearchValue} /> */}
-          <div ref={listRef} className="max-h-52 overflow-y-auto custom-scrollbar">
-            {filteredOptions.map((option, index) => (
-              <div
-                key={option.value}
-                onClick={() => handleOptionSelect(option.value)}
-                className={`px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 ${selectedIndex === index ? "bg-gray-200" : ""}`}
-              >
-                {option.label}
-              </div>
-            ))}
-          </div>
-          {filteredOptions.length === 0 && (
-            <div className="px-4 py-2 font-bold text-red-500 text-center text-sm">
-              No options found!
+       <div className="p-1">
+          <div
+            className={`absolute z-10 p-1  w-[97%] ms-1  bg-white border border-gray-300 rounded-[4px] shadow-lg
+            `
+          }
+            tabIndex={0}
+          >
+            <div ref={listRef} className="max-h-52 overflow-y-auto custom-scrollbar">
+              {filteredOptions.map((option, index) => (
+                <div
+                  key={option.value}
+                  onClick={() => handleOptionSelect(option.value)}
+                  className={`px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 ${selectedIndex === index ? "bg-gray-200" : ""}`}
+                >
+                  {option.label}
+                </div>
+              ))}
             </div>
-          )}
-        </div>
+            {filteredOptions.length === 0 && (
+              <div className="px-4 py-2 font-bold text-red-500 text-center text-sm">
+                No options found!
+              </div>
+            )}
+          </div>
+       </div>
       )}
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {error && <p className="text-[#BC0000] text-sm mt-1">{error}</p>}
     </div>
   );
 };
 
 export default Select;
+
+//        ${dropdownPosition === "top" ? "bottom-full mb-1" : "top-full mt-1"}
