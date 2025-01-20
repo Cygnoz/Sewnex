@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import SearchBar from "../../Components/SerachBar";
+import SearchBar from "../../Components/SearchBar";
 import { settingsList } from "./SettingsList";
 import ChevronLeft from "../../assets/icons/ChevronLeft";
 

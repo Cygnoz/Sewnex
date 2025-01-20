@@ -26,10 +26,9 @@ const Select: React.FC<SelectProps> = ({
   size = "md",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue] = useState("");
   const [filteredOptions, setFilteredOptions] = useState(options);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [dropdownPosition, setDropdownPosition] = useState<"top" | "bottom">("bottom");
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -62,18 +61,18 @@ const Select: React.FC<SelectProps> = ({
     };
   }, []);
 
-  useEffect(() => {
-    if (isOpen && dropdownRef.current) {
-      const dropdownRect = dropdownRef.current.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
+  // useEffect(() => {
+  //   if (isOpen && dropdownRef.current) {
+  //     const dropdownRect = dropdownRef.current.getBoundingClientRect();
+  //     const viewportHeight = window.innerHeight;
 
-      if (dropdownRect.bottom + 150 > viewportHeight) {
-        setDropdownPosition("top");
-      } else {
-        setDropdownPosition("bottom");
-      }
-    }
-  }, [isOpen]);
+  //     if (dropdownRect.bottom + 150 > viewportHeight) {
+  //       setDropdownPosition("top");
+  //     } else {
+  //       setDropdownPosition("bottom");
+  //     }
+  //   }
+  // }, [isOpen]);
 
   const handleOptionSelect = (selectedValue: string) => {
     if (onChange) onChange(selectedValue);

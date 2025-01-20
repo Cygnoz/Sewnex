@@ -29,7 +29,7 @@ const SideBar = ({ activeIndex, setActiveIndex }: Props) => {
   return (
     <aside className="bg-[#004D4D] h-[100vh] overflow-y-scroll hide-scrollbar w-52 text-white">
       <div className="text-center py-6">
-        <span className="font-bold text-xl">Swenex</span>
+        <span className="font-bold text-xl">Sewnex</span>
       </div>
 
       <ul>
