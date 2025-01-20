@@ -77,7 +77,7 @@ const Table: React.FC<TableProps> = ({
             setSearchValue(value);
           }}
         />
-        {/* Add buttons like PrintButton if needed */}
+       
       </div>
 
       <div className="overflow-x-auto mt-3 hide-scrollbar overflow-y-scroll max-h-[25rem]">

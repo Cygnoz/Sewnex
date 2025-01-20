@@ -34,7 +34,11 @@ interface HomeCardProps {
           {/* Icon Frame */}
           <div
             className="w-[40px] h-[40px] rounded-full flex items-center justify-center"
-            style={{ backgroundColor: iconFrameColor }}
+            style={{
+              background: iconFrameColor.includes('linear-gradient')
+                ? iconFrameColor
+                : `background-color: ${iconFrameColor}`,
+            }}
           >
             {icon}
           </div>
