@@ -6,6 +6,7 @@ import Ellipse46 from "../../assets/images/Ellipse 46.png"
 import Ellipse47 from "../../assets/images/Ellipse 47.png"
 import Ellipse48 from "../../assets/images/Ellipse 48.png"
 import Button from "../../Components/Button"
+import MessageIcon from "../../assets/icons/MessageIcon"
 
 function StaffBirthdayCard() {
   const avatarImages = [Ellipse45, Ellipse46, Ellipse47, Ellipse48]
@@ -81,18 +82,18 @@ function StaffBirthdayCard() {
                   {/* <button className="bg-green-500 text-white px-4 py-1 rounded-md">
                     WhatsApp
                   </button> */}
-                  <Button variant="primary" className="flex items-center" size="lg">
-                    <p className="text-md">WhatAapp</p>
+                  <Button variant="primary" className="flex items-center text-[#0B9C56] hover:text-white bg-[#E7FAF1]  font-semibold border border-[#0B9C56]" size="sm">
+                    <p className="text-md flex justify-center items-center gap-2"> <span className=""><MessageIcon/></span>  WhatsApp</p>
                   </Button>
-                  <Button variant="tertiary" className="flex items-center" size="lg">
-                    <p className="text-md">SEND SMS</p>
+                  <Button variant="tertiary" className="flex items-center font-semibold" size="lg">
+                    <p className="text-md">Send SMS</p>
                   </Button>
                 </div>
               </div>
             ))}
           </div>
           <div className="flex justify-end mt-6">
-            <Button variant="primary" className="flex items-center" size="lg" onClick={handleCloseModal}>
+            <Button  className="flex items-center text-[#0B9C56] hover:text-white bg-[#E7FAF1] font-semibold border border-[#0B9C56]" size="lg" onClick={handleCloseModal}>
               <p className="text-md">Close</p>
             </Button>
           </div>

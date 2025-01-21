@@ -6,6 +6,7 @@ import Ellipse46 from "../../assets/images/Ellipse 46.png"
 import Ellipse47 from "../../assets/images/Ellipse 47.png"
 import Ellipse48 from "../../assets/images/Ellipse 48.png"
 import Button from "../../Components/Button"
+import MessageIcon from "../../assets/icons/MessageIcon"
 
 function CustomerBirthdayCard() {
   const avatarImages = [Ellipse45, Ellipse46, Ellipse47, Ellipse48]
@@ -22,8 +23,6 @@ function CustomerBirthdayCard() {
   return (
     <>
       <div className="flex p-4 rounded-md">
-        
-
         {/* Customer Birthday */}
         <div className="relative w-full max-w-4xl bg-[#D9E4E4] h-40 rounded-2xl overflow-hidden cursor-pointer" onClick={handleCardClick}>
           {/* Background Image */}
@@ -49,12 +48,12 @@ function CustomerBirthdayCard() {
             </div>
             {/* arrow btn */}
             <div className="flex justify-start items-center">
-                  <button className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-lg hover:bg-gray-50 transition-colors" aria-label="View birthdays">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </div>
+              <button className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-lg hover:bg-gray-50 transition-colors" aria-label="View birthdays">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -82,10 +81,16 @@ function CustomerBirthdayCard() {
                   {/* <button className="bg-green-500 text-white px-4 py-1 rounded-md">
                     WhatsApp
                   </button> */}
-                  <Button variant="primary" className="flex items-center" size="lg">
-                    <p className="text-md">WhatAapp</p>
+                  <Button variant="primary" className="flex items-center text-[#0B9C56] hover:text-white bg-[#E7FAF1]  font-semibold border border-[#0B9C56]" size="sm">
+                    <p className="text-md flex justify-center items-center gap-2">
+                      {" "}
+                      <span className="">
+                        <MessageIcon />
+                      </span>{" "}
+                      WhatsApp
+                    </p>
                   </Button>
-                  <Button variant="tertiary" className="flex items-center" size="lg">
+                  <Button variant="tertiary" className="flex items-center font-semibold" size="lg">
                     <p className="text-md">SEND SMS</p>
                   </Button>
                 </div>
@@ -93,7 +98,7 @@ function CustomerBirthdayCard() {
             ))}
           </div>
           <div className="flex justify-end mt-6">
-            <Button variant="primary" className="flex items-center" size="lg" onClick={handleCloseModal}>
+            <Button className="flex items-center text-[#0B9C56] hover:text-white bg-[#E7FAF1] font-semibold border border-[#0B9C56]" size="lg" onClick={handleCloseModal}>
               <p className="text-md">Close</p>
             </Button>
           </div>
