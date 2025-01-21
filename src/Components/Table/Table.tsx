@@ -68,8 +68,8 @@ const Table: React.FC<TableProps> = ({
   const skeletonColumns = [...visibleColumns, {}, {}, {}];
 
   return (
-    <div className="border border-b rounded-lg">
-      <div className="flex items-center gap-4 justify-between p-3">
+    <div className="border border-b bg-white rounded-lg">
+      <div className="flex items-center gap-4 justify-between p-2">
         <SearchBar
           placeholder={searchPlaceholder}
           searchValue={searchValue}
