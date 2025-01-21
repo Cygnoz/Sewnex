@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
 
-interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
+interface TextAreaProps extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'size'> {
   required?: boolean;
   label?: string;
   error?: string;
@@ -9,12 +9,12 @@ interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, '
   size?: "sm" | "md" | "lg"; 
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, placeholder, required, readOnly, size = "md",  ...props }, ref) => {
+const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
+  ({ label, error, placeholder, required, readOnly, size = "md", ...props }, ref) => {
     const sizeClasses: Record<string, string> = {
-      sm: "h-7 py-1 text-[10px] px-2",
-      md: "h-9 py-2 px-3 text-xs",
-      lg: "h-11 py-3 px-4 text-sm",
+      sm: "h-16 py-1 text-[10px] px-2",
+      md: "h-20 py-2 px-3 text-xs",
+      lg: "h-24 py-3 px-4 text-sm",
     };
 
     return (
@@ -29,11 +29,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             </p>
           </label>
         )}
-        <input
+        <textarea
           ref={ref}
           id={props.name}
           readOnly={readOnly}
-          className={`w-full ${sizeClasses[size]} rounded-[40px] text-textPrimary border px-2 ${
+          className={`w-full ${sizeClasses[size]} rounded-[10px] text-textPrimary border px-2 ${
             error ? "border-[#BC0000]" : "border-borderColor focus:border-primary-default focus:outline-none focus:ring-primary-default"
           }`}
           placeholder={placeholder}
@@ -45,4 +45,4 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   }
 );
 
-export default Input;
+export default TextArea;

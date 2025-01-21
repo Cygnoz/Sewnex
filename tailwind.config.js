@@ -35,7 +35,8 @@ export default {
 
         text_primary:"#303F58",
         text_secondary:"#4B5C79",
-        text_tertiary:"#495160"
+        text_tertiary:"#495160",
+        text_fourthiry:"#0B1320"
 
       },
   

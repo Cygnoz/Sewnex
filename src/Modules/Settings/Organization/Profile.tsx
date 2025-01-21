@@ -341,10 +341,10 @@ const Profile = () => {
           </label>
           {inputData.organizationLogo && (
             <div className="bg-neutral-200 rounded-b-lg h-7 flex items-center justify-end px-4">
-              <div onClick={handleDeleteImage}>
+              <button onClick={handleDeleteImage}>
                 {" "}
                 <Trash color={"darkRed"} />
-              </div>
+              </button>
             </div>
           )}
           <div className="text-center">

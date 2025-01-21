@@ -12,7 +12,7 @@ const buttonVariants = cva("flex text-center items-center", {
   variants: {
     variant: {
       primary:
-        "bg-primary_main hover:bg-primary_hover active:bg-primary_active disabled:bg-primary_disabled rounded-full gap-2 border border-gray-500 text-white",
+        "bg-primary_main hover:bg-primary_hover active:bg-primary_active disabled:bg-primary_disabled rounded-full gap-2  border-gray-500 text-white",
       secondary:
         "bg-secondary_main hover:bg-secondary_hover active:bg-secondary_active disabled:bg-secondary_disabled rounded-full gap-2 border border-outlineButton_secondary text-outlineButton_secondary",
       tertiary:
