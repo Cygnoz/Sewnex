@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom"
 import Table from "../../../Components/Table/Table"
 import Button from "../../../Components/Button"
-import CirclePlus from "../../../assets/icons/circleplus"
+import CirclePlus from "../../../assets/icons/CirclePlus"
 import { useState } from "react"
 
 type Props = {}
@@ -34,7 +34,7 @@ const DebitNote = ({}: Props) => {
         <div className="ml-auto">
           <Link to="/purchase/debitnote/new">
             <Button variant="primary" size="sm">
-              <CirclePlus color={"white"} size={"18"} />
+              <CirclePlus color={"white"} size={18} />
               New Debit Note
             </Button>
           </Link>

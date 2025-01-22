@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
-import CirclePlus from '../../../assets/icons/circleplus';
+import  { useEffect, useRef, useState } from 'react'
 import Trash2 from '../../../assets/icons/Trash2';
 import CheveronDown from '../../../assets/icons/CheveronDown';
 import SearchBar from '../../../Components/SearchBar';
 import toast from 'react-hot-toast';
 import useApi from '../../../Hooks/useApi';
 import { endpoints } from '../../../Services/apiEdpoints';
+import CirclePlus from '../../../assets/icons/CirclePlus';
 
 
 type Row = {
@@ -671,7 +671,7 @@ const DebitNoteTable = ({ state,
           className="bg-darkGreen text-darkRed rounded-lg py-2 px-6 flex items-center text-sm font-bold"
           onClick={addRow}
         >
-          <CirclePlus color="darkRed" size={'20'} />
+          <CirclePlus color="darkRed" size={20} />
           Add Item
         </button>
       </div>

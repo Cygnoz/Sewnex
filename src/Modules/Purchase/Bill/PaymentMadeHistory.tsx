@@ -17,6 +17,7 @@ const PaymentMadeHistory = ({}: Props) => {
       content: "001",
       color: "#FAF2E6",
       textColor: "#495160",
+      iconColor:"#054928"
     },
     {
       icon: User,

@@ -3,7 +3,7 @@ interface HomeCardProps {
     title: string;
     description: string; // Description text below the title
     number: any;
-    iconFrameColor: string; // Frame background color for the icon
+    iconFrameColor?: string; // Frame background color for the icon
     bgColor?: string; // Background color for the card
     titleColor?: string;
     descriptionColor?: string;
@@ -34,7 +34,11 @@ interface HomeCardProps {
           {/* Icon Frame */}
           <div
             className="w-[40px] h-[40px] rounded-full flex items-center justify-center"
-            style={{ backgroundColor: iconFrameColor }}
+            style={{
+              background: iconFrameColor?.includes('linear-gradient')
+                ? iconFrameColor
+                : `background-color: ${iconFrameColor}`,
+            }}
           >
             {icon}
           </div>

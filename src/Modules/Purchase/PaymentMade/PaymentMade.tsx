@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../../Components/Button";
-import CirclePlus from "../../../assets/icons/circleplus";
+import CirclePlus from "../../../assets/icons/CirclePlus";
 import Table from "../../../Components/Table/Table";
 import { useState } from "react";
 
@@ -49,7 +49,7 @@ function PaymentMade({}: Props) {
   ]);
 
   const handleRowClick = () => {
-    navigate(`/purchase/payment-made/view`);
+    navigate(`/purchase/payment-made/view/`);
   };
 
   return (
@@ -64,7 +64,7 @@ function PaymentMade({}: Props) {
         <div className="ml-auto">
           <Link to="/purchase/payment-made/new">
             <Button variant="primary" size="sm">
-              <CirclePlus color={"white"} size={"18"} />
+              <CirclePlus color={"white"} size={18} />
               New Payment
             </Button>
           </Link>

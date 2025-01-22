@@ -11,7 +11,7 @@ type Props = {};
 const NewDebitNote = ({}: Props) => {
       const [selected, setSelected] = useState<string>("Cash");
     const [state,setstate]=useState([])
-    const [selectedBill,setSelectedbill]=useState([])
+    const [selectedBill]=useState([])
   const handleRadioChange = (value: string, name: string) => {
     console.log(`Selected ${name}: ${value}`);
     setSelected(value);
