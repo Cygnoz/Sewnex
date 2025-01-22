@@ -12,12 +12,12 @@ export const settingsList = [
       icon: Building,
       subhead: [
         { headName: "Profile", subRoute: "/settings/organization/profile" },
-        { headName: "Currencies", subRoute: "/settings/organization/currencies" },
         // {headName:"Accounts",subRoute:"/settings/organization/accounts"},
         {
           headName: "Invoice",
           subRoute: "/settings/organization/invoice",
         },
+        { headName: "Currencies", subRoute: "/settings/organization/currencies" },
       ],
     },
     {

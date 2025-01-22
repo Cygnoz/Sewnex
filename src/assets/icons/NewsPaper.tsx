@@ -1,21 +1,26 @@
-type Props = { color?: string }
 
-function NewsPaper({ color }: Props) {
-    return (
-        <div>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#clip0_1472_45767)">stroke={color ? color : "#495160"} 
-                <path d="M3.33268 18.3334H16.666C17.108 18.3334 17.532 18.1578 17.8445 17.8453C18.1571 17.5327 18.3327 17.1088 18.3327 16.6667V3.33341C18.3327 2.89139 18.1571 2.46746 17.8445 2.1549C17.532 1.84234 17.108 1.66675 16.666 1.66675H6.66602C6.22399 1.66675 5.80007 1.84234 5.4875 2.1549C5.17494 2.46746 4.99935 2.89139 4.99935 3.33341V16.6667C4.99935 17.1088 4.82375 17.5327 4.51119 17.8453C4.19863 18.1578 3.77471 18.3334 3.33268 18.3334ZM3.33268 18.3334C2.89065 18.3334 2.46673 18.1578 2.15417 17.8453C1.84161 17.5327 1.66602 17.1088 1.66602 16.6667V9.16675C1.66602 8.25008 2.41602 7.50008 3.33268 7.50008H4.99935M14.9993 11.6667H8.33268M12.4993 15.0001H8.33268M8.33268 5.00008H14.9993V8.33342H8.33268V5.00008Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </g>
-            <defs>
-                <clipPath id="clip0_1472_45767">
-                    <rect width="20" height="20" fill="white" />
-                </clipPath>
-            </defs>
-        </svg>
+type Props = {color?:string,size?:string};
 
-        </div>
-    )
-}
+const NewsPaper = ({color,size}: Props) => {
+  return (
+    <div>
+      <svg
+        width={size?size:"24"}
+        height={size?size:"24"}
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M4 22H20C20.5304 22 21.0391 21.7893 21.4142 21.4142C21.7893 21.0391 22 20.5304 22 20V4C22 3.46957 21.7893 2.96086 21.4142 2.58579C21.0391 2.21071 20.5304 2 20 2H8C7.46957 2 6.96086 2.21071 6.58579 2.58579C6.21071 2.96086 6 3.46957 6 4V20C6 20.5304 5.78929 21.0391 5.41421 21.4142C5.03914 21.7893 4.53043 22 4 22ZM4 22C3.46957 22 2.96086 21.7893 2.58579 21.4142C2.21071 21.0391 2 20.5304 2 20V11C2 9.9 2.9 9 4 9H6M18 14H10M15 18H10M10 6H18V10H10V6Z"
+          stroke={color?color:"#495160"}
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+  );
+};
 
-export default NewsPaper
+export default NewsPaper;

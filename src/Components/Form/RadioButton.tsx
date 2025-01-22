@@ -36,7 +36,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({
           }`}
         />
       </div>
-      <label htmlFor={id} className="text-start text-sm font-medium text-[#495160]">
+      <label htmlFor={id} className="text-start text-xs font-medium text-[#495160]">
         {label}
       </label>
     </div>

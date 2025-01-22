@@ -144,10 +144,10 @@ const Table: React.FC<TableProps> = ({
                   )}
                   <td className="py-3 px-4 border-b border-tableBorder text-[#495160] flex items-center justify-center gap-2">
                     <button onClick={() => onEditClick && onEditClick(item._id)}>
-                      <Pen color={"red"} size={18} />
+                      <Pen color={"#3C7FBC"} size={18} />
                     </button>
                     <button onClick={() => onRowClick && onRowClick(item._id)}>
-                      <Eye color={"#569FBC"} />
+                      <Eye color={"#9A9436"} />
                     </button>
                     {isDelete && (
                       <button onClick={() => onDelete && onDelete(item._id)}>
