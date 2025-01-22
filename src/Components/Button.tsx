@@ -21,7 +21,7 @@ const buttonVariants = cva("flex text-center items-center transition duration-25
         "bg-fourthiary_main hover:bg-fourthiary_hover active:bg-fourthiary_active disabled:bg-fourthiary_disabled rounded-full gap-2 border border-gray-500 text-white",
     },
     size: {
-      sm: "px-4 py-1 rounded-full",
+      sm: "px-3 py-[10px] rounded-full",
       md: "px-5 py-2 rounded-full",
       lg: "px-7 py-3 rounded-full",
       xl: "px-9 py-4 rounded-full",
