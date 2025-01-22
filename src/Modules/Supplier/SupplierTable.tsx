@@ -1,9 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import Table from "../../Components/Table/Table"
 
 type Props = {}
 
 function SupplierTable({ }: Props) {
     // Example columns for the table
+    const navigate = useNavigate();
     const columns = [
         { id: "Name", label: "Name", visible: true },
         { id: "CompanyName", label: "Company Name", visible: true },
@@ -17,8 +19,8 @@ function SupplierTable({ }: Props) {
         { id: "3", Name: "John ", CompanyName: "787456", Contact: "11223344", email: "john@example.com", Status: "Active" },
         { id: "4", Name: "Jos", CompanyName: "54456", Contact: "11223344", email: "john@example.com", Status: "In Active" },
     ]
-    const handleRowClick = (id: string) => {
-        alert(`Row clicked: ${id}`);
+    const handleRowClick = () => {
+        navigate(`/supplier/view`)
     };
 
     const handleDelete = (id: string) => {
