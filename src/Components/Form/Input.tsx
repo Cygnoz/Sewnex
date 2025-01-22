@@ -14,7 +14,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const sizeClasses: Record<string, string> = {
       sm: "h-7 py-1 text-[10px] px-2",
       md: "h-9 py-2 px-3 text-sm",
-      lg: "h-11 py-3 px-4 text-base",
+      lg: "h-11 py-3 px-4 text-sm",
     };
 
     return (

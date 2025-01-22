@@ -1,13 +1,11 @@
-import Button from "../Components/Button"
+import ChartOfAccountant from "../Modules/accountant/chartOfAccountant/ChartOfAccountant"
 
 type Props = {}
 
 function Accounts({}: Props) {
   return (
     <div>
-       <Button variant="fourthiary" size="sm" >
-                Cancel
-              </Button>
+      <ChartOfAccountant/>
     </div>
   )
 }
