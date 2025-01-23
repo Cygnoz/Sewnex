@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Modal from "../../Components/modal/Modal";
 import Button from "../../Components/Button";
-import CirclePlus from "../../assets/icons/CirclePlus";
 import referenceImage from '../../assets/images/RefereneceImage.png'
 import Input from "../../Components/Form/Input";
 import GalleryIcon from "../../assets/icons/GalleryIcon";
@@ -9,8 +8,10 @@ import Twitter from "../../assets/icons/Twitter";
 import Insta from "../../assets/icons/Insta";
 import Snap from "../../assets/icons/Snap";
 import FaceBook from "../../assets/icons/FaceBook";
-import CheveronDown from "../../assets/icons/CheveronDown";
 import Select from "../../Components/Form/Select";
+import CrossIcon from "../../assets/icons/CrossIcon";
+import CirclePlus from "../../assets/icons/circleplus";
+import CheveronDown from "../../assets/icons/CheveronDown";
 
 type Props = { page?: string };
 
@@ -58,9 +59,14 @@ const NewCustomer = ({ page }: Props) => {
         </Button>
       )}
 
-      <Modal open={isModalOpen} onClose={closeModal} className="p-6 w-[1200px] h-[481px] pt-[32px] rounded-tl-[16px] rounded-tr-[16px] border border-t-0 border-l-0 border-r-0">
-        <div className="p-6">
-          <h2 className="text-md text-[#0B1320] font-bold mb-4">Add New Customer</h2>
+      <Modal open={isModalOpen} onClose={closeModal} className="p-6 w-[1200px]  h-[481px] pt-[32px] rounded-tl-[16px] rounded-tr-[16px] border border-t-0 border-l-0 border-r-0">
+        <div>
+          <div className="p-2 m-2 bg-white flex justify-between items-center mb-5">
+                    <h1 className="font-bold text-md text-[#0B1320]">Add New Customer</h1>
+                    <button onClick={closeModal} className="text-gray-500 hover:text-gray-700 transition" aria-label="Close modal">
+                        <CrossIcon />
+                    </button>
+                </div>
           <div className="p-2 w-[1111px] h-[56px] rounded-lg shadow-sm bg-[#FAF7F2] mb-6">
             {/* Stepper Navigation */}
             <div className="flex p-2 items-center justify-between mb-6">
@@ -230,10 +236,10 @@ const NewCustomer = ({ page }: Props) => {
                   // required
                   placeholder="Select Customer"
                   // error={errors.customer?.message}
-                  onChange={(value: string) => {
-                    // setValue("customer", value);
-                    // handleInputChange("customer");
-                  }}
+                  // onChange={(value: string) => {
+                  //   // setValue("customer", value);
+                  //   // handleInputChange("customer");
+                  // }}
                   // value={watch("customer")}
                   label="Customer"
                   options={[
@@ -261,7 +267,7 @@ const NewCustomer = ({ page }: Props) => {
                           <GalleryIcon />
                         </div>
                       </div>
-                      \        </div>
+                             </div>
                     <div>
                       <p className="text-sm text-textColor mt-1">
                         Upload Image <span className="text-[#B47300]">browse</span>

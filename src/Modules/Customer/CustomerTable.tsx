@@ -54,14 +54,14 @@ function CustomerTable({ }: Props) {
         <div>
             <div>
                 <Table
-                    page="Supplier"
+                    // page="Customer"
                     columns={columns}
                     data={data}
                     onRowClick={handleRowClick}
                     onDelete={handleDelete}
                     onEditClick={handleEditClick}
                     renderColumnContent={renderColumnContent}
-                    searchPlaceholder="Search Supplier"
+                    searchPlaceholder="Search Customer"
                     loading={false}
                     searchableFields={["CompanyName", "Name", "email"]}
                 />

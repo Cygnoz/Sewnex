@@ -85,11 +85,7 @@ const Table: React.FC<TableProps> = ({
         {
           isPrint && (
             <Button size="sm" variant="secondary">
-<<<<<<< HEAD
-              <PrinterIcon color="green" height={0} width={0}/>
-=======
-              <PrinterIcon />
->>>>>>> e96d1ef3d951e7504e002c569961772f2c8d994b
+              <PrinterIcon color="" />
               <p className="text-xs font-semibold">Print</p>
             </Button>
           )
