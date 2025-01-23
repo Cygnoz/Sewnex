@@ -111,19 +111,21 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
             ))}
           </div>
         )}
-        <Input
-          name={name}
-          value={value}
-          placeholder={placeholder}
-          size={size}
-          onChange={handlePhoneNumberChange}
-          className={`w-full max-w-md ${
-            sizeClasses[size]
-          } rounded-r-[40px] text-textPrimary border px-2 ${
-            error
-              ? "border-[#BC0000]"
-              : "border-borderColor focus:border-primary-default focus:outline-none focus:ring-primary-default"
-          }`}        />
+      <div className="max-w-full w-full">
+          <Input
+            name={name}
+            value={value}
+            placeholder={placeholder}
+            size={size}
+            onChange={handlePhoneNumberChange}
+            className={`w-full max-w-md ${
+              sizeClasses[size]
+            } rounded-r-[40px] text-textPrimary border px-2 ${
+              error
+                ? "border-[#BC0000]"
+                : "border-borderColor focus:border-primary-default focus:outline-none focus:ring-primary-default"
+            }`}        />
+      </div>
       </div>
       {error && <p className="text-[#BC0000] text-sm mt-1">{error}</p>}{" "}
       {/* Error message */}

@@ -3,8 +3,8 @@ import CopyBold from "../assets/icons/CopyBold"
 import MaleIcon from "../assets/icons/MaleIcon"
 import TabClose from "../assets/icons/TabClose"
 import HomeCard from "../Components/HomeCards"
+import CustomerTable from "../Modules/Customer/CustomerTable"
 import NewCustomer from "../Modules/Customer/NewCustomer"
-import SupplierTable from "../Modules/Supplier/SupplierTable"
 
 type Props = {}
 
@@ -57,7 +57,7 @@ function Customer({}: Props) {
       }
     </div>
     <div>
-      <SupplierTable />
+      <CustomerTable/>
     </div>
 
   </div>  )

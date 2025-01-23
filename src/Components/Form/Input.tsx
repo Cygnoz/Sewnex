@@ -13,8 +13,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, placeholder, required, readOnly, size = "md",  ...props }, ref) => {
     const sizeClasses: Record<string, string> = {
       sm: "h-7 py-1 text-[10px] px-2",
-      md: "h-9 py-2 px-3 text-sm",
-      lg: "h-11 py-3 px-4 text-base",
+      md: "h-9 py-2 px-3 text-xs",
+      lg: "h-11 py-3 px-4 text-sm",
     };
 
     return (
@@ -22,7 +22,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={props.name}
-            className="block text-sm text-[#495160] mb-1 font-normal text-deepStateBlue"
+            className="block text-xs text-[#495160] mb-1 font-normal text-deepStateBlue"
           >
             <p>
               {label} {required && <span className="text-red-500">*</span>}

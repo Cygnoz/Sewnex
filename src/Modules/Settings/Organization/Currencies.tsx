@@ -1,10 +1,9 @@
 
-
-type Props = {}
-
-function Currencies({}: Props) {
+function Currencies() {
   return (
-    <div>Currencies</div>
+    <div>
+
+    </div>
   )
 }
 

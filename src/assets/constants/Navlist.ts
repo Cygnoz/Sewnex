@@ -90,6 +90,28 @@ export const navList = [
     nav: "Accountant",
     icon: SquarUserIcon,
     route: "/accountant",
+    subhead: [
+      {
+        headName: "Chart Of Account",
+        subRoute: "/accountant",
+      },
+      {
+        headName: "Manual Journals",
+        subRoute: "/accountant/manualjournal",
+      },
+      {
+        headName: "Bank",
+        subRoute: "/accountant/bank",
+      },
+      {
+        headName: "Cash",
+        subRoute: "/accountant/cash",
+      },
+      {
+        headName: "Day Book",
+        subRoute: "/accountant/daybook",
+      },
+    ],
   },
   {
     nav: "Expense",

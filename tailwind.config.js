@@ -12,6 +12,9 @@ export default {
         'custom-gradient2': 'linear-gradient(133.34deg, #FFD07B -13.05%, #8AE4B8 138.88%)',
       },
       colors: {
+        
+        heading:"#0B1320",
+        subHeading:"#818894",
 
         primary_main: '#0EBB67',
         primary_hover: '#097D44',
@@ -39,7 +42,8 @@ export default {
 
         text_primary:"#303F58",
         text_secondary:"#4B5C79",
-        text_tertiary:"#495160"
+        text_tertiary:"#495160",
+        text_fourthiry:"#0B1320"
 
       },
   

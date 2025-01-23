@@ -5,6 +5,7 @@ type Props = {}
 
 function SupplierTable({ }: Props) {
     // Example columns for the table
+    const navigate = useNavigate();
     const columns = [
         { id: "Name", label: "Name", visible: true },
         { id: "CompanyName", label: "Company Name", visible: true },
@@ -18,11 +19,8 @@ function SupplierTable({ }: Props) {
         { id: "3", Name: "John ", CompanyName: "787456", Contact: "11223344", email: "john@example.com", Status: "Active" },
         { id: "4", Name: "Jos", CompanyName: "54456", Contact: "11223344", email: "john@example.com", Status: "In Active" },
     ]
-
-    const navigate = useNavigate();
-
     const handleRowClick = () => {
-        navigate(`customerview`);
+        navigate(`/supplier/view`)
     };
 
     const handleDelete = (id: string) => {
