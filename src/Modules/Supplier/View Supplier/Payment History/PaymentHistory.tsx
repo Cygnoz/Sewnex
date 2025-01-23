@@ -1,4 +1,4 @@
-import CirclePlus from "../../../../assets/icons/CirclePlus";
+import CirclePlus from "../../../../assets/icons/circleplus";
 import Button from "../../../../Components/Button";
 import Input from "../../../../Components/Form/Input";
 import Table from "../../../../Components/Table/Table";
