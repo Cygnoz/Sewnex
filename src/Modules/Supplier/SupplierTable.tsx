@@ -52,7 +52,7 @@ function SupplierTable({ }: Props) {
         <div>
             <div>
                 <Table
-                    page="Supplier"
+                    // page="Supplier"
                     columns={columns}
                     data={data}
                     onRowClick={handleRowClick}
