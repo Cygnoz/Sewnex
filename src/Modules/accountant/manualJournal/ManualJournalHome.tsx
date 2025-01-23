@@ -39,7 +39,7 @@ function ManualJournalHome({}: Props) {
     </div>
 
     <Table columns={dummyColumns} data={dummyData} searchPlaceholder={"Search account"}  searchableFields={["Date", "Status"]}
-          loading={false}  isPrint  isDelete/>  
+          loading={false}  isPrint  isDelete />  
     </div>
   )
 }
