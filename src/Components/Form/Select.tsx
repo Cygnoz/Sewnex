@@ -101,7 +101,7 @@ const Select: React.FC<SelectProps> = ({
         onClick={() => !readOnly && setIsOpen(!isOpen)}
       >
         <div
-          className={`block ${getSizeClasses(size)} text-[#818894] bg-white border w-full 
+          className={`block ${getSizeClasses(size)} text-[#818894] bg-white border w-full flex items-center 
           ${error ? "border-[#BC0000]" : "border-borderColor focus:border-primary-default focus:outline-none focus:ring-primary-default"}
           rounded-[40px] leading-tight`}
         >
@@ -116,7 +116,7 @@ const Select: React.FC<SelectProps> = ({
       {isOpen && (
        <div className="p-1">
           <div
-            className={`absolute z-10 p-1  w-[97%] ms-1  bg-white border border-gray-300 rounded-[4px] shadow-lg
+            className={`absolute z-10  w-[97%] ms-1  bg-white border border-gray-300 rounded-[4px] shadow-lg
             `
           }
             tabIndex={0}

@@ -5,7 +5,7 @@ import { endpoints } from "../../../Services/apiEdpoints";
 import CheveronDown from "../../../assets/icons/CheveronDown";
 import SearchBar from "../../../Components/SearchBar";
 import { Link } from "react-router-dom";
-import CirclePlus from "../../../assets/icons/circleplus";
+import CirclePlus from "../../../assets/icons/CirclePlus";
 import Trash from "../../../assets/icons/Trash";
 
 type Props = {
@@ -644,7 +644,7 @@ const ItemTable = ({ state, setState, isInterState, isNonTaxable }: Props) => {
                           <div>
                             <Link to={"/inventory/Item/new"}>
                               <button className="bg-darkGreen text-darkRed rounded-lg py-4 px-6 flex items-center text-sm font-bold border-slate-400 border gap-2 w-full hover:bg-lightRed">
-                                <CirclePlus color="darkRed" size={"20"} />
+                                <CirclePlus color="darkRed" size={20} />
                                 <p> Add New Item</p>
                               </button>
                             </Link>
@@ -769,7 +769,7 @@ const ItemTable = ({ state, setState, isInterState, isNonTaxable }: Props) => {
             className="text-[#0b9d56]  rounded-lg py-5 flex gap-1 items-center text-sm font-bold"
             onClick={addRow}
           >
-            <CirclePlus color={"#0b9d56"} size={"18"} />
+            <CirclePlus color={"#0b9d56"} size={18} />
             Add Item
           </button>
       </div>

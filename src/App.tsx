@@ -12,6 +12,8 @@ import ExpenseRoutes from "./Routes/ExpenseRoutes";
 import SupplierRoutes from "./Routes/SpplierRoutes";
 import StaffRoutes from "./Routes/StaffRoutes";
 import ReportRoutes from "./Routes/ReportRoutes";
+import Login from "./pages/Login/Login";
+import Otp from "./pages/Login/Otp";
 
 const Layout = lazy(() => import("./layout/Layout"));
 const Dashboard = lazy(() => import("./pages/DashBoard"));
@@ -53,7 +55,11 @@ const App: React.FC = () => {
     },
     {
       path: "/login",
-      element: <div>Login Page</div>,
+      element: <Login/>,
+    },
+    {
+      path: "/otp",
+      element:<Otp/> ,
     },
     {
       path: "*",

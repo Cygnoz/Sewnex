@@ -17,7 +17,7 @@ function Overview({ }: Props) {
             <div className="bg-white rounded-lg w-[150px] h-[140px] flex justify-center items-center">
               <p>Company Logo</p>
             </div>
-            <div className="me-10">
+            <div className="">
               <h1 className="text-[#495160] text-[16px] font-bold mb-1">
                 Supplier Name
               </h1>
@@ -27,18 +27,18 @@ function Overview({ }: Props) {
                 </p>
                 electrotech@gmail.com
               </p>
-              <div className="flex gap-4">
-                <p className="flex gap-2 text-[#495160] text-[12px] font-normal py-1">
+              <div className="flex gap-3 w-full">
+                <p className="flex gap-1 text-[#495160] w-full text-[12px] font-normal py-1">
                   <span>
                     <Phone />
                   </span>
-                  +91 95632652211
+                  +91 95632652
                 </p>
-                <p className="flex gap-2 text-[#495160] text-[12px] font-normal py-1">
+                <p className="flex gap-1 w-full text-[#495160] text-[12px] font-normal py-1">
                   <span>
                     <Building size={16} />
                   </span>
-                  Company Name
+                  CompanyName
                 </p>
               </div>
             </div>

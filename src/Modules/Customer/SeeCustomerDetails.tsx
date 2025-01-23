@@ -15,6 +15,8 @@ import Overview from "./Overview"
 import ItemMeasurement from "./ItemMeasurement"
 import OrderHistory from "./OrderHistory"
 import ViewPayment from "./ViewPayment"
+import { Link } from "react-router-dom"
+import ChevronLeft from "../../assets/icons/ChevronLeft"
 interface CardData {
   icon: string;
   title: string;
@@ -79,6 +81,18 @@ const SeeCustomerDetails = () => {
   ]
   return (
     <div>
+      <div className="flex">
+        <Link to={"/customer"}>
+          <div
+            style={{ borderRadius: "50%" }}
+            className="w-[40px] h-[40px] object-cover  flex items-center justify-center bg-backButton"
+          >
+            <ChevronLeft color="#0F172A"  />
+          </div>
+        </Link>
+        <p className="text-[#0B1320] text-[16px] mx-2 mt-1.5  font-bold">Customer Overview</p>
+
+      </div>
       <div className="mt-2 flex mx-3  bg-white rounded-lg p-5">
         {/* 1st card */}
         <div
@@ -156,20 +170,20 @@ const SeeCustomerDetails = () => {
           {/* Pass the required props to the Overview component */}
           {selectedTab === "Overview" && (
             <Overview
-              // customerData={customerData}
-              // statusData={statusData}
-              // customerId={customerId}
-              // handleStatusSubmit={handleStatusSubmit}
+            // customerData={customerData}
+            // statusData={statusData}
+            // customerId={customerId}
+            // handleStatusSubmit={handleStatusSubmit}
             />
           )}
           {selectedTab === "Item Measurement" && (
-             <ItemMeasurement/>
+            <ItemMeasurement />
           )}
-           {selectedTab === "Order History" && (
-             <OrderHistory/>
+          {selectedTab === "Order History" && (
+            <OrderHistory />
           )}
           {selectedTab === "View Payment" && (
-             <ViewPayment/>
+            <ViewPayment />
           )}
         </div>
 
