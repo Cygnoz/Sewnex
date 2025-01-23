@@ -25,6 +25,8 @@ const PurchaseRoutes = () => {
         <Route path="payment-made/new" element={<NewPayment/>} />
         <Route path="payment-made/view" element={<PaymentView/>} />
         <Route path="debitnote/new" element={<NewDebitNote />} />
+        <Route path="debitnote/view" element={<Purchaseview page="DebitNote" />} />
+
 
 
       </Routes>
