@@ -13,8 +13,8 @@ function Overview({ }: Props) {
     <div>
       <div className="flex gap-3">
         <div className="w-full">
-          <div className="p-5 flex gap-10 rounded-lg bg-gradient-to-r from-[#F7ECD9] via-[#F7ECD9] to-[#B5F0D3]">
-            <div className="bg-white rounded-lg w-[150px] h-[140px] flex justify-center items-center">
+          <div className="p-5 grid grid-cols-3 gap-5 rounded-lg bg-gradient-to-r from-[#F7ECD9] via-[#F7ECD9] to-[#B5F0D3]">
+            <div className="bg-white rounded-lg w-full h-[140px] flex justify-center items-center">
               <p>Company Logo</p>
             </div>
             <div className="">

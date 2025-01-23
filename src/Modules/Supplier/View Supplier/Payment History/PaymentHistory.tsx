@@ -17,7 +17,7 @@ function PaymentHistory({ }: Props) {
     { invoiceNumber: "INV00134", date: "28 May 2024", amount: 500.00, remark: "Balance" },
     { invoiceNumber: "INV00124", date: "28 May 2024", amount: 500.00, remark: "Balance" },
     { invoiceNumber: "INV00114", date: "28 May 2024", amount: 500.00, remark: "Balance" },
-    { invoiceNumber: "INV00034", date: "28 May 2024", amount: 500.00, remark: "Balance" },
+    { invoiceNumber: "INV00034", date: "27 May 2024", amount: 500.00, remark: "Balance" },
   ];
   const handleDelete = (id: string) => {
     alert(`handleDelete clicked for ID: ${id}`);
@@ -48,7 +48,7 @@ function PaymentHistory({ }: Props) {
             data={data}
             onDelete={handleDelete}
             onPrintClick={handlePrintClick}
-            searchPlaceholder="Search Supplier"
+            searchPlaceholder="Search History"
             loading={false}
             searchableFields={["invoiceNumber", "date"]}
           />
