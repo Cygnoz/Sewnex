@@ -6,9 +6,9 @@ import { useEffect, useState } from "react"
 import AccountDropdown from "./AccountDropdown"
 import toast from "react-hot-toast"
 import TrashIcon from "../../../../assets/icons/TrashIcon"
-import CirclePlus from "../../../../assets/icons/circleplus"
 import Button from "../../../../Components/Button"
 import journalBgImage from "../../../../assets/images/journalBgImage.png"
+import CirclePlus from "../../../../assets/icons/circleplus"
 
 type Props = {}
 
