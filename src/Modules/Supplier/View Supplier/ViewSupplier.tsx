@@ -5,8 +5,8 @@ import { useState } from "react";
 import LineChart from "../../../assets/icons/LineChart";
 import History from "../../../assets/icons/History";
 import Overview from "./Overview/Overview";
-// import PurchaseHistory from "./Purchase History/PurchaseHistory";
 import PaymentHistory from "./Payment History/PaymentHistory";
+import PurchaseHistory from "./Purchase History/PurchaseHistory";
 
 type Props = {}
 
