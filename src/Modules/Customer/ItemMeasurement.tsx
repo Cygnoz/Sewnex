@@ -51,7 +51,7 @@ const ItemMeasurement = () => {
   };
 
   return (
-   <div className='m-2 h-[237px] rounded-lg bg-[#F5F8FC]'>
+   <div className='m-2 h-[237px] mx-20 rounded-lg bg-[#F5F8FC]'>
      <div className="flex flex-wrap justify-center gap-4 p-4">
       {items.map((item, index) => (
         <div
