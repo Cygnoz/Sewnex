@@ -2,15 +2,65 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import CehvronDown from "../../assets/icons/CheveronDown";
 import CheveronLeftIcon from "../../assets/icons/ChevronLeft";
-import Upload from "../../assets/icons/SquarUserIcon";
+// import Upload from "../../assets/icons";
 import Button from "../../Components/Button";
 import SearchBar from "../../Components/SearchBar";
-import useApi from "../../Hooks/useApi";
-import { endpoints } from "../../Services/apiEdpoints";
+// import useApi from "../../Hooks/useApi";
+// import { endpoints } from "../../Services/apiEdpoints";
+// import AddSupplierModal from "../";
+import AddExpenseTable from "./AddExpenseTable";
+import ExpenseFilterCards from "./ExpenseFilterCards";
+import BrowseUploads from "../../assets/icons/BrowseUploads";
 
+import { List } from "../../assets/icons/List";
+// import ExpenseFilterCards from "./ExpenseFilterCards";
+// import toast from "react-hot-toast";
+// import List from "../../../assets/icons/List";
+// import { ExpenseData } from "../../../Types/Expense";
 
-import List from "../../assets/icons/ListFilter";
-
+interface ExpenseData {
+  expenseNumber: string;
+  expenseDate: string;
+  paidThrough: string;
+  paidThroughId: string;
+  expenseCategory: string;
+  expenseType: string;
+  hsnCode: string;
+  sac: string;
+  distance: string;
+  ratePerKm: string;
+  supplierId: string;
+  supplierDisplayName: string;
+  gstTreatment: string;
+  gstin: string;
+  sourceOfSupply: string;
+  destinationOfSupply: string;
+  invoice: string;
+  uploadFiles: string;
+  subTotal: number;
+  grandTotal: number;
+  amountIs: string;
+  sgst: number;
+  cgst: number;
+  igst: number;
+  vat: number;
+  expense: ExpenseDetail[];
+}
+interface ExpenseDetail {
+  expenseAccountId: string;
+  expenseAccount: string;
+  note: string;
+  taxGroup: string;
+  taxExemption: string;
+  sgst: number;
+  cgst: number;
+  igst: number;
+  vat: number;
+  sgstAmount: number;
+  cgstAmount: number;
+  igstAmount: number;
+  amount: number;
+}
 
 type Props = {};
 
@@ -25,7 +75,7 @@ function AddExpensePage({}: Props) {
     setSelectedSection(section);
   };
 
-  const [expenseData, setExpenseData] = useState({
+  const [expenseData, setExpenseData] = useState<ExpenseData>({
     expenseNumber: "",
     expenseDate: "",
     paidThrough: "",
@@ -70,14 +120,14 @@ function AddExpensePage({}: Props) {
     ],
   });
 
-  const { request: AllAccounts } = useApi("get", 5001);
-  const { request: AllSuppliers } = useApi("get", 5009);
-  const { request: AddExpenses } = useApi("post", 5008);
-  const { request: getAllExpenseCategory } = useApi("get", 5008);
-  const { request: getTax } = useApi("get", 5004);
-  const { request: getCountries } = useApi("get", 5004);
-  const { request: getOrg } = useApi("get", 5004);
-  const { request: getPrefix } = useApi("get", 5008);
+  // const { request: AllAccounts } = useApi("get", 5001);
+  // const { request: AllSuppliers } = useApi("get", 5009);
+  // const { request: AddExpenses } = useApi("post", 5008);
+  // const { request: getAllExpenseCategory } = useApi("get", 5008);
+  // const { request: getTax } = useApi("get", 5004);
+  // const { request: getCountries } = useApi("get", 5004);
+  // const { request: getOrg } = useApi("get", 5004);
+  // const { request: getPrefix } = useApi("get", 5008);
 
   const [countryData, setcountryData] = useState<any | any>([]);
   const [searchValue, setSearchValue] = useState<string>("");
@@ -201,7 +251,7 @@ function AddExpensePage({}: Props) {
 
       if (hasErrors) {
         const fieldNames = emptyFields.join(", ");
-        alert(`Please fill in the following fields: ${fieldNames}`);
+        toast.error(`Please fill in the following fields: ${fieldNames}`);
         return;
       }
 
@@ -209,20 +259,20 @@ function AddExpensePage({}: Props) {
       const { response, error } = await AddExpenses(url, expenseData);
 
       if (response) {
-        alert(response.data.message);
+        toast.success(response.data.message);
         navigate("/expense/home");
       } else {
-        alert(error?.response?.data?.message || "An error occurred.");
+        toast.error(error?.response?.data?.message || "An error occurred.");
       }
     } catch (error) {
       console.error("Error in handleAddExpense:", error);
-      alert("An unexpected error occurred.");
+      toast.error("An unexpected error occurred.");
     }
   };
 
   const toggleDropdown = (key: string | null) => {
     setOpenDropdownIndex(key === openDropdownIndex ? null : key);
-    const supplierUrl = `${endpoints}`;
+    const supplierUrl = `${endponits.GET_ALL_SUPPLIER}`;
     fetchData(supplierUrl, setSupplierData, AllSuppliers);
   };
 
@@ -246,20 +296,20 @@ function AddExpensePage({}: Props) {
     }
   };
 
-  const fetchData = async (
-    url: string,
-    setData: React.Dispatch<React.SetStateAction<any>>,
-    fetchFunction: (url: string) => Promise<any>
-  ) => {
-    try {
-      const { response, error } = await fetchFunction(url);
-      if (!error && response) {
-        setData(response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  // const fetchData = async (
+  //   url: string,
+  //   setData: React.Dispatch<React.SetStateAction<any>>,
+  //   fetchFunction: (url: string) => Promise<any>
+  // ) => {
+  //   try {
+  //     const { response, error } = await fetchFunction(url);
+  //     if (!error && response) {
+  //       setData(response.data);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
 
   const handleButtonClick = () => {
     if (fileInputRef.current) {
@@ -295,38 +345,38 @@ function AddExpensePage({}: Props) {
     }));
   };
 
-  const fetchCountries = async () => {
-    try {
-      const url = `${endpoints.GET_COUNTRY_DATA}`;
-      const { response, error } = await getCountries(url);
-      if (!error && response) {
-        setcountryData(response.data[0].countries);
-      }
-    } catch (error) {
-      console.log("Error in fetching Country", error);
-    }
-  };
+  // const fetchCountries = async () => {
+  //   try {
+  //     const url = `${endponits.GET_COUNTRY_DATA}`;
+  //     const { response, error } = await getCountries(url);
+  //     if (!error && response) {
+  //       setcountryData(response.data[0].countries);
+  //     }
+  //   } catch (error) {
+  //     console.log("Error in fetching Country", error);
+  //   }
+  // };
 
-  const fetchAllAccounts = async () => {
-    try {
-      const url = `${endpoints}`;
-      const { response, error } = await AllAccounts(url);
-      if (!error || response) {
-        setAccountData({
-          paidThrough: response?.data.filter(
-            (acc: any) =>
-              acc.accountSubhead === "Cash" || acc.accountSubhead === "Bank"
-          ),
-          liabilities: response?.data.filter(
-            (acc: any) => acc.accountGroup == "Liability"
-          ),
-        });
-        return;
-      }
-    } catch (error) {
-      console.error("Error fetching accounts:", error);
-    }
-  };
+  // const fetchAllAccounts = async () => {
+  //   try {
+  //     const url = `${endponits.Get_ALL_Acounts}`;
+  //     const { response, error } = await AllAccounts(url);
+  //     if (!error || response) {
+  //       setAccountData({
+  //         paidThrough: response?.data.filter(
+  //           (acc: any) =>
+  //             acc.accountSubhead === "Cash" || acc.accountSubhead === "Bank"
+  //         ),
+  //         liabilities: response?.data.filter(
+  //           (acc: any) => acc.accountGroup == "Liability"
+  //         ),
+  //       });
+  //       return;
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching accounts:", error);
+  //   }
+  // };
 
   const findCountryStates = (countryName: string) =>
     countryData.find(
@@ -520,19 +570,19 @@ function AddExpensePage({}: Props) {
     }
   }, [expenseData.expense]);
 
-  useEffect(() => {
-    fetchAllAccounts();
-    fetchCountries();
-    const categoryUrl = `${endpoints}`;
-    const taxRateUrl = `${endpoints}`;
-    const organizationURL = `${endpoints}`;
-    const getPrefixUrl = `${endpoints}`;
+  // useEffect(() => {
+  //   fetchAllAccounts();
+  //   fetchCountries();
+  //   const categoryUrl = `${endponits.GET_ALL_EXPENSE_CATEGORY}`;
+  //   const taxRateUrl = `${endponits.GET_ALL_TAX}`;
+  //   const organizationURL = `${endponits.GET_ONE_ORGANIZATION}`;
+  //   const getPrefixUrl = `${endponits.GET_LAST_EXPENSE_PREFIX}`;
 
-    fetchData(organizationURL, setOrganization, getOrg);
-    fetchData(categoryUrl, setCategories, getAllExpenseCategory);
-    fetchData(taxRateUrl, setTaxRate, getTax);
-    fetchData(getPrefixUrl, setPrefix, getPrefix);
-  }, []);
+  //   fetchData(organizationURL, setOrganization, getOrg);
+  //   fetchData(categoryUrl, setCategories, getAllExpenseCategory);
+  //   fetchData(taxRateUrl, setTaxRate, getTax);
+  //   fetchData(getPrefixUrl, setPrefix, getPrefix);
+  // }, []);
 
   useEffect(() => {
     if (prefix) {
@@ -574,21 +624,24 @@ function AddExpensePage({}: Props) {
   }, [Itemize]);
 
   useEffect(() => {
-    if (expenseData.gstTreatment === "Unregistered Business" || expenseData.gstTreatment === "Consumer") {
+    if (
+      expenseData.gstTreatment === "Unregistered Business" ||
+      expenseData.gstTreatment === "Consumer"
+    ) {
       setExpenseData((prevData) => ({
         ...prevData,
         gstin: "",
         expense: prevData.expense.map((item: any) => ({
           ...item,
-          taxGroup:"Non-Taxable", 
-          cgst:"",
-          sgst:"",
-          igst:"",
+          taxGroup: "Non-Taxable",
+          cgst: "",
+          sgst: "",
+          igst: "",
         })),
       }));
       setSelectedTax("");
     }
-  
+
     if (expenseData.gstTreatment === "Overseas") {
       setExpenseData((prevData) => ({
         ...prevData,
@@ -596,17 +649,14 @@ function AddExpensePage({}: Props) {
       }));
       setSelectedTax("");
     }
-  }, [expenseData.gstTreatment]); 
-  
-  
-  
+  }, [expenseData.gstTreatment]);
 
   return (
     <>
-      <div className="bg-white">
+      <div className="bg-white p-4 ">
         <div className="flex gap-5 items-center mb-4 ms-4">
           <Link to={"/expense"}>
-            <div className="flex justify-center items-center h-11 w-11 bg-tertiary_main rounded-full">
+            <div className="flex justify-center items-center h-11 w-11 bg-[#FFFFFF] rounded-full">
               <CheveronLeftIcon color="#0B1320" />
             </div>
           </Link>
@@ -614,7 +664,7 @@ function AddExpensePage({}: Props) {
         </div>
         <div className="px-3 mb-4">
           <label className="block mb-1">
-            <div className="w-3/4 mx-2 border-dashed border-2 border-neutral-700 p-4 rounded gap-2 text-center mt-2">
+            <div className=" mx-2 border-dashed border-2 border-[#B47300] p-4 rounded gap-2 text-center mt-2">
               {expenseData.uploadFiles ? (
                 <div className="flex justify-center ">
                   <img
@@ -625,21 +675,22 @@ function AddExpensePage({}: Props) {
                 </div>
               ) : (
                 <>
-                  <div className="flex gap-1 justify-center">
-                    <Upload />
-                    <span>Upload Your Receipt</span>
+                  <div className=" gap-1 justify-center">
+                    <div className="flex justify-center">
+                      <BrowseUploads />
+                    </div>
+                    <h2>
+                      Upload Receipt{" "}
+                      <span className="text-[#B47300]">browse</span>{" "}
+                    </h2>
                   </div>
-                  <p className="text-xs mt-1 text-gray-600">
+                  <p className="text-xs mt-1 text-[#818894]">
                     Maximum file size allowed is 5MB
                   </p>
-                  <div className="mt-2 flex justify-center">
-                    <Button onClick={handleButtonClick}>
-                      Upload Your Files
-                    </Button>
-                  </div>
                 </>
               )}
             </div>
+
             <input
               type="file"
               ref={fileInputRef}
@@ -650,13 +701,13 @@ function AddExpensePage({}: Props) {
           </label>
         </div>
 
-        {/* <ExpenseFilterCards onSelectSection={handleRecordClick} /> */}
+        <ExpenseFilterCards onSelectSection={handleRecordClick} />
 
         {selectedSection === "expense" && (
           <>
             <div className="grid grid-cols-3 gap-4 mt-5 mx-4">
               <div className="col-span-1 space-y-2">
-                <label className="text-sm mb-1 text-labelColor">
+                <label className="text-sm mb-1 text-[#6b7280]">
                   Date<span className="text-[#bd2e2e] ">*</span>
                 </label>
                 <div className="relative w-full">
@@ -665,12 +716,12 @@ function AddExpensePage({}: Props) {
                     name="expenseDate"
                     value={expenseData.expenseDate}
                     onChange={handleChange}
-                    className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-3 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-3 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     placeholder="Select Date"
                   />
                 </div>
               </div>
-              <div className="col-span-1 space-y-2">
+              {/* <div className="col-span-1 space-y-2">
                 <label className="text-sm mb-1 text-labelColor">
                   Expense Number<span className="text-[#bd2e2e] ">*</span>
                 </label>
@@ -680,17 +731,16 @@ function AddExpensePage({}: Props) {
                     type="text"
                     name="expenseNumber"
                     value={expenseData.expenseNumber}
-                    onChange={handleAddExpense}
-                    className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     placeholder="Expense Number"
                   />
                 </div>
-              </div>
+              </div> */}
 
               {Itemize && (
                 <>
                   <div className="col-span-1 space-y-2">
-                    <label className="text-sm mb-1 text-labelColor">
+                    <label className="text-sm mb-1 text-[#6b7280]">
                       Expense Account<span className="text-[#bd2e2e] ">*</span>
                     </label>
                     <div className="relative w-full">
@@ -718,9 +768,15 @@ function AddExpensePage({}: Props) {
                             ],
                           });
                         }}
-                        className="appearance-none w-full h-9 text-zinc-700 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
+                        className={`appearance-none w-full h-9 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer ${
+                          expenseData?.expense[0]?.expenseAccount
+                            ? "text-gray-700"
+                            : "text-zinc-400"
+                        }`}
                       >
-                        <option value="">Select an Account</option>
+                        <option value="" disabled className="text-zinc-400">
+                          Select an Account
+                        </option>
                         {accountData?.liabilities &&
                           accountData.liabilities.map(
                             (account: any, index: number) => (
@@ -736,16 +792,16 @@ function AddExpensePage({}: Props) {
                       </div>
                     </div>
                     <button
-                      className="flex items-center  gap-2"
+                      className="flex justify-between items-center  gap-2"
                       onClick={handleItemizeFlase}
                     >
-                      <List />{" "}
-                      <p className="font-semibold text-[#680000]">Itemize</p>
+                      <List />
+                      <p className="font-semibold text-[#004D4D]"> Itemize</p>
                     </button>
                   </div>
 
                   <div className="col-span-1 space-y-2">
-                    <label className="text-sm mb-1 text-labelColor">
+                    <label className="text-sm mb-1 text-[#6b7280]">
                       Expense Amount<span className="text-[#bd2e2e] ">*</span>
                     </label>
                     <div className="relative w-full">
@@ -759,7 +815,7 @@ function AddExpensePage({}: Props) {
                             handleExpenseChange(0, { amount: Number(value) });
                           }
                         }}
-                        className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                        className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                         placeholder="Enter Expense Amount"
                       />
                     </div>
@@ -768,7 +824,7 @@ function AddExpensePage({}: Props) {
               )}
 
               <div className="col-span-1 space-y-2">
-                <label className="text-sm mb-1 text-labelColor">
+                <label className="text-sm mb-1 text-[#6b7280]">
                   Paid Through Account<span className="text-[#bd2e2e] ">*</span>
                 </label>
                 <div className="relative w-full">
@@ -790,7 +846,7 @@ function AddExpensePage({}: Props) {
                           : "",
                       });
                     }}
-                    className="appearance-none w-full h-9 text-zinc-700 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
+                    className="appearance-none w-full h-9 text-zinc-700 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
                   >
                     <option value="">Select an Account</option>
                     {accountData?.paidThrough &&
@@ -810,7 +866,7 @@ function AddExpensePage({}: Props) {
               </div>
 
               <div className="col-span-1 space-y-2 mt-1 cursor-pointer">
-                <label className="block text-sm  text-labelColor">
+                <label className="block text-sm  text-[#6b7280]">
                   Expense Category
                 </label>
                 <div
@@ -822,7 +878,7 @@ function AddExpensePage({}: Props) {
                     }
                   }}
                 >
-                  <div className="items-center flex appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                  <div className="items-center flex appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                     <p>
                       {expenseData.expenseCategory &&
                       expenseData.expenseCategory
@@ -853,7 +909,7 @@ function AddExpensePage({}: Props) {
                   {openDropdownIndex === "Category" && (
                     <div
                       ref={dropdownRef}
-                      className="absolute z-10 bg-white shadow rounded-md mt-1 p-2 w-full space-y-1 max-h-72 overflow-y-auto hide-scrollbar"
+                      className="absolute z-10 bg-white shadow rounded-full mt-1 p-2 w-full space-y-1 max-h-72 overflow-y-auto hide-scrollbar"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <SearchBar
@@ -865,7 +921,7 @@ function AddExpensePage({}: Props) {
                         categories?.map((category: any) => (
                           <div
                             key={category._id}
-                            className="grid grid-cols-12 gap-1 p-2 hover:bg-gray-100 cursor-pointer border border-slate-400 rounded-lg bg-lightPink"
+                            className="grid grid-cols-12 gap-1 p-2 hover:bg-gray-100 cursor-pointer border border-slate-400 rounded-full bg-lightPink"
                             onClick={() => {
                               setExpenseData({
                                 ...expenseData,
@@ -896,100 +952,99 @@ function AddExpensePage({}: Props) {
               </div>
               {Itemize && (
                 <>
-                <div>
-  <label
-    className="block text-sm text-labelColor mt-2.5"
-    htmlFor="itemType"
-  >
-    Expense Type
-  </label>
-  <div className="flex items-center space-x-4 text-textColor text-sm">
-    {/* Goods Option */}
-    <div className="flex gap-2 justify-center items-center mt-1">
-      <div
-        className="grid place-items-center mt-1"
-        onClick={() => {
-          setExpenseData((prev) => ({
-            ...prev,
-            expenseType: "Goods", // Consistent property name
-          }));
-        }}
-      >
-        <input
-          id="Goods"
-          type="radio"
-          name="expenseType"
-          value="Goods"
-          className={`col-start-1 row-start-1 appearance-none shrink-0 w-5 h-5 rounded-full border ${
-            expenseData.expenseType === "Goods"
-              ? "border-8 border-[#97998E]"
-              : "border-1 border-[#97998E]"
-          }`}
-          checked={expenseData.expenseType === "Goods"}
-          readOnly // Avoid unnecessary onChange handling
-        />
-        <div
-          className={`col-start-1 row-start-1 w-2 h-2 rounded-full ${
-            expenseData.expenseType === "Goods"
-              ? "bg-neutral-50" // Correct color for checked state
-              : "bg-transparent"
-          }`}
-        />
-      </div>
-      <label
-        htmlFor="Goods"
-        className="text-start font-medium mt-1"
-      >
-        Goods
-      </label>
-    </div>
+                  <div>
+                    <label
+                      className="block text-sm text-[#6b7280] mb-2"
+                      htmlFor="itemType"
+                    >
+                      Expense Type
+                    </label>
+                    <div className="flex items-center space-x-4 text-textColor text-sm">
+                      {/* Goods Option */}
+                      <div className="flex gap-2 justify-center items-center mt-1">
+                        <div
+                          className="grid place-items-center mt-1"
+                          onClick={() => {
+                            setExpenseData((prev) => ({
+                              ...prev,
+                              expenseType: "Goods",
+                            }));
+                          }}
+                        >
+                          <input
+                            id="Goods"
+                            type="radio"
+                            name="expenseType"
+                            value="Goods"
+                            className={` col-start-1 row-start-1 appearance-none shrink-0 w-5 h-5 rounded-full border ${
+                              expenseData.expenseType === "Goods"
+                                ? "border-8 border-[#B47300]" // Updated color for selected state
+                                : "border-1 border-[#97998E]"
+                            }`}
+                            checked={expenseData.expenseType === "Goods"}
+                            readOnly
+                          />
+                          <div
+                            className={`col-start-1 row-start-1 w-2 h-2 rounded-full ${
+                              expenseData.expenseType === "Goods"
+                                ? "bg-neutral-50"
+                                : "bg-transparent"
+                            }`}
+                          />
+                        </div>
+                        <label
+                          htmlFor="Goods"
+                          className="text-start font-medium mt-1 text-[#6b7280]"
+                        >
+                          Goods
+                        </label>
+                      </div>
 
-    {/* Service Option */}
-    <div className="flex gap-2 justify-center items-center">
-      <div
-        className="grid place-items-center mt-1"
-        onClick={() => {
-          setExpenseData((prev) => ({
-            ...prev,
-            expenseType: "Service", // Consistent property name
-          }));
-        }}
-      >
-        <input
-          id="Service"
-          type="radio"
-          name="expenseType"
-          value="Service"
-          className={`col-start-1 row-start-1 appearance-none shrink-0 w-5 h-5 rounded-full border ${
-            expenseData.expenseType === "Service"
-              ? "border-8 border-[#97998E]"
-              : "border-1 border-[#97998E]"
-          }`}
-          checked={expenseData.expenseType === "Service"}
-          readOnly // Avoid unnecessary onChange handling
-        />
-        <div
-          className={`col-start-1 row-start-1 w-2 h-2 rounded-full ${
-            expenseData.expenseType === "Service"
-              ? "bg-neutral-50" // Correct color for checked state
-              : "bg-transparent"
-          }`}
-        />
-      </div>
-      <label
-        htmlFor="Service"
-        className="text-start font-medium mt-1"
-      >
-        Service
-      </label>
-    </div>
-  </div>
-</div>
-
+                      {/* Service Option */}
+                      <div className="flex gap-2 justify-center items-center">
+                        <div
+                          className="grid place-items-center mt-1"
+                          onClick={() => {
+                            setExpenseData((prev) => ({
+                              ...prev,
+                              expenseType: "Service",
+                            }));
+                          }}
+                        >
+                          <input
+                            id="Service"
+                            type="radio"
+                            name="expenseType"
+                            value="Service"
+                            className={`col-start-1 row-start-1 appearance-none shrink-0 w-5 h-5 rounded-full border ${
+                              expenseData.expenseType === "Service"
+                                ? "border-8 border-[#B47300]" // Updated color for selected state
+                                : "border-1 border-[#97998E]"
+                            }`}
+                            checked={expenseData.expenseType === "Service"}
+                            readOnly
+                          />
+                          <div
+                            className={`col-start-1 row-start-1 w-2 h-2 rounded-full ${
+                              expenseData.expenseType === "Service"
+                                ? "bg-neutral-50"
+                                : "bg-transparent"
+                            }`}
+                          />
+                        </div>
+                        <label
+                          htmlFor="Service"
+                          className="text-start font-medium mt-1 text-[#6b7280]"
+                        >
+                          Service
+                        </label>
+                      </div>
+                    </div>
+                  </div>
 
                   {expenseData.expenseType === "Goods" ? (
                     <div className="col-span-1 space-y-2">
-                      <label className="text-sm mb-1 text-labelColor">
+                      <label className="text-sm mb-1 text-[#6b7280]">
                         HSN Code
                       </label>
                       <div className="relative w-full">
@@ -998,23 +1053,21 @@ function AddExpensePage({}: Props) {
                           name="hsnCode"
                           value={expenseData.hsnCode}
                           onChange={handleChange}
-                          className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                          className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                           placeholder="Enter HSN code"
                         />
                       </div>
                     </div>
                   ) : (
                     <div className="col-span-1 space-y-2">
-                      <label className="text-sm mb-1 text-labelColor">
-                        SAC
-                      </label>
+                      <label className="text-sm mb-1 text-[#6b7280]">SAC</label>
                       <div className="relative w-full">
                         <input
                           type="text"
                           name="sac"
                           value={expenseData.sac}
                           onChange={handleChange}
-                          className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                          className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                           placeholder="Enter SAC"
                         />
                       </div>
@@ -1024,18 +1077,18 @@ function AddExpensePage({}: Props) {
               )}
 
               <div className="col-span-1 space-y-2 mt-1 cursor-pointer">
-                <label className="block text-sm  text-labelColor">Vendor</label>
+                <label className="block text-sm  text-[#6b7280]">Vendor</label>
                 <div
                   className="relative w-full"
                   onClick={(e) => {
                     // Prevent the dropdown from opening when clicking the clear button
                     if (!expenseData.supplierDisplayName) {
                       e.stopPropagation();
-                      toggleDropdown("supplier");
+                      // toggleDropdown("supplier");
                     }
                   }}
                 >
-                  <div className="items-center flex appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                  <div className="items-center flex appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                     <p>
                       {expenseData.supplierDisplayName &&
                       expenseData.supplierDisplayName
@@ -1081,7 +1134,7 @@ function AddExpensePage({}: Props) {
                         filteredSupplier.map((supplier: any) => (
                           <div
                             key={supplier._id}
-                            className="grid grid-cols-12 gap-1 p-2 hover:bg-gray-100 cursor-pointer border border-slate-400 rounded-lg bg-lightPink"
+                            className="grid grid-cols-12 gap-1 p-2 hover:bg-gray-100 cursor-pointer border border-slate-400 rounded-full bg-lightPink"
                             onClick={() => {
                               setExpenseData({
                                 ...expenseData,
@@ -1132,7 +1185,7 @@ function AddExpensePage({}: Props) {
               </div>
 
               <div className="col-span-1 space-y-2">
-                <label className="text-sm mb-1 text-labelColor">
+                <label className="text-sm mb-1 text-[#6b7280]">
                   GST Treatment<span className="text-[#bd2e2e] ">*</span>
                 </label>
                 <div className="relative w-full">
@@ -1140,9 +1193,15 @@ function AddExpensePage({}: Props) {
                     name="gstTreatment"
                     value={expenseData.gstTreatment}
                     onChange={handleChange}
-                    className="appearance-none w-full h-9 text-zinc-700 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
+                    className={`appearance-none w-full h-9 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer ${
+                      expenseData.gstTreatment === ""
+                        ? "text-zinc-400"
+                        : "text-zinc-700"
+                    }`}
                   >
-                    <option value="">Select GST Treatment</option>
+                    <option value="" disabled>
+                      Select GST Treatment
+                    </option>
                     <option value="Registered Business - Regular">
                       Registered Business - Regular
                     </option>
@@ -1161,6 +1220,7 @@ function AddExpensePage({}: Props) {
                     <option value="Tax Deductor">Tax Deductor</option>
                     <option value="SEZ Developer">SEZ Developer</option>
                   </select>
+
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                     <CehvronDown color="gray" />
                   </div>
@@ -1170,7 +1230,7 @@ function AddExpensePage({}: Props) {
               {expenseData.gstTreatment !== "Unregistered Business" &&
                 expenseData.gstTreatment !== "Consumer" && (
                   <div className="col-span-1 space-y-2">
-                    <label className="text-sm mb-1 text-labelColor">
+                    <label className="text-sm mb-1 text-[#6b7280]">
                       Vendor GSTIN{" "}
                       {(expenseData.gstTreatment ===
                         "Registered Business - Regular" ||
@@ -1189,7 +1249,7 @@ function AddExpensePage({}: Props) {
                         name="gstin"
                         value={expenseData.gstin}
                         onChange={handleChange}
-                        className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                        className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                         placeholder="Enter GSTIN"
                       />
                     </div>
@@ -1198,7 +1258,7 @@ function AddExpensePage({}: Props) {
 
               {expenseData.gstTreatment != "Overseas" && (
                 <div className="col-span-1 space-y-2">
-                  <label className="text-sm mb-1 text-labelColor">
+                  <label className="text-sm mb-1 text-[#6b7280]">
                     Source of Supply
                     {(expenseData.gstTreatment ===
                       "Registered Business - Regular" ||
@@ -1217,11 +1277,11 @@ function AddExpensePage({}: Props) {
 
                   <div className="relative w-full">
                     <select
-                    disabled={expenseData.supplierId===""}
+                      disabled={expenseData.supplierId === ""}
                       onChange={handleChange}
                       name="sourceOfSupply"
                       value={expenseData.sourceOfSupply}
-                      className="block appearance-none w-full h-9  text-zinc-400 bg-white border border-inputBorder text-sm  pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                      className="block appearance-none w-full h-9  text-zinc-400 bg-white border border-inputBorder text-sm  pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     >
                       <option value="">Select Source Of Supply</option>
                       {destinationList &&
@@ -1243,7 +1303,7 @@ function AddExpensePage({}: Props) {
               )}
 
               <div className="col-span-1 space-y-2">
-                <label className="text-sm mb-1 text-labelColor">
+                <label className="text-sm mb-1 text-[#6b7280]">
                   Destination of Supply{" "}
                   {(expenseData.gstTreatment ===
                     "Registered Business - Regular" ||
@@ -1264,7 +1324,7 @@ function AddExpensePage({}: Props) {
                     onChange={handleChange}
                     name="destinationOfSupply"
                     value={expenseData.destinationOfSupply}
-                    className="block appearance-none w-full h-9  text-zinc-400 bg-white border border-inputBorder text-sm  pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    className="block appearance-none w-full h-9  text-zinc-400 bg-white border border-inputBorder text-sm  pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   >
                     <option value="">Select Destination Of Supply</option>
                     {placeOfSupplyList.length > 0 &&
@@ -1282,7 +1342,7 @@ function AddExpensePage({}: Props) {
 
               {Itemize && (
                 <div className="col-span-1 space-y-2">
-                  <label className="text-sm mb-1 text-labelColor">Tax</label>
+                  <label className="text-sm mb-1 text-[#6b7280]">Tax</label>
                   <div className="relative w-full">
                     <select
                       disabled={
@@ -1331,7 +1391,7 @@ function AddExpensePage({}: Props) {
 
                         setSelectedTax(selectedValue);
                       }}
-                      className="appearance-none w-full h-9 text-zinc-700 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
+                      className="appearance-none w-full h-9 text-zinc-700 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
                     >
                       <option value="">Select Tax Rate</option>
 
@@ -1356,7 +1416,7 @@ function AddExpensePage({}: Props) {
               )}
 
               <div className="col-span-1 space-y-2">
-                <label className="text-sm mb-1 text-labelColor">
+                <label className="text-sm mb-1 text-[#6b7280]">
                   Invoice #{" "}
                   {(expenseData.gstTreatment ===
                     "Registered Business - Regular" ||
@@ -1375,17 +1435,17 @@ function AddExpensePage({}: Props) {
                     name="invoice"
                     value={expenseData.invoice}
                     onChange={handleChange}
-                    className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     placeholder="Invoice #"
                   />
                 </div>
               </div>
+              <div></div>
+
               {Itemize && (
                 <>
-                  <div className="col-span-1 space-y-2">
-                    <label className="text-sm mb-1 text-labelColor">
-                      Notes
-                    </label>
+                  <div className="space-y-2">
+                    <label className="text-sm mb-1 text-[#6b7280]">Notes</label>
                     <div className="relative w-full">
                       <input
                         type="text"
@@ -1395,7 +1455,7 @@ function AddExpensePage({}: Props) {
                           const value = e.target.value;
                           handleExpenseChange(0, { note: value });
                         }}
-                        className="appearance-none w-full h-16 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
+                        className="appearance-none w-full h-16 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
                         placeholder="Enter Notes"
                       />
                     </div>
@@ -1406,7 +1466,7 @@ function AddExpensePage({}: Props) {
                 expenseData.expense[0].taxGroup !== "Non-Taxable" && (
                   <div className=" mt-1 ">
                     <label
-                      className="block text-sm text-labelColor"
+                      className="block text-sm text-[#6b7280]"
                       htmlFor="amountIs"
                     >
                       Amount Is
@@ -1429,7 +1489,7 @@ function AddExpensePage({}: Props) {
                             value="Tax Inclusive"
                             className={`col-start-1 row-start-1 appearance-none shrink-0 w-5 h-5 rounded-full border ${
                               expenseData.amountIs === "Tax Inclusive"
-                                ? "border-8 border-[#97998E]"
+                                ? "border-8 border-[#B47300]"
                                 : "border-1 border-[#97998E]"
                             }`}
                             checked={expenseData.amountIs === "Tax Inclusive"}
@@ -1468,7 +1528,7 @@ function AddExpensePage({}: Props) {
                             value="Tax Exclusive"
                             className={`col-start-1 row-start-1 appearance-none shrink-0 w-5 h-5 rounded-full border ${
                               expenseData.amountIs === "Tax Exclusive"
-                                ? "border-8 border-[#97998E]"
+                                ? "border-8 border-[#B47300]"
                                 : "border-1 border-[#97998E]"
                             }`}
                             checked={expenseData.amountIs === "Tax Exclusive"} // Correct checked logic
@@ -1498,27 +1558,27 @@ function AddExpensePage({}: Props) {
                 className="flex items-center  gap-2 mt-5"
                 onClick={handleItemizeTrue}
               >
-                <CheveronLeftIcon color="#680000" />{" "}
-                <p className="text-sm text-[#680000]">
+                <CheveronLeftIcon color="#004D4D" />{" "}
+                <p className="text-sm text-[#004D4D]">
                   Back to single expense view{" "}
                 </p>
               </button>
             )}
 
-            {/* {!Itemize && (
+            {!Itemize && (
               <AddExpenseTable
                 liabilities={accountData.liabilities}
                 expenseData={expenseData}
                 taxRate={taxRate}
                 setExpenseData={setExpenseData}
               />
-            )} */}
+            )}
           </>
         )}
         {selectedSection === "mileage" && (
           <div className="grid grid-cols-3 gap-4 mt-5 mx-4">
             <div className="col-span-1 space-y-2">
-              <label className="text-sm mb-1 text-labelColor">
+              <label className="text-sm mb-1 text-[#6b7280]">
                 Date<span className="text-[#bd2e2e] ">*</span>
               </label>
               <div className="relative w-full">
@@ -1527,13 +1587,13 @@ function AddExpensePage({}: Props) {
                   name="expenseDate"
                   value={expenseData.expenseDate}
                   onChange={handleChange}
-                  className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-3 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-3 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   placeholder="Select Date"
                 />
               </div>
             </div>
             {/* <div className="col-span-1 space-y-2">
-              <label className="text-sm mb-1 text-labelColor">Employee</label>
+              <label className="text-sm mb-1 text-[#6b7280]">Employee</label>
               <div className="relative w-full">
                 <input
                   type="text"
@@ -1545,24 +1605,23 @@ function AddExpensePage({}: Props) {
                 />
               </div>
             </div> */}
-             <div className="col-span-1 space-y-2">
-                <label className="text-sm mb-1 text-labelColor">
-                  Expense Number<span className="text-[#bd2e2e] ">*</span>
-                </label>
-                <div className="relative w-full">
-                  <input
-                    disabled
-                    type="text"
-                    name="expenseNumber"
-                    value={expenseData.expenseNumber}
-                    onChange={handleAddExpense}
-                    className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                    placeholder="Expense Number"
-                  />
-                </div>
-              </div>
             <div className="col-span-1 space-y-2">
-              <label className="text-sm mb-1 text-labelColor">
+              <label className="text-sm mb-1 text-[#6b7280]">
+                Expense Number<span className="text-[#bd2e2e] ">*</span>
+              </label>
+              <div className="relative w-full">
+                <input
+                  disabled
+                  type="text"
+                  name="expenseNumber"
+                  value={expenseData.expenseNumber}
+                  className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  placeholder="Expense Number"
+                />
+              </div>
+            </div>
+            <div className="col-span-1 space-y-2">
+              <label className="text-sm mb-1 text-[#6b7280]">
                 Expense Account<span className="text-[#bd2e2e] ">*</span>
               </label>
               <div className="relative w-full">
@@ -1588,7 +1647,7 @@ function AddExpensePage({}: Props) {
                       ],
                     });
                   }}
-                  className="appearance-none w-full h-9 text-zinc-700 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
+                  className="placeholder-[#818894] appearance-none w-full h-9 text-zinc-700 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
                 >
                   <option value="">Select an Account</option>
                   {accountData?.liabilities &&
@@ -1602,13 +1661,13 @@ function AddExpensePage({}: Props) {
                 </select>
 
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                  <CehvronDown color="gray" />
+                  <CehvronDown color="#818894" />
                 </div>
               </div>
             </div>
 
             <div className="col-span-1 space-y-2">
-              <label className="text-sm mb-1 text-labelColor">
+              <label className="text-sm mb-1 text-[#6b7280]">
                 Paid Through<span className="text-[#bd2e2e] ">*</span>
               </label>
               <div className="relative w-full">
@@ -1628,7 +1687,7 @@ function AddExpensePage({}: Props) {
                       paidThroughId: selectedAccount?._id || "",
                     });
                   }}
-                  className="appearance-none w-full h-9 text-zinc-700 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
+                  className="appearance-none w-full h-9 text-zinc-700 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
                 >
                   <option value="">Select an Account</option>
                   {accountData?.paidThrough &&
@@ -1646,7 +1705,7 @@ function AddExpensePage({}: Props) {
               </div>
             </div>
             <div className="col-span-1 space-y-2">
-              <label className="text-sm mb-1 text-labelColor">
+              <label className="text-sm mb-1 text-[#6b7280]">
                 Distance<span className="text-[#bd2e2e] ">*</span>
               </label>
               <div className="relative w-full">
@@ -1655,13 +1714,13 @@ function AddExpensePage({}: Props) {
                   name="distance"
                   value={expenseData.distance}
                   onChange={handleChange}
-                  className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   placeholder="Enter distance"
                 />
               </div>
             </div>
             <div className="col-span-1 space-y-2">
-              <label className="text-sm mb-1 text-labelColor">
+              <label className="text-sm mb-1 text-[#6b7280]">
                 Rate Per Km <span className="text-[#bd2e2e] ">*</span>
               </label>
               <div className="relative w-full">
@@ -1670,13 +1729,13 @@ function AddExpensePage({}: Props) {
                   name="ratePerKm"
                   value={expenseData.ratePerKm}
                   onChange={handleChange}
-                  className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   placeholder="Enter Rate"
                 />
               </div>
             </div>
             <div className="col-span-1 space-y-2">
-              <label className="text-sm mb-1 text-labelColor">Amount</label>
+              <label className="text-sm mb-1 text-[#6b7280]">Amount</label>
               <div className="relative w-full">
                 <input
                   type="number"
@@ -1684,14 +1743,14 @@ function AddExpensePage({}: Props) {
                   name="amount"
                   value={expenseData.expense[0].amount}
                   onChange={handleChange}
-                  className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
+                  className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
                   placeholder="Enter Amount"
                 />
               </div>
             </div>
 
             <div className="col-span-1 space-y-2 mt-1 cursor-pointer">
-              <label className="block text-sm mb-1 text-labelColor">
+              <label className="block text-sm mb-1 text-[#6b7280]">
                 Vendor
               </label>
               <div
@@ -1699,11 +1758,11 @@ function AddExpensePage({}: Props) {
                 onClick={(e) => {
                   if (!expenseData.supplierDisplayName) {
                     e.stopPropagation();
-                    toggleDropdown("supplier");
+                    // toggleDropdown("supplier");
                   }
                 }}
               >
-                <div className="items-center flex appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                <div className="items-center flex appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                   <p>
                     {expenseData.supplierDisplayName &&
                     expenseData.supplierDisplayName
@@ -1747,7 +1806,7 @@ function AddExpensePage({}: Props) {
                       filteredSupplier.map((supplier: any) => (
                         <div
                           key={supplier._id}
-                          className="grid grid-cols-12 gap-1 p-2 hover:bg-gray-100 cursor-pointer border border-slate-400 rounded-lg bg-lightPink"
+                          className="grid grid-cols-12 gap-1 p-2 hover:bg-gray-100 cursor-pointer border border-slate-400 rounded-full bg-lightPink"
                           onClick={() => {
                             setExpenseData({
                               ...expenseData,
@@ -1782,7 +1841,7 @@ function AddExpensePage({}: Props) {
                         </p>
                       </div>
                     )}
-                    <div className="hover:bg-gray-100 cursor-pointer border border-slate-400 rounded-lg py-4">
+                    <div className="hover:bg-gray-100 cursor-pointer border border-slate-400 rounded-full py-4">
                       {/* <AddSupplierModal page="purchase" /> */}
                     </div>
                   </div>
@@ -1791,21 +1850,21 @@ function AddExpensePage({}: Props) {
             </div>
 
             <div className="col-span-1 space-y-2">
-              <label className="text-sm mb-1 text-labelColor">Invoice#</label>
+              <label className="text-sm mb-1 text-[#6b7280]">Invoice#</label>
               <div className="relative w-full">
                 <input
                   type="text"
                   name="invoice"
                   value={expenseData.invoice}
                   onChange={handleChange}
-                  className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  className="appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   placeholder="Enter Invoice"
                 />
               </div>
             </div>
 
             <div className="col-span-1 space-y-2">
-              <label className="text-sm mb-1 text-labelColor">Notes</label>
+              <label className="text-sm mb-1 text-[#6b7280]">Notes</label>
               <div className="relative w-full">
                 <input
                   type="text"
@@ -1815,7 +1874,7 @@ function AddExpensePage({}: Props) {
                     const value = e.target.value;
                     handleExpenseChange(0, { note: value });
                   }}
-                  className="appearance-none w-full h-16 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
+                  className="appearance-none w-full h-16 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
                   placeholder="Enter Notes"
                 />
               </div>
@@ -1824,7 +1883,7 @@ function AddExpensePage({}: Props) {
           </div>
         )}
       </div>
-      <div className="col-span-1 flex justify-end items-start mt-4 space-x-2">
+      <div className="col-span-1 flex justify-end items-start mt-4 space-x-2 ">
         <Button
           onClick={() => navigate("/expense")}
           variant="secondary"
@@ -1834,7 +1893,7 @@ function AddExpensePage({}: Props) {
           Cancel
         </Button>
         <Button
-          onClick={handleAddExpense}
+          // onClick={handleAddExpense}
           variant="primary"
           size="sm"
           type="submit"
@@ -1848,7 +1907,3 @@ function AddExpensePage({}: Props) {
 }
 
 export default AddExpensePage;
-
-
-
-
