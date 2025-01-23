@@ -8,6 +8,7 @@ const DayBookTable = lazy(() => import("../Modules/accountant/dayBook/DayBookTab
 const ManualJournalHome = lazy(() => import("../Modules/accountant/manualJournal/ManualJournalHome")); 
 const AccountantViewOne = lazy(() => import("../Modules/accountant/AccountantViewOne")); 
 const NewJournal = lazy(() => import("../Modules/accountant/manualJournal/newJournal/NewJournal")); 
+const ManualJournalView = lazy(() => import("../Modules/accountant/manualJournal/ManualJournalView")); 
  
 const AccountsRoutes = () => {
     return (
@@ -19,6 +20,7 @@ const AccountsRoutes = () => {
         <Route path="manualJournal" element={<ManualJournalHome/>}></Route>
         <Route path="newJournal" element={<NewJournal/>}></Route>
         <Route path="viewOne" element={<AccountantViewOne/>}></Route>
+        <Route path="viewOneJournal" element={<ManualJournalView/>}></Route>
       </Routes>
     );
   };

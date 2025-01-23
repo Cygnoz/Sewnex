@@ -20,7 +20,8 @@ const Layout = ({}: Props) => {
   
   const shouldShowSubHeader =
   location.pathname !== "/accountant/viewOne" &&
-  location.pathname !== "/accountant/newJournal";
+  location.pathname !== "/accountant/newJournal" &&
+  location.pathname !== "/accountant/viewOneJournal";
 
 
   return (

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Button from "../../../Components/Button"
 import CirclePlus from "../../../assets/icons/circleplus"
 import Table from "../../../Components/Table/Table"
@@ -21,6 +21,11 @@ function ManualJournalHome({}: Props) {
     { Date: "Bob Brown", Journal: "AC-001", ReferenceNumber: "Bank",Status:"Telephone Expense" ,Note:"Lorem ipsum anga",Amount:"23"},
   ]
   
+  const navigate=useNavigate()
+  const HanldeNavigate=()=>{
+    navigate("/accountant/viewOneJournal")
+  }
+  
   return (
     <div>
          <div className="flex justify-between items-center mb-6">
@@ -39,7 +44,7 @@ function ManualJournalHome({}: Props) {
     </div>
 
     <Table columns={dummyColumns} data={dummyData} searchPlaceholder={"Search account"}  searchableFields={["Date", "Status"]}
-          loading={false}  isPrint  isDelete />  
+          loading={false} onRowClick={HanldeNavigate}/>  
     </div>
   )
 }
