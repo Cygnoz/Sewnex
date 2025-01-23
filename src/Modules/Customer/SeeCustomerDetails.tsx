@@ -17,6 +17,7 @@ import OrderHistory from "./OrderHistory"
 import ViewPayment from "./ViewPayment"
 import { Link } from "react-router-dom"
 import ChevronLeft from "../../assets/icons/ChevronLeft"
+import SalesHistory from "./SalesHistory"
 interface CardData {
   icon: string;
   title: string;
@@ -184,6 +185,9 @@ const SeeCustomerDetails = () => {
           )}
           {selectedTab === "View Payment" && (
             <ViewPayment />
+          )}
+           {selectedTab === "Sales History" && (
+            <SalesHistory/>
           )}
         </div>
 
