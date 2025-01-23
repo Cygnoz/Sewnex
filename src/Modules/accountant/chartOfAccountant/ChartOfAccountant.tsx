@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import Table from "../../../Components/Table/Table"
 import NewAccountModal from "./NewAccountModal"
 
@@ -18,6 +19,10 @@ function ChartOfAccountant({}: Props) {
     { name: "Tom White", Balance: "tom@example.com", Date: "Editor" },
     { name: "Tom White", Balance: "tom@example.com", Date: "Editor" },
   ]
+  const navigate=useNavigate()
+  const HanldeNavigate=()=>{
+    navigate("/accountant/viewOne")
+  }
   return (
     <div>
     <div className="flex justify-between items-center">
@@ -31,7 +36,7 @@ function ChartOfAccountant({}: Props) {
     </div>
     <div className="mt-6">
       <Table columns={dummyColumns} data={dummyData} searchPlaceholder={"Search account"}  searchableFields={["name", "email"]}
-          loading={false} isDelete isPrint/>  
+          loading={false} isDelete isPrint onRowClick={HanldeNavigate}/>  
     </div>
     </div>
   )

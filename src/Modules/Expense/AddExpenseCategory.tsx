@@ -6,6 +6,9 @@ import PencilLine from "../../assets/icons/PencilLine";
 import Trash from "../../assets/icons/Trash";
 import Plus from "../../assets/icons/Plus";
 
+import Select from "../../Components/Form/Select";
+import CirclePlus from "../../assets/icons/CirclePlus";
+
 type Props = {};
 
 type CategoryData = {
@@ -37,7 +40,9 @@ function AddExpenseCategory({}: Props) {
   };
 
   // Handle input change for expense category form
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setCategories((prevData) => ({
       ...prevData,
@@ -61,43 +66,86 @@ function AddExpenseCategory({}: Props) {
 
   // Handle delete category
   const handleDelete = (id: string) => {
-    const updatedCategories = allCategory.filter((category) => category._id !== id);
+    const updatedCategories = allCategory.filter(
+      (category) => category._id !== id
+    );
     setAllCategory(updatedCategories);
     console.log("Category deleted:", id);
   };
 
   // Search filter logic
   const [searchValue, setSearchValue] = useState<string>("");
-  const filteredCategories = allCategory.filter((category) =>
-    category.expenseCategory.toLowerCase().includes(searchValue.toLowerCase()) ||
-    category.description.toLowerCase().includes(searchValue.toLowerCase())
+  const filteredCategories = allCategory.filter(
+    (category) =>
+      category.expenseCategory
+        .toLowerCase()
+        .includes(searchValue.toLowerCase()) ||
+      category.description.toLowerCase().includes(searchValue.toLowerCase())
   );
+
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value);
+    console.log("Selected category:", value);
+  };
 
   return (
     <div>
-      <Button variant="secondary" className="flex items-center" size="lg" onClick={() => openModal(true, false, false)}>
-        <Plus color="currentColor" />
+      <Button
+        variant="secondary"
+        className="flex items-center"
+        size="md"
+        onClick={() => openModal(true, false, false)}
+      >
+        <CirclePlus color={"#0B9C56"} />
         <p className="text-md">Add Category</p>
       </Button>
 
-      <Modal open={isOpen.main} onClose={() => closeModal(false, false, false)} className="w-[65%]">
+      <Modal
+        open={isOpen.main}
+        onClose={() => closeModal(false, false, false)}
+        className="w-[65%]"
+      >
         <div className="p-5 mt-3 bg-[#F9F7F5]">
           <div className="mb-5 flex p-4 rounded-xl bg-CreamBg relative overflow-hidden  bg-[#FFFFFF]">
             <div className="relative z-10">
               <h3 className="text-xl font-bold text-textColor">Category</h3>
-              
             </div>
-            <div className="ms-auto text-3xl cursor-pointer relative z-10" onClick={() => closeModal(false, false, false)}>
+            <div
+              className="ms-auto text-3xl cursor-pointer relative z-10"
+              onClick={() => closeModal(false, false, false)}
+            >
               &times;
             </div>
           </div>
 
-          <div className="flex">
-            <div className="w-96">
-              <SearchBar placeholder="Search Name or Description" searchValue={searchValue} onSearchChange={setSearchValue} />
+          <div className="flex justify-evenly">
+            <div className=" flex gap-10">
+              <SearchBar
+                placeholder="Search Name or Description"
+                searchValue={searchValue}
+                onSearchChange={setSearchValue}
+                
+              />
+              <Select
+             
+                options={allCategory.map((cat) => ({
+                  value: cat._id || cat.expenseCategory,
+                  label: cat.expenseCategory,
+                }))}
+                placeholder="Select a category"
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+                size="md"
+              />
             </div>
             <div className="flex ml-auto me-2 my-4">
-              <Button variant="primary" size="lg" onClick={() => openModal(true, true, false)}>
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={() => openModal(true, true, false)}
+              >
                 <Plus color="white" />
                 <p className="text-sm ">Add Category</p>
               </Button>
@@ -106,20 +154,32 @@ function AddExpenseCategory({}: Props) {
 
           <div className="grid grid-cols-3 gap-5 ">
             {filteredCategories.length === 0 ? (
-              <p className="text-center col-span-3 text-red-500 font-semibold">No categories found!</p>
+              <p className="text-center col-span-3 text-red-500 font-semibold">
+                No categories found!
+              </p>
             ) : (
               filteredCategories.map((category) => (
-                <div key={category._id} className="flex p-2 " >
+                <div key={category._id} className="flex p-2 ">
                   <div className="border border-slate-200 text-textColor rounded-xl w-96 h-auto p-3 flex justify-between bg-[#FFFFFF]">
                     <div>
-                      <h3 className="text-sm font-bold">{category.expenseCategory}</h3>
-                      <p className="text-xs text-textColor">{category.description}</p>
+                      <h3 className="text-sm font-bold">
+                        {category.expenseCategory}
+                      </h3>
+                      <p className="text-xs text-textColor">
+                        {category.description}
+                      </p>
                     </div>
                     <div className="flex space-x-2">
-                      <p className="cursor-pointer" onClick={() => openModal(true, false, true)}>
+                      <p
+                        className="cursor-pointer"
+                        onClick={() => openModal(true, false, true)}
+                      >
                         <PencilLine color="currentColor" />
                       </p>
-                      <p className="cursor-pointer" onClick={() => handleDelete(category._id || "")}>
+                      <p
+                        className="cursor-pointer"
+                        onClick={() => handleDelete(category._id || "")}
+                      >
                         <Trash color="currentColor" />
                       </p>
                     </div>
@@ -127,24 +187,33 @@ function AddExpenseCategory({}: Props) {
                 </div>
               ))
             )}
-          
           </div>
-          
 
-          <Modal open={isOpen.add || isOpen.edit} onClose={() => closeModal(true, false, false)} style={{ width: "35%" }}>
+          <Modal
+            open={isOpen.add || isOpen.edit}
+            onClose={() => closeModal(true, false, false)}
+            style={{ width: "35%" }}
+          >
             <div className="p-5">
               <div className="flex p-4 rounded-xl relative overflow-hidden h-24">
                 <div className="relative z-10">
-                  <h3 className="text-xl font-bold text-textColor">{isOpen.edit ? "Edit" : "Add"} Category</h3>
+                  <h3 className="text-xl font-bold text-textColor">
+                    {isOpen.edit ? "Edit" : "Add"} Category
+                  </h3>
                 </div>
-                <div className="ms-auto text-3xl cursor-pointer relative z-10" onClick={() => closeModal(true, false, false)}>
+                <div
+                  className="ms-auto text-3xl cursor-pointer relative z-10"
+                  onClick={() => closeModal(true, false, false)}
+                >
                   &times;
                 </div>
               </div>
 
               <form className="grid gap-5">
                 <div className="w-full">
-                  <label className="block text-sm mb-1 text-labelColor">Name</label>
+                  <label className="block text-sm mb-1 text-labelColor">
+                    Name
+                  </label>
                   <input
                     type="text"
                     placeholder="Enter category name"
@@ -156,7 +225,9 @@ function AddExpenseCategory({}: Props) {
                 </div>
 
                 <div className="w-full">
-                  <label className="block text-sm mb-1 text-labelColor">Description</label>
+                  <label className="block text-sm mb-1 text-labelColor">
+                    Description
+                  </label>
                   <textarea
                     rows={4}
                     placeholder="Enter description"
@@ -168,10 +239,20 @@ function AddExpenseCategory({}: Props) {
                 </div>
 
                 <div className="flex justify-end gap-2">
-                  <Button variant="secondary" size="sm" className="text-sm pl-6 pr-6" onClick={() => closeModal(true, false, false)}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="text-sm pl-6 pr-6"
+                    onClick={() => closeModal(true, false, false)}
+                  >
                     Cancel
                   </Button>
-                  <Button variant="primary" size="sm" className="text-sm pl-8 pr-8" onClick={handleSave}>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    className="text-sm pl-8 pr-8"
+                    onClick={handleSave}
+                  >
                     Save
                   </Button>
                 </div>
@@ -179,10 +260,15 @@ function AddExpenseCategory({}: Props) {
             </div>
           </Modal>
           <div className="flex justify-end mt-5">
-            <Button variant="secondary" size="lg" className="text-sm pl-6 pr-6 " onClick={() => closeModal(false, false, false)}>
-                    Cancel
-                  </Button>
-            </div>
+            <Button
+              variant="secondary"
+              size="lg"
+              className="text-sm pl-6 pr-6 "
+              onClick={() => closeModal(false, false, false)}
+            >
+              Cancel
+            </Button>
+          </div>
         </div>
       </Modal>
     </div>

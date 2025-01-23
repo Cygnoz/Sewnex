@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import Table from "../../../Components/Table/Table"
 import NewCashModal from "./NewCashModal"
 
@@ -17,6 +18,11 @@ function CashHome({}: Props) {
         { AccountName: "Jane Smith", AccountCode: "AC-001", AccountType: "Bank" ,Document:"Telephone Expense" ,ParentAccountType:"Lorem ipsum anga"},
         { AccountName: "Bob Brown", AccountCode: "AC-001", AccountType: "Bank",Document:"Telephone Expense" ,ParentAccountType:"Lorem ipsum anga"},
       ]
+
+      const navigate=useNavigate()
+      const HanldeNavigate=()=>{
+        navigate("/accountant/viewOne")
+      }
   return (
     <div>
     <div className="flex justify-between items-center">
@@ -30,7 +36,7 @@ function CashHome({}: Props) {
 </div>
 <div className="mt-6">
  <Table columns={dummyColumns} data={dummyData} searchPlaceholder={"Search account"}  searchableFields={["AccountName", "AccountCode"]}
-     loading={false}  isPrint/>  
+     loading={false}  isPrint onRowClick={HanldeNavigate}/>  
 </div>
 </div>
   )

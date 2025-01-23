@@ -29,10 +29,10 @@ const OrderHistory: React.FC<Props> = () => {
   };
 
   return (
-    <div className="p-3">
+    <div >
     <div className="p-5 m-4 rounded-lg bg-[#F5F8FC]">
     <Table
-        page="OrderHistory"
+        // page="OrderHistory"
         columns={columns}
         data={data}
         onRowClick={handleRowClick}
