@@ -12,6 +12,7 @@ import ExpenseRoutes from "./Routes/ExpenseRoutes";
 import SupplierRoutes from "./Routes/SpplierRoutes";
 import StaffRoutes from "./Routes/StaffRoutes";
 import ReportRoutes from "./Routes/ReportRoutes";
+import PosReceipt from "./pages/pos/PosReceipt";
 
 const Layout = lazy(() => import("./layout/Layout"));
 const Dashboard = lazy(() => import("./pages/DashBoard"));
@@ -35,8 +36,7 @@ const App: React.FC = () => {
         { path: "expense/*", element: <ExpenseRoutes /> },
         { path: "supplier/*", element: <SupplierRoutes /> },
         { path: "staffs/*", element: <StaffRoutes /> },
-        { path: "report/*", element: <ReportRoutes /> },
-        
+        { path: "report/*", element: <ReportRoutes /> },  
       ],
     },
     {
@@ -50,6 +50,10 @@ const App: React.FC = () => {
     {
       path: "/pos",
       element: <Pos />,
+    },
+    {
+      path: "/posreciept",
+      element: <PosReceipt />,
     },
     {
       path: "/login",
