@@ -43,7 +43,7 @@ const AccountDropdown = ({
   return (
     <td className="px-6 py-4 whitespace-nowrap relative dropdown-container">
 
-      <div className="flex items-center border rounded-md border-inputBorder "           onClick={() => onDropdownToggle(index, !isDropdownOpen)}
+      <div className="flex items-center border rounded-full px-2 border-inputBorder "           onClick={() => onDropdownToggle(index, !isDropdownOpen)}
       >
 
         <input

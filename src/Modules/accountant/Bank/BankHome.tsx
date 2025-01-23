@@ -21,7 +21,7 @@ function BankHome({}: Props) {
       
       const navigate=useNavigate()
       const HanldeNavigate=()=>{
-        navigate("/")
+        navigate("/accountant/viewOne")
       }
 
   return (

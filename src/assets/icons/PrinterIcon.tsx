@@ -1,4 +1,4 @@
-type Props = { color: string; height: number; width: number };
+type Props = { color: string; height?: number; width?: number };
 
 function PrinterIcon({ color, height, width }: Props) {
   return (

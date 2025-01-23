@@ -5,7 +5,6 @@ import { useState } from "react";
 import LineChart from "../../../assets/icons/LineChart";
 import History from "../../../assets/icons/History";
 import Overview from "./Overview/Overview";
-import PurchaseHistory from "./Purchase History/PurchaseHistory";
 import PaymentHistory from "./Payment History/PaymentHistory";
 
 type Props = {}
@@ -56,7 +55,10 @@ function ViewSupplier({ }: Props) {
                         <Overview />
                     )}
                     {activeTab === "purchaseHistory" && (
-                        <PurchaseHistory />
+                        // <PurchaseHistory /> 
+                        <div>
+                            hu
+                        </div>
                     )}
                     {activeTab === "paymentHistory" && (
                         <PaymentHistory />

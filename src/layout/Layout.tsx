@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Header from "./header/Header";
 import SideBar from "./sideBar/SideBar";
 import SubHeader from "./SubHeader/Subheader";
@@ -9,6 +9,7 @@ type Props = {};
 
 const Layout = ({}: Props) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const location = useLocation(); 
 
   useEffect(() => {
     const savedIndex = localStorage.getItem("savedIndex");
@@ -16,6 +17,10 @@ const Layout = ({}: Props) => {
       setActiveIndex(Number(savedIndex));
     }
   }, []);
+  
+  const shouldShowSubHeader =
+  location.pathname !== "/accountant/viewOne" &&
+  location.pathname !== "/accountant/newJournal";
 
 
   return (
@@ -24,10 +29,12 @@ const Layout = ({}: Props) => {
       <div className="w-[100%] h-[100vh] overflow-y-scroll hide-scrollbar">
         <Header />
         <div className="py-3 px-6">
-          {activeIndex !== null && navList[activeIndex]?.subhead && (
+          {shouldShowSubHeader && activeIndex !== null && navList[activeIndex]?.subhead && (
             <SubHeader activeIndex={activeIndex} />
           )}
-        <div className="my-3">  <Outlet /></div>
+          <div className="my-3">
+            <Outlet />
+          </div>
         </div>
       </div>
     </div>
