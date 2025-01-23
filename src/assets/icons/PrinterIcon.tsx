@@ -1,5 +1,11 @@
+<<<<<<< HEAD
+type Props = { color: string; height?: number; width?: number };
+
+function PrinterIcon({ color, height, width }: Props) {
+=======
 type Props = { color?: string; size?: number; };
 function PrinterIcon({ color, size }: Props) {
+>>>>>>> e96d1ef3d951e7504e002c569961772f2c8d994b
   return (
     <svg width={size || 17}
       height={size || 17} viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">

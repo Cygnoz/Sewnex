@@ -56,7 +56,10 @@ function ViewSupplier({ }: Props) {
                         <Overview />
                     )}
                     {activeTab === "purchaseHistory" && (
-                        <PurchaseHistory />
+                        // <PurchaseHistory /> 
+                        <div>
+                            hu
+                        </div>
                     )}
                     {activeTab === "paymentHistory" && (
                         <PaymentHistory />
