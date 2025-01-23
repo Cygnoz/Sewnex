@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import Table from "../../Components/Table/Table"
 
 type Props = {}
@@ -17,8 +18,11 @@ function SupplierTable({ }: Props) {
         { id: "3", Name: "John ", CompanyName: "787456", Contact: "11223344", email: "john@example.com", Status: "Active" },
         { id: "4", Name: "Jos", CompanyName: "54456", Contact: "11223344", email: "john@example.com", Status: "In Active" },
     ]
-    const handleRowClick = (id: string) => {
-        alert(`Row clicked: ${id}`);
+
+    const navigate = useNavigate();
+
+    const handleRowClick = () => {
+        navigate(`customerview`);
     };
 
     const handleDelete = (id: string) => {

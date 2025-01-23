@@ -5,7 +5,7 @@ import Modal from "../../Components/modal/Modal";
 import Plus from "../../assets/icons/Plus";
 import GalleryIcon from "../../assets/icons/GalleryIcon";
 import CheveronDown from "../../assets/icons/CheveronDown";
-import PhoneInput from "react-phone-input-2";
+// import PhoneInput from "react-phone-input-2";
 import Eye from "../../assets/icons/Eye";
 import Trash from "../../assets/icons/Trash";
 import Upload from "../../assets/icons/Upload";
