@@ -21,7 +21,7 @@ interface TableProps {
   onRowClick?: (id: string) => void;
   onDelete?: (id: string) => void;
   renderColumnContent?: (colId: string, item: any) => JSX.Element;
-  searchPlaceholder: string;
+  searchPlaceholder?: string;
   loading?: boolean;
   searchableFields: string[];
   setColumns?: any;
@@ -74,17 +74,17 @@ const Table: React.FC<TableProps> = ({
   return (
     <div className="border border-b bg-white rounded-lg">
       <div className="flex items-center gap-4 justify-between px-6 mt-6 mb-4">
-        <SearchBar
+      { searchPlaceholder && <SearchBar
           placeholder={searchPlaceholder}
           searchValue={searchValue}
           onSearchChange={(value) => {
             setSearchValue(value);
           }}
-        />
+        />}
         {
           isPrint && (
             <Button size="sm" variant="secondary">
-              <PrinterIcon/>
+              <PrinterIcon color={""} height={0} width={0}/>
               <p className="text-xs font-semibold">Print</p>
             </Button>
           )

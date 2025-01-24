@@ -13,11 +13,12 @@ export const settingsList = [
       subhead: [
         { headName: "Profile", subRoute: "/settings/organization/profile" },
         // {headName:"Accounts",subRoute:"/settings/organization/accounts"},
-        {
-          headName: "Invoice",
-          subRoute: "/settings/organization/invoice",
-        },
+       
         { headName: "Currencies", subRoute: "/settings/organization/currencies" },
+         {
+          headName: "Additional Details",
+          subRoute: "/settings/organization/additinal-details",
+        },
       ],
     },
     {

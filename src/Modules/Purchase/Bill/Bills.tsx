@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CirclePlus from "../../../assets/icons/circleplus";
+import CirclePlus from "../../../assets/icons/CirclePlus";
 import Button from "../../../Components/Button";
 import Table from "../../../Components/Table/Table";
 import { Link, useNavigate } from "react-router-dom";
@@ -98,7 +98,7 @@ function Bills() {
         <div className="ml-auto">
           <Link to="/purchase/bills/new">
             <Button variant="primary" size="sm">
-              <CirclePlus color={"white"} size={"18"} />
+              <CirclePlus color={"white"} size={18} />
               New Bill
             </Button>
           </Link>

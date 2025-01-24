@@ -21,7 +21,7 @@ const NewBill = ({}: Props) => {
   const [state, setState] = useState<[]>([]);
   const [isNonTaxable] = useState<boolean>(false);
   const [selectedSupplier, setSelectedSupplier] = useState<any>([]);
-  const [Suppliers, setSupplier] = useState<[] | any>([
+  const [Suppliers] = useState<[] | any>([
     {
       supplierProfile:
         "https://i.postimg.cc/Qd5VB9FY/colorful-swirl-logo-design-concept-illustration-vector.jpg",
@@ -123,7 +123,7 @@ const NewBill = ({}: Props) => {
           </div>
         </Link>
         <div className="flex justify-center items-center">
-          <h4 className="font-bold text-xl text-textColor ">Create New Bill</h4>
+          <h4 className="font-bold text-xl text-textColor ">Exchange Rates</h4>
         </div>
       </div>
       <div className="grid grid-cols-12 gap-4 h-[90vh] overflow-scroll hide-scrollbar ">

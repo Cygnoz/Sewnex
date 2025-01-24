@@ -2,7 +2,7 @@ import { useState } from "react";
 import Banner from "./Banner";
 import ChevronRight from "../../../assets/icons/ChevronRight";
 import Modal from "../../../Components/modal/Modal";
-import CirclePlus from "../../../assets/icons/circleplus";
+import CirclePlus from "../../../assets/icons/CirclePlus";
 import Button from "../../../Components/Button";
 import Plus from "../../../assets/icons/Plus";
 import QrCode from "../../../assets/images/Frame 629654.png";
@@ -11,10 +11,8 @@ import twitterLogo from "../../../assets/images/twitter-logo-2 logo.png";
 import instagramLogo from "../../../assets/images/instagram logo.png";
 import linkedinlog from "../../../assets/images/linkedin logo.png";
 import facebooklogo from "../../../assets/images/Group.png";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-
+import Checkbox from "../../../Components/Form/Checkbox";
+import Input from "../../../Components/Form/Input";
 
 interface InvoiceSettings {
   organizationAddressFormat?: string;
@@ -51,7 +49,7 @@ const InvoiceINOrg = () => {
   const [showQROpenLocation, setShowQROpenLocation] = useState(false);
   const [showQROpenPayment, setShowQROpenPayment] = useState(false);
   const [showSignOpen, setShowSignOpen] = useState(false);
-  const [invoiceSettings, setInvoiceSettings] = useState({
+  const [invoiceSettings, setInvoiceSettings] = useState<InvoiceSettings>({
     organizationAddressFormat: "${ORGANIZATION.CITY}",
     qrLocation: "",
     displayQrLocation: false,
@@ -77,9 +75,6 @@ const InvoiceINOrg = () => {
     displayIfsc: false,
     defaultTermsAndCondition: "",
   });
-
-  
-
 
   const organizationDetails = [
     "${ORGANIZATION.CITY} ${ORGANIZATION.STATE} ${ORGANIZATION.POSTAL_CODE}",
@@ -111,43 +106,43 @@ const InvoiceINOrg = () => {
     "Dheeraj@",
   ];
 
-  const validationSchema = yup.object({
-    organizationAddressFormat: yup.string().optional(),
-    qrLocation: yup.string().optional(),
-    displayQrLocation: yup.boolean().optional(),
-    qrPayment: yup.string().optional(),
-    displayQrPayment: yup.boolean().optional(),
-    digitalSignature: yup.string().optional(),
-    displayDigitalSignature: yup.boolean().optional(),
-    xLink: yup.string().url("Must be a valid URL").optional(),
-    displayXLink: yup.boolean().optional(),
-    instagramLink: yup.string().url("Must be a valid URL").optional(),
-    displayInstagramLink: yup.boolean().optional(),
-    linkedinLink: yup.string().url("Must be a valid URL").optional(),
-    displayLinkedinLink: yup.boolean().optional(),
-    facebookLink: yup.string().url("Must be a valid URL").optional(),
-    displayFacebookLink: yup.boolean().optional(),
-    accountHolderName: yup.string().optional(),
-    displayAccountHolderName: yup.boolean().optional(),
-    bankName: yup.string().optional(),
-    displayBankName: yup.boolean().optional(),
-    accNum: yup.string().optional(),
-    displayAccNum: yup.boolean().optional(),
-    ifsc: yup.string().optional(),
-    displayIfsc: yup.boolean().optional(),
-    defaultTermsAndCondition: yup.string().optional(),
-  });
+  // const validationSchema = yup.object({
+  //   organizationAddressFormat: yup.string().optional(),
+  //   qrLocation: yup.string().optional(),
+  //   displayQrLocation: yup.boolean().optional(),
+  //   qrPayment: yup.string().optional(),
+  //   displayQrPayment: yup.boolean().optional(),
+  //   digitalSignature: yup.string().optional(),
+  //   displayDigitalSignature: yup.boolean().optional(),
+  //   xLink: yup.string().url("Must be a valid URL").optional(),
+  //   displayXLink: yup.boolean().optional(),
+  //   instagramLink: yup.string().url("Must be a valid URL").optional(),
+  //   displayInstagramLink: yup.boolean().optional(),
+  //   linkedinLink: yup.string().url("Must be a valid URL").optional(),
+  //   displayLinkedinLink: yup.boolean().optional(),
+  //   facebookLink: yup.string().url("Must be a valid URL").optional(),
+  //   displayFacebookLink: yup.boolean().optional(),
+  //   accountHolderName: yup.string().optional(),
+  //   displayAccountHolderName: yup.boolean().optional(),
+  //   bankName: yup.string().optional(),
+  //   displayBankName: yup.boolean().optional(),
+  //   accNum: yup.string().optional(),
+  //   displayAccNum: yup.boolean().optional(),
+  //   ifsc: yup.string().optional(),
+  //   displayIfsc: yup.boolean().optional(),
+  //   defaultTermsAndCondition: yup.string().optional(),
+  // });
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    clearErrors,
-    formState: { errors },
-  } = useForm<InvoiceSettings>({
-    resolver: yupResolver(validationSchema),
-  });
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   watch,
+  //   setValue,
+  //   clearErrors,
+  //   formState: { errors },
+  // } = useForm<InvoiceSettings>({
+  //   resolver: yupResolver(validationSchema),
+  // });
 
   const encodeFileToBase64 = (file: any) => {
     return new Promise((resolve, reject) => {
@@ -157,6 +152,8 @@ const InvoiceINOrg = () => {
       reader.onerror = (error) => reject(error);
     });
   };
+
+ 
 
   const openModal = (
     placeholder = false,
@@ -199,10 +196,22 @@ const InvoiceINOrg = () => {
     }
   };
 
-  const handleEventBindChange = (value: any, varName: string) => {
+  const handleEventBindChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    varName: string
+  ) => {
+    const value = event.target.value; // Get the string value from the input
     setInvoiceSettings((prevState) => ({
       ...prevState,
-      [varName]: value,
+      [varName]: value, // Update the correct property
+    }));
+  };
+  
+
+  const handleRadioChange = (checked: boolean, varName: string) => {
+    setInvoiceSettings((prevState) => ({
+      ...prevState,
+      [varName]: checked,
     }));
   };
 
@@ -234,10 +243,10 @@ const InvoiceINOrg = () => {
         <div className="m-4 space-y-3">
           <button
             onClick={() => openModal(true, false)}
-            className="text-[#004D4D] flex items-center space-x-1 font-bold text-sm cursor-pointer"
+            className="text-[#004D4D] flex items-center space-x-1 font-bold text-xs cursor-pointer"
           >
             <p>Insert Placeholders</p>
-            <CirclePlus color="#004D4D" size="14" />
+            <CirclePlus color="#004D4D" size={14} />
           </button>
           <Modal
             open={isAddPlaceHolderOpen}
@@ -246,7 +255,10 @@ const InvoiceINOrg = () => {
           >
             <div className="grid grid-cols-2 gap-2">
               {organisationAddress.map((address) => (
-                <div key={address} className="p-2  rounded hover:bg-[#F3E6E6] cursor-pointer">
+                <div
+                  key={address}
+                  className="p-2  rounded hover:bg-[#F3E6E6] cursor-pointer"
+                >
                   {address}
                 </div>
               ))}
@@ -254,12 +266,14 @@ const InvoiceINOrg = () => {
           </Modal>
           <div className="p-3 text-xs text-[#303F58]  bg-[#F4F4F4]">
             {organizationDetails.map((data) => (
-              <p key={data} className="text-[12px]">{data}</p>
+              <p key={data} className="text-[12px]">
+                {data}
+              </p>
             ))}
           </div>
           <button
             onClick={() => openModal(false, true)}
-            className="text-center text-[#004D4D] text-[12px] font-bold cursor-pointer"
+            className="text-center text-[#004D4D] text-[12px] font-bold cursor-pointer "
           >
             See Preview
           </button>
@@ -271,7 +285,7 @@ const InvoiceINOrg = () => {
             <div className="flex justify-between">
               <div className="space-y-1">
                 {previewList.map((list) => (
-                  <p >{list}</p>
+                  <p>{list}</p>
                 ))}
               </div>
               <p
@@ -299,7 +313,7 @@ const InvoiceINOrg = () => {
                     <p>
                       <b>Upload Organization's Location QR Code</b>
                     </p>
-                    <p className="text-sm">
+                    <p className="text-xs">
                       Upload or configure the location of your QR code on the
                       invoice
                     </p>
@@ -310,11 +324,9 @@ const InvoiceINOrg = () => {
                 {invoiceSettings.qrLocation && (
                   <button
                     onClick={() => openModal(false, false, true)}
-                  
-                    className="h-[26px] w-[68px] border rounded-md flex items-center justify-center"
-                  
+                    className="h-[26px] text-[10px] text-text_tertiary px-1  border rounded-md flex items-center justify-center"
                   >
-                    <p className="text-[10px] font-medium">Show QR</p>
+                    Show QR
                   </button>
                 )}
                 <div className="bg-[#004D4D] text-white items-center justify-center rounded-full flex h-8 w-8">
@@ -360,31 +372,24 @@ const InvoiceINOrg = () => {
                     onChange={(e) => handleFileChange(e, "qrLocation")}
                   />
                 </label>
-                <Button
-                  onClick={() => closeModal()}
-                  variant="secondary"
-                >
-                  <p className="text-xs font-medium text-[#565148]">Close</p>
+                <Button onClick={() => closeModal()} variant="secondary">
+                  <p className="text-xs font-medium ">Close</p>
                 </Button>
               </div>
             </div>
           </Modal>
         </div>
-        <div className="flex items-center space-x-2 text-[#303F58]">
-          <input
-            onChange={(e) =>
-              handleEventBindChange(e.target.checked, "displayQrLocation")
-            }
-            type="checkbox"
-            id="customCheckbox"
-            checked={invoiceSettings.displayQrLocation}
-          />
-          <label className="text-[14px] text-[#303F58]">Display in Invoice</label>
-        </div>
+        <Checkbox
+          label="Display QR Code in invoice"
+          checked={invoiceSettings.displayQrLocation}
+          onChange={(checked) =>
+            handleRadioChange(checked, "displayQrLocation")
+          }
+        />
       </div>
 
       {/* QR code Payment */}
-      <div className="space-y-3 text-[#303F58]">
+      <div className="space-y-3 mt-1 text-[#303F58]">
         <p className="font-bold">QR code Payment</p>
         <div>
           <label>
@@ -398,22 +403,22 @@ const InvoiceINOrg = () => {
                     <p>
                       <b>Upload Payment Based QR Code</b>
                     </p>
-                    <p>Upload Payment Based QR Code on the Invoice</p>
+                    <p className="text-xs">
+                      Upload Payment Based QR Code on the Invoice
+                    </p>
                   </div>
                 </div>
               </div>
               <div className="col-span-2 flex items-center justify-end gap-8">
                 {invoiceSettings.qrPayment && (
-                  <Button
+                  <button
                     onClick={() => openModal(false, false, false, false, true)}
-                    variant="secondary"
-                    className="h-[26px] w-[68px] flex justify-center"
-                    size="sm"
+                    className="h-[26px] text-xs text-text_tertiary px-1  border rounded-md flex items-center justify-center"
                   >
-                    <p className="text-[10px] font-medium">Show QR</p>
-                  </Button>
+                    <p className=" text-[10px] font-medium">Show QR</p>
+                  </button>
                 )}
-                <div className="bg-darkRed text-white items-center justify-center rounded-full flex h-8 w-8">
+                <div className="bg-[#004D4D] text-white items-center justify-center rounded-full flex h-8 w-8">
                   <Plus color="white" />
                 </div>
               </div>
@@ -446,9 +451,9 @@ const InvoiceINOrg = () => {
               </div>
               <div className="flex items-center gap-4">
                 <label htmlFor="qrPayment" className="cursor-pointer">
-                  <div className="h-[32px] w-[92px] flex justify-center items-center rounded-lg bg-[#820000] hover:bg-[#820000]">
+                  <Button variant="primary" >
                     <p className="text-xs font-medium text-white">Replace QR</p>
-                  </div>
+                  </Button>
                   <input
                     type="file"
                     id="qrPayment"
@@ -459,30 +464,26 @@ const InvoiceINOrg = () => {
                 <Button
                   onClick={() => closeModal()}
                   variant="secondary"
-                  className="h-[32px] w-[92px] flex justify-center rounded-lg"
-                  size="sm"
                 >
-                  <p className="text-xs font-medium text-[#565148]">Close</p>
+                  <p className="text-xs font-medium ">Close</p>
                 </Button>
               </div>
             </div>
           </Modal>
         </div>
         <div className="flex items-center space-x-2">
-          <input
+          <Checkbox
+            label="Display QR Code in invoice"
             checked={invoiceSettings.displayQrPayment}
-            onChange={(e) =>
-              handleEventBindChange(e.target.checked, "displayQrPayment")
+            onChange={(checked) =>
+              handleRadioChange(checked, "displayQrPayment")
             }
-            type="checkbox"
-            id="customCheckbox"
           />
-          <label className="text-[14px]">Display in Invoice</label>
         </div>
       </div>
 
       {/* Invoice Signatory */}
-      <div className="space-y-3 text-[#303F58]">
+      <div className="space-y-3 mt-1 text-[#303F58]">
         <p className="font-bold">Invoice Signatory</p>
         <div>
           <label>
@@ -496,7 +497,7 @@ const InvoiceINOrg = () => {
                     <p>
                       <b>Upload Organisation Digital Signature</b>
                     </p>
-                    <p>
+                    <p className="text-xs">
                       Upload the digital signature of the person authorized to
                       sign invoices
                     </p>
@@ -505,16 +506,14 @@ const InvoiceINOrg = () => {
               </div>
               <div className="col-span-2 flex items-center justify-end gap-8">
                 {invoiceSettings.digitalSignature && (
-                  <Button
+                  <button
                     onClick={() => openModal(false, false, false, true)}
-                    variant="secondary"
-                    className="h-[26px] w-[74px] flex justify-center"
-                    size="sm"
+                    className="h-[26px] text-xs text-text_tertiary px-1  border rounded-md flex items-center justify-center"
                   >
                     <p className="text-[10px] font-medium">Show Sign</p>
-                  </Button>
+                  </button>
                 )}
-                <div className="bg-darkRed text-white items-center justify-center rounded-full flex h-8 w-8">
+                <div className="bg-[#004D4D] text-white items-center justify-center rounded-full flex h-8 w-8">
                   <Plus color="white" />
                 </div>
               </div>
@@ -547,11 +546,11 @@ const InvoiceINOrg = () => {
               </div>
               <div className="flex items-center gap-4">
                 <label htmlFor="digitalSignature" className="cursor-pointer">
-                  <div className="h-[32px] w-[92px] flex justify-center items-center rounded-lg bg-[#820000] hover:bg-[#820000]">
-                    <p className="text-xs font-medium text-white">
+                  <Button variant="primary">
+                    <p className="text-xs font-medium ">
                       Replace Sign
                     </p>
-                  </div>
+                  </Button>
                   <input
                     type="file"
                     id="digitalSignature"
@@ -562,25 +561,21 @@ const InvoiceINOrg = () => {
                 <Button
                   onClick={() => closeModal()}
                   variant="secondary"
-                  className="h-[32px] w-[92px] flex justify-center rounded-lg"
-                  size="sm"
                 >
-                  <p className="text-xs font-medium text-[#565148]">Close</p>
+                  <p className="text-xs font-medium ">Close</p>
                 </Button>
               </div>
             </div>
           </Modal>
         </div>
         <div className="flex items-center space-x-2">
-          <input
+          <Checkbox
+            label="Display QR Code in invoice"
             checked={invoiceSettings.displayDigitalSignature}
-            onChange={(e) =>
-              handleEventBindChange(e.target.checked, "displayDigitalSignature")
+            onChange={(checked) =>
+              handleRadioChange(checked, "displayDigitalSignature")
             }
-            type="checkbox"
-            id="customCheckbox"
           />
-          <label className="text-[14px]">Display in Invoice</label>
         </div>
       </div>
 
@@ -591,32 +586,32 @@ const InvoiceINOrg = () => {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label htmlFor="" className="text-slate-600">
-              X
+              Twitter
             </label>
             <div className="flex gap-2 items-center justify-center">
               <div className="flex items-center justify-center align-middle bg-slate-100 p-2 h-10 rounded-md mt-2">
                 <img width={25} src={twitterLogo} alt="" />
               </div>
               <input
-                type="text"
-                placeholder="Add X Link"
-                onChange={(e) => handleEventBindChange(e.target.value, "xLink")}
-                value={invoiceSettings.xLink}
-                className="pl-4 mt-3 text-sm w-[100%] rounded-md text-start bg-white border border-slate-300 h-[39px] p-2 focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
-                name="twitter"
-              />
+  type="text"
+  placeholder="Add X Link"
+  onChange={(e) => handleEventBindChange(e, "xLink")}
+  value={invoiceSettings.xLink}
+  className="pl-4 mt-3 text-xs w-[100%] rounded-md text-start bg-white border border-slate-300 h-[39px] p-2 focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
+  name="twitter"
+/>
+
+
               {/* <img src={xMark} className="mt-3" alt="" /> */}
             </div>
             <div className="flex items-center space-x-2 mt-3">
-              <input
+              <Checkbox
+                label="Display QR Code in invoice"
                 checked={invoiceSettings.displayXLink}
-                onChange={(e) =>
-                  handleEventBindChange(e.target.checked, "displayXLink")
+                onChange={(checked) =>
+                  handleRadioChange(checked, "displayXLink")
                 }
-                type="checkbox"
-                id="customCheckbox"
               />
-              <label className="text-[14px]">Display in Invoice</label>
             </div>
           </div>
 
@@ -629,28 +624,22 @@ const InvoiceINOrg = () => {
               <input
                 type="text"
                 placeholder="Add Instagram Link"
-                className="pl-4 mt-3 text-sm w-[100%] rounded-md text-start bg-white border border-slate-300 h-[39px] p-2 focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
+                className="pl-4 mt-3 text-xs w-[100%] rounded-md text-start bg-white border border-slate-300 h-[39px] p-2 focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
                 value={invoiceSettings.instagramLink}
-                name="insta"
-                onChange={(e) =>
-                  handleEventBindChange(e.target.value, "instagramLink")
-                }
+                name="instagramLink"
+                onChange={(e) => handleEventBindChange(e, "instagramLink")}
+
               />
               {/* <img src={xMark} className="mt-3" alt="" /> */}
             </div>
             <div className="flex items-center space-x-2 mt-3">
-              <input
+              <Checkbox
+                label="Display QR Code in invoice"
                 checked={invoiceSettings.displayInstagramLink}
-                onChange={(e) =>
-                  handleEventBindChange(
-                    e.target.checked,
-                    "displayInstagramLink"
-                  )
+                onChange={(checked) =>
+                  handleRadioChange(checked, "displayInstagramLink")
                 }
-                type="checkbox"
-                id="customCheckbox"
               />
-              <label className="text-[14px]">Display in Invoice</label>
             </div>
           </div>
         </div>
@@ -667,25 +656,22 @@ const InvoiceINOrg = () => {
               <input
                 type="text"
                 placeholder="Add Linkedin Link"
-                className="pl-4 mt-3 text-sm w-[100%] rounded-md text-start bg-white border border-slate-300 h-[39px] p-2 focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
+                className="pl-4 mt-3 text-xs w-[100%] rounded-md text-start bg-white border border-slate-300 h-[39px] p-2 focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
                 name="linkedin"
-                onChange={(e) =>
-                  handleEventBindChange(e.target.value, "linkedinLink")
-                }
+                onChange={(e) => handleEventBindChange(e, "linkedin")}
+
                 value={invoiceSettings.linkedinLink}
               />
               {/* <img src={xMark} className="mt-3" alt="" /> */}
             </div>
             <div className="flex items-center space-x-2 mt-3">
-              <input
+              <Checkbox
+                label="Display QR Code in invoice"
                 checked={invoiceSettings.displayLinkedinLink}
-                onChange={(e) =>
-                  handleEventBindChange(e.target.checked, "displayLinkedinLink")
+                onChange={(checked) =>
+                  handleRadioChange(checked, "displayLinkedinLink")
                 }
-                type="checkbox"
-                id="customCheckbox"
               />
-              <label className="text-[14px]">Display in Invoice</label>
             </div>
           </div>
 
@@ -698,25 +684,22 @@ const InvoiceINOrg = () => {
               <input
                 type="text"
                 placeholder="Add Facebook Link"
-                className="pl-4 mt-3 text-sm w-[100%] rounded-md text-start bg-white border border-slate-300 h-[39px] p-2 focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
-                onChange={(e) =>
-                  handleEventBindChange(e.target.value, "facebookLink")
-                }
+                className="pl-4 mt-3 text-xs w-[100%] rounded-md text-start bg-white border border-slate-300 h-[39px] p-2 focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
+                onChange={(e) => handleEventBindChange(e, "facebookLink")}
+
                 value={invoiceSettings.facebookLink}
                 name="facebook"
               />
               {/* <img src={xMark} className="mt-3" alt="" /> */}
             </div>
             <div className="flex items-center space-x-2 mt-3">
-              <input
+              <Checkbox
+                label="Display QR Code in invoice"
                 checked={invoiceSettings.displayFacebookLink}
-                onChange={(e) =>
-                  handleEventBindChange(e.target.checked, "displayFacebookLink")
+                onChange={(checked) =>
+                  handleRadioChange(checked, "displayFacebookLink")
                 }
-                type="checkbox"
-                id="customCheckbox"
               />
-              <label className="text-[14px]">Display in Invoice</label>
             </div>
           </div>
         </div>
@@ -731,115 +714,74 @@ const InvoiceINOrg = () => {
 
         <div className="grid grid-cols-2 gap-4 mt-4">
           <div>
-            <label className="text-slate-600">Account Holder Name</label>
-            <input
-              type="text"
+            <Input
               placeholder="Enter Account Holder Name"
-              className="pl-4 text-sm w-[100%] mt-3 rounded-md text-start bg-white border border-slate-300 h-[39px] p-2 focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
-              onChange={(e) =>
-                handleEventBindChange(e.target.value, "accountHolderName")
-              }
-              value={invoiceSettings.accountHolderName}
-              name="accountHolderName"
+              label="Account Holder Name"
             />
             <div className="flex items-center space-x-2 mt-3">
-              <input
+              <Checkbox
+                label="Display in invoice"
                 checked={invoiceSettings.displayAccountHolderName}
-                onChange={(e) =>
-                  handleEventBindChange(
-                    e.target.checked,
-                    "displayAccountHolderName"
-                  )
+                onChange={(checked) =>
+                  handleRadioChange(checked, "displayAccountHolderName")
                 }
-                type="checkbox"
-                id="customCheckbox"
               />
-              <label className="text-[14px]">Display in Invoice</label>
             </div>
           </div>
 
           <div>
-            <label className="text-slate-600">Bank Name</label>
-            <input
-              type="text"
-              placeholder="Enter Bank Name"
-              className="pl-4 mt-3 text-sm w-[100%] rounded-md text-start bg-white border border-slate-300 h-[39px] p-2 focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
-              onChange={(e) =>
-                handleEventBindChange(e.target.value, "bankName")
-              }
-              value={invoiceSettings.bankName}
-              name="bankName"
-            />
+            <Input placeholder="Enter Bank Name" label="Bank Name" />
+
             <div className="flex items-center space-x-2 mt-3">
-              <input
+              <Checkbox
+                label="Display  in invoice"
                 checked={invoiceSettings.displayBankName}
-                onChange={(e) =>
-                  handleEventBindChange(e.target.checked, "displayBankName")
+                onChange={(checked) =>
+                  handleRadioChange(checked, "displayBankName")
                 }
-                type="checkbox"
-                id="customCheckbox"
               />
-              <label className="text-[14px]">Display in Invoice</label>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4 mt-4">
           <div>
-            <label className="text-slate-600">Account Number</label>
-            <input
-              type="rating"
-              placeholder="Enter Account Number"
-              className="pl-4 mt-3 text-sm w-[100%] rounded-md text-start bg-white border border-slate-300 h-[39px] p-2 focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
-              onChange={(e) => handleEventBindChange(e.target.value, "accNum")}
-              value={invoiceSettings.accNum}
-              name="accNum"
-            />
+            <Input placeholder="Enter Account Number" label="Account Number" />
+
             <div className="flex items-center space-x-2 mt-3">
-              <input
+              <Checkbox
+                label="Display  invoice"
                 checked={invoiceSettings.displayAccNum}
-                onChange={(e) =>
-                  handleEventBindChange(e.target.checked, "displayAccNum")
+                onChange={(checked) =>
+                  handleRadioChange(checked, "displayAccNum")
                 }
-                type="checkbox"
-                id="customCheckbox"
               />
-              <label className="text-[14px]">Display in Invoice</label>
             </div>
           </div>
 
           <div>
-            <label className="text-slate-600">IFSC Code</label>
-            <input
-              type="text"
-              placeholder="Enter IFSC Code"
-              className="pl-4 text-sm mt-3 w-[100%] rounded-md text-start bg-white border border-slate-300 h-[39px] p-2 focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
-              onChange={(e) => handleEventBindChange(e.target.value, "ifsc")}
-              value={invoiceSettings.ifsc}
-              name="ifsc"
-            />
+            <Input placeholder="Enter IFSC Code" label="IFSC" />
+
             <div className="flex items-center space-x-2 mt-3">
-              <input
+              <Checkbox
+                label="Display in invoice"
                 checked={invoiceSettings.displayIfsc}
-                onChange={(e) =>
-                  handleEventBindChange(e.target.checked, "displayIfsc")
+                onChange={(checked) =>
+                  handleRadioChange(checked, "displayIfsc")
                 }
-                type="checkbox"
-                id="customCheckbox"
               />
-              <label className="text-[14px]">Display in Invoice</label>
             </div>
           </div>
         </div>
         <div />
       </div>
-      <p className="font-bold text-textColor text-sm mb-3 text-[#303F58]">Terms & Condition</p>
+      <p className="font-bold text-textColor text-sm mt-3 text-[#303F58]">
+        Terms & Condition
+      </p>
       <div className="mt-4 p-6 rounded-lg bg-white">
         <textarea
           value={invoiceSettings.defaultTermsAndCondition}
-          onChange={(e) =>
-            handleEventBindChange(e.target.value, "defaultTermsAndCondition")
-          }
+          onChange={(e) => handleEventBindChange(e, "defaultTermsAndCondition")}
           className="w-full h-32 p-3 border border-inputBorder rounded-lg resize-none focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
         />
       </div>

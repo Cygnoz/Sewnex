@@ -7,12 +7,103 @@ import TextArea from "../../../Components/Form/TextArea";
 import Button from "../../../Components/Button";
 import PrinterIcon from "../../../assets/icons/PrinterIcon";
 import PaymentTable from "./PaymentTable";
+import ObjectSelect from "../../../Components/Form/ObjectSelect";
+import AddSupplierModal from "../../Supplier/AddSupplierModal";
 
 type Props = {};
 
 const NewPayment = ({}: Props) => {
   const [supplierBills] = useState<[] | any>([]);
   const [paymentState, setPaymentState] = useState<[] | any>([]);
+  const [selectedSupplier, setSelectedSupplier] = useState<any>([]);
+  const [Suppliers] = useState<[] | any>([
+    {
+      supplierProfile:
+        "https://i.postimg.cc/Qd5VB9FY/colorful-swirl-logo-design-concept-illustration-vector.jpg",
+      ame: "John",
+      lastName: "Doe",
+      companyName: "Tech Solutions Ltd.",
+      supplierDisplayName: "Tech Supplies",
+      supplierEmail: "john.doe@techsolutions.com",
+      workPhone: "+1234567890",
+      mobile: "+0987654321",
+      billingCountry: "India",
+      billingAddressStreet1: "123 Tech Park",
+      billingAddressStreet2: "Block B",
+      billingCity: "Pune",
+      billingState: "Maharashtra",
+      billingPinCode: "411057",
+      billingPhone: "+911234567890",
+      billingFaxNum: "+912345678901",
+      shippingCountry: "India",
+      shippingAddressStreet1: "456 Tech Street",
+      shippingAddressStreet2: "Suite 202",
+      shippingCity: "Mumbai",
+      shippingState: "Maharashtra",
+      shippingPinCode: "400001",
+      shippingPhone: "+912345678901",
+      shippingFaxNum: "+911234567890",
+    },
+    {
+      supplierProfile:
+        "https://i.postimg.cc/XY8qcMg9/depositphotos-75675633-stock-illustration-colorful-sun-logo.webp",
+      ame: "Jane",
+      lastName: "Smith",
+      companyName: "Innovate Corp.",
+      supplierDisplayName: "Innovate Supplies",
+      supplierEmail: "jane.smith@innovatecorp.com",
+      workPhone: "+9876543210",
+      mobile: "+1234567890",
+      billingCountry: "USA",
+      billingAddressStreet1: "789 Innovation Drive",
+      billingAddressStreet2: "Building A",
+      billingCity: "San Francisco",
+      billingState: "California",
+      billingPinCode: "94107",
+      billingPhone: "+14155551234",
+      billingFaxNum: "+14155554321",
+      shippingCountry: "USA",
+      shippingAddressStreet1: "789 Innovation Drive",
+      shippingAddressStreet2: "Building B",
+      shippingCity: "San Francisco",
+      shippingState: "California",
+      shippingPinCode: "94107",
+      shippingPhone: "+14155556789",
+      shippingFaxNum: "+14155598765",
+    },
+    {
+      supplierProfile:
+        "https://i.postimg.cc/XY8qcMg9/depositphotos-75675633-stock-illustration-colorful-sun-logo.webp",
+      ame: "Jane",
+      lastName: "Smith",
+      companyName: "Innovate Corp.",
+      supplierDisplayName: "Innovate Supplies",
+      supplierEmail: "jane.smith@innovatecorp.com",
+      workPhone: "+9876543210",
+      mobile: "+1234567890",
+      billingCountry: "USA",
+      billingAddressStreet1: "789 Innovation Drive",
+      billingAddressStreet2: "Building A",
+      billingCity: "San Francisco",
+      billingState: "California",
+      billingPinCode: "94107",
+      billingPhone: "+14155551234",
+      billingFaxNum: "+14155554321",
+      shippingCountry: "USA",
+      shippingAddressStreet1: "789 Innovation Drive",
+      shippingAddressStreet2: "Building B",
+      shippingCity: "San Francisco",
+      shippingState: "California",
+      shippingPinCode: "94107",
+      shippingPhone: "+14155556789",
+      shippingFaxNum: "+14155598765",
+    },
+  ]);
+
+  const handleSelect = (option: any) => {
+    setSelectedSupplier(option);
+    console.log("Selected Supplier:", option);
+  };
 
   return (
     <div>
@@ -30,10 +121,20 @@ const NewPayment = ({}: Props) => {
       <div className="grid grid-cols-12  gap-4 overflow-scroll hide-scrollbar ">
         <div className="col-span-9 bg-white p-6 rounded-t-2xl text-xs">
           <div className=" grid grid-cols-2 gap-4 pb-3">
-            <Select
-              label=" Supplier"
+          <ObjectSelect
+              required
               placeholder="Select Supplier"
-              options={[]}
+              options={Suppliers}
+              label="Select Supplier"
+              selectedOption={selectedSupplier}
+              onSelect={handleSelect}
+              searchKey={"supplierDisplayName"}
+              displayFields={{
+                optionImage: "supplierProfile",
+                optionLabel: "supplierDisplayName",
+                optionMobile: "mobileNumber",
+              }}
+              NewItem={AddSupplierModal}
             />
             <Input label="Payment Date" placeholder="Select Date" type="Date" />
             <Input label="Payment ID" placeholder="Payment Id" />
