@@ -4,10 +4,12 @@ import Modal from "../../Components/modal/Modal";
 import SearchBar from "../../Components/SearchBar";
 import PencilLine from "../../assets/icons/PencilLine";
 import Trash from "../../assets/icons/Trash";
-import Plus from "../../assets/icons/Plus";
+
 
 import Select from "../../Components/Form/Select";
-import CirclePlus from "../../assets/icons/CirclePlus";
+import CirclePlus from "../../assets/icons/circleplus";
+import Pen from "../../assets/icons/Pen";
+
 
 type Props = {};
 
@@ -121,7 +123,7 @@ function AddExpenseCategory({}: Props) {
           </div>
 
           <div className="flex justify-evenly">
-            <div className=" flex gap-10">
+            <div className=" flex gap-[200px]">
               <SearchBar
                 placeholder="Search Name or Description"
                 searchValue={searchValue}
@@ -137,16 +139,16 @@ function AddExpenseCategory({}: Props) {
                 placeholder="Select a category"
                 value={selectedCategory}
                 onChange={handleCategoryChange}
-                size="md"
+                size="lg"
               />
             </div>
-            <div className="flex ml-auto me-2 my-4">
+            <div className="flex ml-auto me-2 ">
               <Button
                 variant="primary"
                 size="lg"
                 onClick={() => openModal(true, true, false)}
               >
-                <Plus color="white" />
+                <CirclePlus/>
                 <p className="text-sm ">Add Category</p>
               </Button>
             </div>
@@ -154,7 +156,7 @@ function AddExpenseCategory({}: Props) {
 
           <div className="grid grid-cols-3 gap-5 ">
             {filteredCategories.length === 0 ? (
-              <p className="text-center col-span-3 text-red-500 font-semibold">
+              <p className="text-center col-span-3 text-red-500 font-semibold mt-10">
                 No categories found!
               </p>
             ) : (
@@ -162,25 +164,26 @@ function AddExpenseCategory({}: Props) {
                 <div key={category._id} className="flex p-2 ">
                   <div className="border border-slate-200 text-textColor rounded-xl w-96 h-auto p-3 flex justify-between bg-[#FFFFFF]">
                     <div>
-                      <h3 className="text-sm font-bold">
+                      <h3 className="text-sm font-bold text-[#0B1320]">
                         {category.expenseCategory}
                       </h3>
-                      <p className="text-xs text-textColor">
+                      <p className="text-xs text-[#818894]">
                         {category.description}
                       </p>
                     </div>
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-2 items-center">
                       <p
                         className="cursor-pointer"
                         onClick={() => openModal(true, false, true)}
                       >
-                        <PencilLine color="currentColor" />
+                       
+                        <Pen color="#818894" size={20}/>
                       </p>
                       <p
                         className="cursor-pointer"
                         onClick={() => handleDelete(category._id || "")}
                       >
-                        <Trash color="currentColor" />
+                        <Trash color="#818894" />
                       </p>
                     </div>
                   </div>
