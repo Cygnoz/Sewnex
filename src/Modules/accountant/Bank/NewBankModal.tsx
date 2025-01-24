@@ -1,10 +1,10 @@
 import { useState } from "react";
-import CirclePlus from "../../../assets/icons/CirclePlus"
 import Button from "../../../Components/Button"
 import Modal from "../../../Components/modal/Modal";
 import Input from "../../../Components/Form/Input";
 import accountsBgImage from "../../../assets/images/bankBgImage.png"
 import Select from "../../../Components/Form/Select";
+import CirclePlus from "../../../assets/icons/circleplus";
 
 type Props = {}
 

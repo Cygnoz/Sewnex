@@ -11,5 +11,7 @@ export const endpoints ={
     GET_A_BILL:``,
     GET_DEBIT_NOTE:``,
     GET_PAYMENT:``,
-    GET_CURRENCIES:``
+    GET_CURRENCIES:``,
+
+    GET_ALL_TAX:""
 }

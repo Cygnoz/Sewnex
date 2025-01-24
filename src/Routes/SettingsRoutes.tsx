@@ -1,5 +1,7 @@
 import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
+import GSTComponent from "../Modules/Settings/TaxesAndCompliances/gst/GSTComponent";
+import VATComponent from "../Modules/Settings/TaxesAndCompliances/vat/VATComponent";
 
 const Settings = lazy(() => import("../pages/Settings"));
 const Profile = lazy(() => import("../Modules/Settings/Organization/Profile"));
@@ -29,9 +31,7 @@ const SettingsRoutes = () => {
       <Route path="/organization/currencies" element={<Currencies />}></Route>
       <Route path="/organization/invoice" element={<Invoice />}></Route>
       <Route path="/items/item" element={<Item />}></Route>
-      <Route path="/tax-compliance/taxes" element={<Taxes />}></Route>
-      <Route path="/tax-compliance/msme-settings" element={<MSMESettings />}></Route>
-      <Route path="/preferences/customer-vendor" element={<CustomerVendor />}></Route>
+x      <Route path="/preferences/customer-vendor" element={<CustomerVendor />}></Route>
       <Route path="/rewards-settings/rewards" element={<Rewards />}></Route>
       <Route path="/rewards-settings/refer-earn" element={<ReferEarn />}></Route>
       <Route path="/rewards-settings/membership-card" element={<MembershipCard />}></Route>
@@ -43,6 +43,12 @@ const SettingsRoutes = () => {
       <Route path="/purchases/purchase-orders" element={<PurchaseOrders />}></Route>
       <Route path="/purchases/expense" element={<Expense />}></Route>
       <Route path="/customization/transaction-number-series" element={<TransactionNumberSeries />}></Route>
+
+      <Route path="/tax-compliance/taxes" element={<Taxes />}></Route>
+      <Route path="/tax-compliance/msme-settings" element={<MSMESettings />}></Route>
+      <Route path="/tax-compliance/GST" element={<GSTComponent />}></Route>
+      <Route path="/tax-compliance/VAT" element={<VATComponent />}></Route>
+
     </Routes>
   );
 };

@@ -569,22 +569,22 @@ function NewJournal({ }: Props) {
         <div className="grid grid-cols-12">
           <div className="col-span-4 flex flex-col gap-3">
             <p className="text-[14px] text-[#4B5C79]">Sub Total</p>
-            <span className="text-xl font-bold text-textColor">Total</span>
+            <span className="text-base font-bold text-textColor">Total</span>
           </div>
           <div className="col-span-3 flex flex-col gap-3">
             <h4 className="text-[14px] text-[#4B5C79]">
               INR {totalResult.totalDebit.toFixed(2)}
             </h4>
-            <span className="text-textColor font-bold text-xl">
+            <span className="text-textColor font-bold text-base">
               INR{" "}{totalResult.totalDebit.toFixed(2)}
             </span>
           </div>
 
-          <div className="col-span-3 flex flex-col w-  gap-3 me-16">
+          <div className="col-span-3 flex flex-col w-  gap-3 me-20">
             <h4 className="text-[14px] text-[#4B5C79] text-end">
               INR {totalResult.totalCredit.toFixed(2)}
             </h4>
-            <span className="text-textColor font-bold text-xl text-end">
+            <span className="text-textColor font-bold text-base text-end">
               INR {totalResult.totalCredit.toFixed(2)}
             </span>
           </div>
@@ -598,9 +598,8 @@ function NewJournal({ }: Props) {
             </h4>
           </div>
         </div>
-
-        <hr className="mt-3 border-t border-hr" />
-        <br />
+      </div>
+      <br />
         <div className="flex items-center justify-end gap-3">
           <Button className="text-sm" variant="secondary">
             Cancel
@@ -609,7 +608,6 @@ function NewJournal({ }: Props) {
             Save
           </Button>
         </div>
-      </div>
     </div>
   )
 }
