@@ -11,6 +11,7 @@ import Upload from "../../assets/icons/Upload";
 import Globe from "../../assets/icons/Globe";
 import Pen from "../../assets/icons/Pen";
 import CirclePlus from "../../assets/icons/circleplus";
+// import PhoneInput from "../../Components/Form/PhoneInput";
 
 type Props = { page?: string, id?:string }
 type SupplierData = {
@@ -1468,7 +1469,7 @@ function AddSupplierModal({ page,id }: Props) {
                                                                 Phone
                                                             </label>
                                                             <div className="w-full border-0 mt-2">
-                                                                <PhoneInput
+                                                                {/* <PhoneInput
                                                                     inputClass="appearance-none text-[#818894] bg-white border-inputBorder text-sm h-[39px] pl-3 pr-8 rounded-3xl leading-tight focus:outline-none focus:bg-white focus:border-darkRed"
                                                                     inputStyle={{ height: "38px", width: "100%" }}
                                                                     containerStyle={{ width: "100%" }}
@@ -1477,7 +1478,15 @@ function AddSupplierModal({ page,id }: Props) {
                                                                     onChange={(value) =>
                                                                         handleBillingPhoneChange(value)
                                                                     }
-                                                                />
+                                                                /> */}
+                                                                  <input
+                                                                type="text"
+                                                                className="pl-2 text-sm w-full text-[#818894] rounded-3xl text-start bg-white border border-slate-300 h-9 px-3 py-2 "
+                                                                placeholder="Enter Phone"
+                                                                // name="shippingAttention"
+                                                                // value={supplierdata.shippingAttention}
+                                                                // onChange={handleChange}
+                                                            />
                                                             </div>
                                                         </div>
                                                         <div className="relative w-full">
