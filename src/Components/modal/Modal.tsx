@@ -59,7 +59,7 @@ const Modal = ({
           role="dialog"
         >
           <div
-            className={`bg-white rounded-lg h-auto ${
+            className={`bg-white rounded-2xl h-auto ${
               className || "w-[60%]"
             } transition-transform duration-300`}
             onClick={handleModalClick}

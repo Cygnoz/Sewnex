@@ -6,11 +6,12 @@ interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, '
   error?: string;
   placeholder?: string;
   readOnly?: boolean;
+  type?:string
   size?: "sm" | "md" | "lg"; 
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, placeholder, required, readOnly, size = "md",  ...props }, ref) => {
+  ({ label, error, placeholder, required, readOnly, type, size = "md",  ...props }, ref) => {
     const sizeClasses: Record<string, string> = {
       sm: "h-7 py-1 text-[10px] px-2",
       md: "h-9 py-2 px-3 text-xs",
@@ -38,6 +39,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           }`}
           placeholder={placeholder}
           {...props}
+          type={type}
         />
         {error && <p className="text-[#BC0000] text-sm mt-1">{error}</p>}
       </div>

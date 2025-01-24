@@ -16,16 +16,16 @@ const MetricCard: React.FC<MetricCardProps> = ({
   icon: Icon,
   className,
   backgroundImage,
-  backgroundHeight = "100px", // Default height
+  backgroundHeight = "90px", // Default height
   iconClassName = "bg-background/20 bg-custom-gradient2",
 }) => {
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl p-6 transition-all hover:shadow-lg ${className}`}
+      className={`relative overflow-hidden bg-no-repeat rounded-2xl p-6 transition-all hover:shadow-lg ${className}`}
       style={{
         backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundSize: 'contain',
+        backgroundPosition: 'center right',
         height: backgroundHeight, // Apply customizable height
       }}
     >

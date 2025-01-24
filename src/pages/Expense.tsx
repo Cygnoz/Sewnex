@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import Building from "../assets/icons/Building";
-import Plus from "../assets/icons/Plus";
-import Button from "../Components/Button";
+import  { useState } from "react";
+
 import HomeCard from "../Components/HomeCards";
 import Table from "../Components/Table/Table";
-// import Modal from "../Components/modal/Modal"; // Import the Modal component
-import AddExpenseCategory from "../Modules/Expense/AddExpenseCategory"; // Import AddExpenseCategory component
+import AddExpenseCategory from "../Modules/Expense/AddExpenseCategory";
 import { useNavigate } from "react-router-dom";
 import AddExpenseModal from "../Modules/Expense/AddExpenseModal";
+import { TodaysExpense } from "../assets/icons/TodaysExpense";
+import { MonthExpense } from "../assets/icons/MonthExpense";
+import { WeekExpense } from "../assets/icons/WeekExpense";
 
 type Props = {};
 
 function Expense({}: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const columns = [
     { id: "slNo", label: "Sl No", visible: true },
@@ -41,10 +41,75 @@ function Expense({}: Props) {
       paymentMethod: "Cash",
       addedDate: "2025-01-16",
     },
+    {
+      id: "3",
+      slNo: 3,
+      name: "Michael Brown",
+      category: "Clothing",
+      paymentMethod: "Debit Card",
+      addedDate: "2025-01-17",
+    },
+    {
+      id: "4",
+      slNo: 4,
+      name: "Emily Johnson",
+      category: "Books",
+      paymentMethod: "Credit Card",
+      addedDate: "2025-01-18",
+    },
+    {
+      id: "5",
+      slNo: 5,
+      name: "Chris Evans",
+      category: "Electronics",
+      paymentMethod: "Cash",
+      addedDate: "2025-01-19",
+    },
+    {
+      id: "6",
+      slNo: 6,
+      name: "Sarah Taylor",
+      category: "Groceries",
+      paymentMethod: "Mobile Payment",
+      addedDate: "2025-01-20",
+    },
+    {
+      id: "7",
+      slNo: 7,
+      name: "David Wilson",
+      category: "Furniture",
+      paymentMethod: "Debit Card",
+      addedDate: "2025-01-21",
+    },
+    {
+      id: "8",
+      slNo: 8,
+      name: "Sophia Martinez",
+      category: "Beauty",
+      paymentMethod: "Credit Card",
+      addedDate: "2025-01-22",
+    },
+    {
+      id: "9",
+      slNo: 9,
+      name: "Liam Anderson",
+      category: "Clothing",
+      paymentMethod: "Cash",
+      addedDate: "2025-01-23",
+    },
+    {
+      id: "10",
+      slNo: 10,
+      name: "Olivia Thomas",
+      category: "Books",
+      paymentMethod: "Mobile Payment",
+      addedDate: "2025-01-24",
+    },
   ];
+  
 
   const handleRowClick = (id: string) => {
-  navigate("view");
+    navigate("view");
   };
 
   const handleDelete = (id: string) => {
@@ -66,7 +131,6 @@ function Expense({}: Props) {
     navigate("/expense/add-expense");
   };
 
-
   return (
     <>
       <div>
@@ -86,22 +150,14 @@ function Expense({}: Props) {
               {/* Add Category Button */}
               <AddExpenseCategory />
 
-              {/* Add Expense Button */}
-              {/* <Button onClick={handleAddExpenseClick}>
-                <div className="flex items-center gap-2">
-                  <Plus color="#FFFFFF" classname="w-4 h-4" />
-                  Add Expense
-                </div>
-
-              </Button> */}
-              <AddExpenseModal/>
+              <AddExpenseModal />
             </div>
           </div>
         </div>
 
         <div className="flex justify-evenly items-center mt-3">
           <HomeCard
-            icon={<Building />}
+            icon={<TodaysExpense/>}
             title="Today's"
             description=""
             number={5000}
@@ -113,7 +169,7 @@ function Expense({}: Props) {
             border="#FFFFFF"
           />
           <HomeCard
-            icon={<Building />}
+            icon={<WeekExpense/>}
             title="This week's expense"
             description=""
             number={5000}
@@ -125,7 +181,7 @@ function Expense({}: Props) {
             border="#FFFFFF"
           />
           <HomeCard
-            icon={<Building />}
+            icon={<MonthExpense />}
             title="This month expense"
             description=""
             number={10000}
@@ -138,7 +194,7 @@ function Expense({}: Props) {
           />
         </div>
 
-        <div className="mt-10">
+        <div className="mt-2">
           <Table
             columns={columns}
             data={data}
@@ -152,8 +208,12 @@ function Expense({}: Props) {
               if (colId === "actions") {
                 return (
                   <div className="flex gap-2">
-                    <button onClick={() => handleEditClick(item.id)}>Edit</button>
-                    <button onClick={() => handleDelete(item.id)}>Delete</button>
+                    <button onClick={() => handleEditClick(item.id)}>
+                      Edit
+                    </button>
+                    <button onClick={() => handleDelete(item.id)}>
+                      Delete
+                    </button>
                   </div>
                 );
               }
@@ -163,7 +223,6 @@ function Expense({}: Props) {
         </div>
 
         {/* Modal for Add Category */}
-       
       </div>
     </>
   );

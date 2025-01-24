@@ -8,7 +8,7 @@ const CustomerRoutes = () => {
     return (
       <Routes>
         <Route path="/" element={<Customer/>}></Route>
-        <Route path ="view" element={<SeeCustomerDetails/>}> </Route>
+        <Route path ="customerview" element={<SeeCustomerDetails/>}> </Route>
 
       
       </Routes>

@@ -7,10 +7,10 @@ import WalletMinimal from "../../../assets/icons/WalletMinimal";
 import useApi from "../../../Hooks/useApi";
 import Link2 from "../../../assets/icons/Link2";
 import Modal from "../../../Components/modal/Modal";
-import CirclePlus from "../../../assets/icons/CirclePlus";
 import Checkbox from "../../../Components/Form/Checkbox";
 import Input from "../../../Components/Form/Input";
 import TextArea from "../../../Components/Form/TextArea";
+import CirclePlus from "../../../assets/icons/circleplus";
 
 type Props = {};
 

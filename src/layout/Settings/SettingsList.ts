@@ -2,7 +2,8 @@ import BarChart from "../../assets/icons/BarChart";
 import Building from "../../assets/icons/Building";
 import Frame from "../../assets/icons/Frame";
 import ListFilter from "../../assets/icons/ListFilter";
-import Paint from "../../assets/icons/Paint";
+// import ListIcon from "../../assets/icons/ListIcon";
+// import Paint from "../../assets/icons/Paint";
 import ShoppingBag from "../../assets/icons/ShoppingBag";
 import WalletIcon from "../../assets/icons/WalletIcon";
 
@@ -87,15 +88,15 @@ export const settingsList = [
         { headName: "Expense", subRoute: "/settings/purchases/expense" },
       ],
     },
-    {
-      nav: "Customization",
-      icon: Paint,
-      subhead: [
+    // {
+    //   nav: "Customization",
+    //   icon: Paint,
+    //   subhead: [
      
-        {
-          headName: "Transaction Number Series",
-          subRoute: "/settings/customization/transaction-number-series",
-        },
-      ],
-    }
+    //     {
+    //       headName: "Transaction Number Series",
+    //       subRoute: "/settings/customization/transaction-number-series",
+    //     },
+    //   ],
+    // }
   ];

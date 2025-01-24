@@ -1,17 +1,18 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import CirclePlus from "../../assets/icons/CirclePlus";
 import Button from "../../Components/Button";
 import Modal from "../../Components/modal/Modal";
 import Plus from "../../assets/icons/Plus";
 import GalleryIcon from "../../assets/icons/GalleryIcon";
 import CheveronDown from "../../assets/icons/CheveronDown";
-import PhoneInput from "react-phone-input-2";
+// import PhoneInput from "react-phone-input-2";
 import Eye from "../../assets/icons/Eye";
 import Trash from "../../assets/icons/Trash";
 import Upload from "../../assets/icons/Upload";
 import Globe from "../../assets/icons/Globe";
+import Pen from "../../assets/icons/Pen";
+import CirclePlus from "../../assets/icons/circleplus";
 
-type Props = { page?: string }
+type Props = { page?: string, id?:string }
 type SupplierData = {
     supplierProfile: string;
     salutation: string;
@@ -79,7 +80,7 @@ type SupplierData = {
     }[];
     remarks: string;
 };
-function AddSupplierModal({ page }: Props) {
+function AddSupplierModal({ page,id }: Props) {
     const initializeSupplierData = (): SupplierData => ({
         supplierProfile: "",
         salutation: "",
@@ -476,7 +477,6 @@ function AddSupplierModal({ page }: Props) {
     return (
         <div>
             {page && page == "add" ? (
-
                 <Button onClick={openModal}>
                     <CirclePlus size={18} />
                     <p className="text-[14px] font-medium">
@@ -484,15 +484,9 @@ function AddSupplierModal({ page }: Props) {
                     </p>
                 </Button>
             ) : (
-                <Button
-                    onClick={openModal}
-                    variant="primary"
-                    className="flex items-center"
-                    size="xl"
-                >
-                    <CirclePlus color="white" size={18} />{" "}
-                    <p className="text-sm font-medium">Edit Supplier</p>
-                </Button>
+                <div onClick={openModal}>
+                    <Pen color={"#3C7FBC"} size={18} />
+                </div>
             )}
 
 
@@ -1676,13 +1670,13 @@ function AddSupplierModal({ page }: Props) {
                                                                     value={supplierdata.shippingPhone}
                                                                     onChange={handleShippingPhoneChange}
                                                                 /> */}
-                                                                 <input
+                                                                <input
                                                                     className="pl-3 text-sm w-full text-[#818894] rounded-3xl text-start bg-white border border-inputBorder h-[39px] p-2 mt-2 leading-tight focus:outline-none focus:bg-white focus:border-darkRed"
                                                                     placeholder="Phone "
                                                                     type="number"
-                                                                    // name="shippingFaxNum"
-                                                                    // value={supplierdata.shippingFaxNum}
-                                                                    // onChange={handleChange}
+                                                                // name="shippingFaxNum"
+                                                                // value={supplierdata.shippingFaxNum}
+                                                                // onChange={handleChange}
                                                                 />
                                                             </div>
                                                         </div>
@@ -1920,7 +1914,7 @@ function AddSupplierModal({ page }: Props) {
                                                                             // name="accountNum"
                                                                             className="text-sm w-[100%] rounded-3xl text-start bg-white border border-slate-300 h-9 py-2 px-3 text-[#818894]"
                                                                             placeholder="Enter Account Number"
-                                                                            // value={bankDetail.accountNum}
+                                                                        // value={bankDetail.accountNum}
                                                                         // onChange={(e) =>
                                                                         //     handleBankDetailsChange(index, e)
                                                                         // }

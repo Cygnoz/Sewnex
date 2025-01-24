@@ -8,6 +8,8 @@ import ChevronRight from "../../assets/icons/ChevronRight";
 import ChevronLeft from "../../assets/icons/ChevronLeft";
 import Button from "../Button";
 import PrinterIcon from "../../assets/icons/PrinterIcon";
+import AddSupplierModal from "../../Modules/Supplier/AddSupplierModal";
+import NewCustomer from "../../Modules/Customer/NewCustomer";
 
 interface Column {
   id: string;
@@ -26,12 +28,13 @@ interface TableProps {
   searchableFields: string[];
   setColumns?: any;
   isDelete?: boolean;
-  isPrint?:boolean
+  isPrint?: boolean
   onEditClick?: (id: string) => void;
+  onPrintClick?: (id: string) => void;
+  page?: string
 }
 
 const Table: React.FC<TableProps> = ({
-  isDelete,
   isPrint,
   columns,
   data,
@@ -42,6 +45,8 @@ const Table: React.FC<TableProps> = ({
   loading,
   searchableFields,
   onEditClick,
+  onPrintClick,
+  page
 }) => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
@@ -84,7 +89,7 @@ const Table: React.FC<TableProps> = ({
         {
           isPrint && (
             <Button size="sm" variant="secondary">
-              <PrinterIcon color={""} height={0} width={0}/>
+              <PrinterIcon />
               <p className="text-xs font-semibold">Print</p>
             </Button>
           )
@@ -143,17 +148,40 @@ const Table: React.FC<TableProps> = ({
                       )
                   )}
                   <td className="py-3 px-4 border-b border-tableBorder text-[#495160] flex items-center justify-center gap-2">
-                    <button onClick={() => onEditClick && onEditClick(item._id)}>
-                      <Pen color={"#3C7FBC"} size={18} />
-                    </button>
-                    <button onClick={() => onRowClick && onRowClick(item._id)}>
-                      <Eye color={"#9A9436"} />
-                    </button>
-                    {isDelete && (
+                    {
+                      onEditClick && (
+                        <>
+                          {page === "supplier" ? (
+                            <AddSupplierModal id={item._id} />
+                          ) : page === "Customer" ? (
+                            <NewCustomer id={item._id}/>
+                          ) : (
+                            <button onClick={() => onEditClick && onEditClick(item._id)}>
+                              <Pen color={"#3C7FBC"} size={18} />
+                            </button>
+                          )}
+                        </>
+                      )
+                    }
+
+                    {
+                      onRowClick && (
+                        <button onClick={() => onRowClick && onRowClick(item._id)}>
+                          <Eye color={"#9A9436"} />
+                        </button>
+                      )
+                    }
+                    {onPrintClick && (
+                      <button onClick={() => onDelete && onDelete(item._id)}>
+                        <PrinterIcon color="#EA1E4F" />
+                      </button>
+                    )}
+                    {onDelete && (
                       <button onClick={() => onDelete && onDelete(item._id)}>
                         <Trash2 color="#EA1E4F" size={18} />
                       </button>
                     )}
+
                   </td>
                   <td className="py-3 px-4 border-b border-tableBorder"></td>
                 </tr>

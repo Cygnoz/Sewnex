@@ -88,7 +88,7 @@ const ViewPayment: React.FC = () => {
 
       {/* Table Component */}
       <Table
-        page="ViewPayment"
+        // page="ViewPayment"
         columns={columns}
         data={data}
         searchPlaceholder="Search by Invoice Number, Date, or Amount"

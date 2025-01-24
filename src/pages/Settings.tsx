@@ -15,14 +15,15 @@ import saleImg from "../assets/images/image 51.png";
 import purchaseImg from "../assets/images/image 45.png";
 import customizationImg from "../assets/images/image 50.png";
 import { Link } from "react-router-dom";
-
+import Shirt from "../assets/icons/Shirt";
+import orders from '../assets/images/orders.png'
 const Settings = () => {
   const data = [
     {
       page: "Organization",
       icon: building,
       text: "Lorem ipsum dolor sit ametLorem Lorem ipsum dolor sit ametLorem ",
-      img: orgImg,
+      img: orgImg ,
       imgH: 59,
       imgW: 64,
       route: "/settings/organization/profile",
@@ -35,6 +36,16 @@ const Settings = () => {
       imgH: 69.14,
       imgW: 43.74,
       route: "/settings/items/item",
+
+    },
+    {
+      page: "Orders",
+      icon: Shirt,
+      text: "Lorem ipsum dolor sit ametLorem Lorem ipsum dolor sit ametLorem ",
+      img: orders,
+      imgH: 69.14,
+      imgW: 43.74,
+      route: "/settings/orders/ordersettings",
 
     },
     {
@@ -109,7 +120,7 @@ const Settings = () => {
         {data?.map((data, index) => (
           <div
             key={index}
-            className="w-56 h-48 border rounded-xl border-[#DADBDD] p-4 flex flex-col justify-between mx-auto"
+            className="w-56 h-48 border rounded-xl border-[#DADBDD] bg-[#FFFFFF] p-4 flex flex-col justify-between mx-auto"
           >
             <div className="flex justify-end">
               <data.icon />
