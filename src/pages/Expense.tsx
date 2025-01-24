@@ -1,5 +1,4 @@
-import  { useState } from "react";
-
+// import  { useState } from "react";
 import HomeCard from "../Components/HomeCards";
 import Table from "../Components/Table/Table";
 import AddExpenseCategory from "../Modules/Expense/AddExpenseCategory";
@@ -12,7 +11,7 @@ import { WeekExpense } from "../assets/icons/WeekExpense";
 type Props = {};
 
 function Expense({}: Props) {
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
+  // const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
   const navigate = useNavigate();
 
   const columns = [
@@ -28,7 +27,7 @@ function Expense({}: Props) {
     {
       id: "1",
       slNo: 1,
-      name: "John Doe",
+      name: "Abhinu",
       category: "Electronics",
       paymentMethod: "Credit Card",
       addedDate: "2025-01-15",
@@ -36,79 +35,37 @@ function Expense({}: Props) {
     {
       id: "2",
       slNo: 2,
-      name: "Jane Smith",
-      category: "Groceries",
-      paymentMethod: "Cash",
-      addedDate: "2025-01-16",
+      name: "Abhinu",
+      category: "Electronics",
+      paymentMethod: "Credit Card",
+      addedDate: "2025-01-15",
     },
     {
       id: "3",
       slNo: 3,
-      name: "Michael Brown",
-      category: "Clothing",
-      paymentMethod: "Debit Card",
-      addedDate: "2025-01-17",
+      name: "Abhinu",
+      category: "Electronics",
+      paymentMethod: "Credit Card",
+      addedDate: "2025-01-15",
     },
     {
       id: "4",
       slNo: 4,
-      name: "Emily Johnson",
-      category: "Books",
-      paymentMethod: "Credit Card",
-      addedDate: "2025-01-18",
-    },
-    {
-      id: "5",
-      slNo: 5,
-      name: "Chris Evans",
+      name: "Abhinu",
       category: "Electronics",
-      paymentMethod: "Cash",
-      addedDate: "2025-01-19",
-    },
-    {
-      id: "6",
-      slNo: 6,
-      name: "Sarah Taylor",
-      category: "Groceries",
-      paymentMethod: "Mobile Payment",
-      addedDate: "2025-01-20",
-    },
-    {
-      id: "7",
-      slNo: 7,
-      name: "David Wilson",
-      category: "Furniture",
-      paymentMethod: "Debit Card",
-      addedDate: "2025-01-21",
-    },
-    {
-      id: "8",
-      slNo: 8,
-      name: "Sophia Martinez",
-      category: "Beauty",
       paymentMethod: "Credit Card",
-      addedDate: "2025-01-22",
+      addedDate: "2025-01-15",
     },
-    {
-      id: "9",
-      slNo: 9,
-      name: "Liam Anderson",
-      category: "Clothing",
-      paymentMethod: "Cash",
-      addedDate: "2025-01-23",
-    },
-    {
-      id: "10",
-      slNo: 10,
-      name: "Olivia Thomas",
-      category: "Books",
-      paymentMethod: "Mobile Payment",
-      addedDate: "2025-01-24",
-    },
+ 
   ];
   
+  // const handlePrintClick = (id: string) => {
+  //   console.log(`Printing record with ID: ${id}`);
+  //   // Add your print logic here
+  // };
+  
 
-  const handleRowClick = (id: string) => {
+  const handleRowClick = () => {
     navigate("view");
   };
 
@@ -120,16 +77,16 @@ function Expense({}: Props) {
     console.log("Edit clicked for ID:", id);
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
+  // const openModal = () => {
+  //   setIsModalOpen(true);
+  // };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-  const handleAddExpenseClick = () => {
-    navigate("/expense/add-expense");
-  };
+  // const closeModal = () => {
+  //   setIsModalOpen(false);
+  // };
+  // const handleAddExpenseClick = () => {
+  //   navigate("/expense/add-expense");
+  // };
 
   return (
     <>
@@ -195,32 +152,31 @@ function Expense({}: Props) {
         </div>
 
         <div className="mt-2">
-          <Table
-            columns={columns}
-            data={data}
-            searchPlaceholder="Search by Name or Category"
-            searchableFields={["name", "category"]}
-            loading={false}
-            onRowClick={handleRowClick}
-            onDelete={handleDelete}
-            onEditClick={handleEditClick}
-            renderColumnContent={(colId, item) => {
-              if (colId === "actions") {
-                return (
-                  <div className="flex gap-2">
-                    <button onClick={() => handleEditClick(item.id)}>
-                      Edit
-                    </button>
-                    <button onClick={() => handleDelete(item.id)}>
-                      Delete
-                    </button>
-                  </div>
-                );
-              }
-              return item[colId];
-            }}
-          />
-        </div>
+  <Table
+    columns={columns}
+    data={data}
+    searchPlaceholder="Search by Name or Category"
+    searchableFields={["name", "category"]}
+    loading={false}
+    onRowClick={handleRowClick}
+    onDelete={handleDelete}
+    onEditClick={handleEditClick}
+    isPrint={true} // Enable the print button
+    // onPrintClick={handlePrintClick} // Pass the print click handler
+    renderColumnContent={(colId, item) => {
+      if (colId === "actions") {
+        return (
+          <div className="flex gap-2">
+            <button onClick={() => handleEditClick(item.id)}>Edit</button>
+            <button onClick={() => handleDelete(item.id)}>Delete</button>
+          </div>
+        );
+      }
+      return item[colId];
+    }}
+  />
+</div>
+
 
         {/* Modal for Add Category */}
       </div>

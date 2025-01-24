@@ -13,7 +13,7 @@ const Taxes = lazy(() => import("../Modules/Settings/TaxesAndCompliances/Taxes")
 const MSMESettings = lazy(() => import("../Modules/Settings/TaxesAndCompliances/MSMESettings"));
 const CustomerVendor = lazy(() => import("../Modules/Settings/Preferences/CustomerAndVendor"));
 const Rewards = lazy(() => import("../Modules/Settings/RewardSettings/Rewards"));
-const ReferEarn = lazy(() => import("../Modules/Settings/RewardSettings/Rewards"));
+const ReferEarn = lazy(() => import("../Modules/Settings/RewardSettings/ReferAndEran"));
 const MembershipCard = lazy(() => import("../Modules/Settings/RewardSettings/MembershipCard"));
 const SalesOrder = lazy(() => import("../Modules/Settings/Sale/SalesOrder"));
 const Shipments = lazy(() => import("../Modules/Settings/Sale/Shipments"));
