@@ -33,7 +33,7 @@ function Banner({ seeOrgDetails }: Props) {
 <div className="bg-gradient-to-br from-[#F7ECD9] to-[#B5F0D3] rounded-lg flex h-[148px]">      {seeOrgDetails && oneOrganization && (
         <div className="ms-2 p-2 text-center mt-3 items-center flex">
           <div>
-            <p className="bg-gray text-sm w-fit text-yellow-50 rounded-md p-2">
+            <p className="bg-gray text-sm w-fit text-yellow-50 bg-[#818894] rounded-md p-2">
               Organization
             </p>
             <div className="flex mt-1">

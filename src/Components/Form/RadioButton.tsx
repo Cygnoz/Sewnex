@@ -5,6 +5,7 @@ interface RadioButtonProps {
   name: string;
   label: string;
   selected: string;
+  className?:string
   onChange: (value: string, name: string) => void;
 }
 
@@ -13,6 +14,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   name,
   label,
   selected,
+  className,
   onChange,
 }) => {
   return (
@@ -36,7 +38,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({
           }`}
         />
       </div>
-      <label htmlFor={id} className="text-start text-xs font-medium text-[#495160]">
+      <label htmlFor={id} className={className || "text-start text-xs font-medium text-[#495160]"}>
         {label}
       </label>
     </div>

@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
+import OrderSettings from "../Modules/Settings/Orders/OrderSettings";
 
 const Settings = lazy(() => import("../pages/Settings"));
 const Profile = lazy(() => import("../Modules/Settings/Organization/Profile"));
@@ -43,6 +44,7 @@ const SettingsRoutes = () => {
       <Route path="/purchases/purchase-orders" element={<PurchaseOrders />}></Route>
       <Route path="/purchases/expense" element={<Expense />}></Route>
       <Route path="/customization/transaction-number-series" element={<TransactionNumberSeries />}></Route>
+      <Route path="/orders/ordersettings" element={<OrderSettings/>}></Route>
     </Routes>
   );
 };
