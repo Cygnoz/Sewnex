@@ -9,6 +9,7 @@ import ChevronLeft from "../../assets/icons/ChevronLeft";
 import Button from "../Button";
 import PrinterIcon from "../../assets/icons/PrinterIcon";
 import AddSupplierModal from "../../Modules/Supplier/AddSupplierModal";
+import NewCustomer from "../../Modules/Customer/NewCustomer";
 
 interface Column {
   id: string;
@@ -150,13 +151,19 @@ const Table: React.FC<TableProps> = ({
                     {
                       onEditClick && (
                         <>
-                          {page === "supplier" ? <AddSupplierModal id={item._id} /> :
+                          {page === "supplier" ? (
+                            <AddSupplierModal id={item._id} />
+                          ) : page === "Customer" ? (
+                            <NewCustomer id={item._id}/>
+                          ) : (
                             <button onClick={() => onEditClick && onEditClick(item._id)}>
                               <Pen color={"#3C7FBC"} size={18} />
-                            </button>}
+                            </button>
+                          )}
                         </>
                       )
                     }
+
                     {
                       onRowClick && (
                         <button onClick={() => onRowClick && onRowClick(item._id)}>

@@ -12,10 +12,11 @@ import Select from "../../Components/Form/Select";
 import CrossIcon from "../../assets/icons/CrossIcon";
 import CirclePlus from "../../assets/icons/circleplus";
 import CheveronDown from "../../assets/icons/CheveronDown";
+import Pen from "../../assets/icons/Pen";
 
-type Props = { page?: string };
+type Props = { page?: string, id?:string }
 
-const NewCustomer = ({ page }: Props) => {
+const NewCustomer = ({ page,id }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(1);
 
@@ -48,18 +49,12 @@ const NewCustomer = ({ page }: Props) => {
           </p>
         </Button>
       ) : (
-        <Button
-          onClick={openModal}
-          variant="primary"
-          className="flex items-center"
-          size="xl"
-        >
-          <CirclePlus color="white" size={18} />
-          <p className="text-sm font-medium">Edit Supplier</p>
-        </Button>
-      )}
+        <div onClick={openModal}>
+            <Pen color={"#3C7FBC"} size={18} />
+        </div>
+    )}
 
-      <Modal open={isModalOpen} onClose={closeModal} className="p-6 w-[1200px]  h-[481px] pt-[32px] rounded-tl-[16px] rounded-tr-[16px] border border-t-0 border-l-0 border-r-0">
+      <Modal  open={isModalOpen} onClose={closeModal} className="p-6 max-w-[1200px] max-h-[500px] w-full h-full pt-[32px] rounded-tl-[16px] rounded-tr-[16px] border border-t-0 border-l-0 border-r-0">
         <div>
           <div className="p-2 m-2 bg-white flex justify-between items-center mb-5">
                     <h1 className="font-bold text-md text-[#0B1320]">Add New Customer</h1>
