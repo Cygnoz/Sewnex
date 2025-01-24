@@ -5,8 +5,8 @@ interface RadioButtonProps {
   name: string;
   label: string;
   selected: string;
+  className?:string
   onChange: (value: string, name: string) => void;
-  labelClassName?: string; 
 }
 
 const RadioButton: React.FC<RadioButtonProps> = ({
@@ -14,8 +14,8 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   name,
   label,
   selected,
+  className,
   onChange,
-  labelClassName = "text-start text-xs font-medium text-[#495160]",
 }) => {
   return (
     <div className="flex gap-2 justify-center items-center cursor-pointer">
@@ -38,7 +38,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({
           }`}
         />
       </div>
-      <label htmlFor={id} className={labelClassName}>
+      <label htmlFor={id} className={className || "text-start text-xs font-medium text-[#495160]"}>
         {label}
       </label>
     </div>

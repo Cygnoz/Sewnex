@@ -2,6 +2,7 @@ import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import GSTComponent from "../Modules/Settings/TaxesAndCompliances/gst/GSTComponent";
 import VATComponent from "../Modules/Settings/TaxesAndCompliances/vat/VATComponent";
+import OrderSettings from "../Modules/Settings/Orders/OrderSettings";
 
 const Settings = lazy(() => import("../pages/Settings"));
 const Profile = lazy(() => import("../Modules/Settings/Organization/Profile"));
@@ -49,6 +50,7 @@ x      <Route path="/preferences/customer-vendor" element={<CustomerVendor />}><
       <Route path="/tax-compliance/GST" element={<GSTComponent />}></Route>
       <Route path="/tax-compliance/VAT" element={<VATComponent />}></Route>
 
+      <Route path="/orders/ordersettings" element={<OrderSettings/>}></Route>
     </Routes>
   );
 };
