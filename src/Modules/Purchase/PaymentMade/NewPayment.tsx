@@ -110,7 +110,7 @@ const NewPayment = ({}: Props) => {
       <div className="flex mb-3 gap-5">
         <Link to={"/purchase/payment-made"}>
           <div className="flex justify-center items-center h-11 w-11 bg-[white] rounded-full">
-            <ChevronLeft color={"#0B1320"} strokeWidth="3" />
+            <ChevronLeft  />
           </div>
         </Link>
         <div className="flex justify-center items-center">
@@ -190,7 +190,7 @@ const NewPayment = ({}: Props) => {
         <div className="flex gap-2 ml-auto">
           <Button variant="secondary">Cancel</Button>
           <Button variant="secondary">
-            <PrinterIcon color={"#0b9d56"} height={18} width={18} /> Print
+            <PrinterIcon color={"#0b9d56"}  /> Print
           </Button>
           <Button variant="primary">Save & Send</Button>
         </div>

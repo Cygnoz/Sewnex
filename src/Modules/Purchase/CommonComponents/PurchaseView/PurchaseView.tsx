@@ -82,7 +82,7 @@ function Purchaseview({ page }: Props) {
                 style={{ borderRadius: "50%" }}
                 className="w-[40px] h-[40px] flex items-center justify-center bg-[#e8e8ea]"
               >
-                <ChevronLeft color={"#0B1320"} strokeWidth={"2"} />
+                <ChevronLeft  />
               </div>
             </Link>
 
@@ -125,7 +125,7 @@ function Purchaseview({ page }: Props) {
               </>
 
               <Button variant="secondary" size="sm" className="px-2">
-                <PrinterIcon color="#0b9d56" height={16} width={16} />
+                <PrinterIcon color="#0b9d56"  />
                 Print
               </Button>
 
