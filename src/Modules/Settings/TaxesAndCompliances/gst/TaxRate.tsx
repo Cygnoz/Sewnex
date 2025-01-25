@@ -1,14 +1,14 @@
-import Table from "../../../../Components/Table/Table"
-import Button from "../../../../Components/Button"
-import CirclePlus from "../../../../assets/icons/circleplus"
-import Modal from "../../../../Components/modal/Modal"
-import { useState } from "react"
-import accountsBgImage from "../../../../assets/images/bankBgImage.png"
-import Select from "../../../../Components/Form/Select"
-import Input from "../../../../Components/Form/Input"
+import Table from "../../../../Components/Table/Table";
+import Button from "../../../../Components/Button";
+import CirclePlus from "../../../../assets/icons/circleplus";
+import Modal from "../../../../Components/modal/Modal";
+import { useState } from "react";
+import accountsBgImage from "../../../../assets/images/bankBgImage.png";
+import Select from "../../../../Components/Form/Select";
+import Input from "../../../../Components/Form/Input";
+import ViewTaxDetails from "./ViewTaxDetails";
 
-
-type Props = {}
+type Props = {};
 
 type TaxGst = {
   _id: string;
@@ -19,7 +19,7 @@ type TaxGst = {
   igst: string;
 };
 
-function TaxRate({ }: Props) {
+function TaxRate({}: Props) {
   const initialTaxGst = {
     _id: "",
     taxName: "",
@@ -31,6 +31,9 @@ function TaxRate({ }: Props) {
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [taxGst, setTaxGst] = useState<TaxGst>(initialTaxGst);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [selectedGstRate, setSelectedGstRate] = useState<any>(null);
+
   console.log(taxGst);
 
   const openModal = (taxRate: TaxGst | null = null) => {
@@ -46,22 +49,46 @@ function TaxRate({ }: Props) {
     setTaxGst(initialTaxGst);
   };
 
-
   const dummyColumns = [
     { id: "TaxName", label: "Tax Name ", visible: true },
     { id: "Rate", label: "Rate", visible: true },
     { id: "CGST", label: "CGST", visible: true },
     { id: "SGST", label: "SGST", visible: true },
     { id: "IGST", label: "IGST", visible: true },
-  ]
+  ];
 
   const dummyData = [
-    { TaxName: "GST 0", Rate: "0%", CGST: "0%", SGST: "0%", IGST: "0%" },
-    { TaxName: "GST 1", Rate: "0%", CGST: "0%", SGST: "0%", IGST: "0%" },
-    { TaxName: "GST 2", Rate: "0%", CGST: "0%", SGST: "0%", IGST: "0%" },
-  ]
-
-  const HanldeEyeClick = () => {
+    {
+      _id: "1",
+      TaxName: "GST 0",
+      Rate: "0%",
+      CGST: "0%",
+      SGST: "0%",
+      IGST: "0%",
+    },
+    {
+      _id: "2",
+      TaxName: "GST 1",
+      Rate: "10%",
+      CGST: "5%",
+      SGST: "5%",
+      IGST: "10%",
+    },
+    {
+      _id: "3",
+      TaxName: "GST 2",
+      Rate: "0%",
+      CGST: "0%",
+      SGST: "0%",
+      IGST: "0%",
+    },
+  ];
+  const handleEyeClick = (id: string) => {
+    const selectedData = dummyData.find((item) => item._id === id);
+    if (selectedData) {
+      setSelectedGstRate(selectedData);
+      setIsViewModalOpen(true);
+    }
   };
 
   return (
@@ -69,14 +96,24 @@ function TaxRate({ }: Props) {
       <div className="flex justify-between">
         <p className="text-[#303F58] font-bold">Tax Rate</p>
         <div className="flex gap-4">
-          <Button onClick={() => openModal(null)} className="text-sm font-medium" size="sm">
+          <Button
+            onClick={() => openModal(null)}
+            className="text-sm font-medium"
+            size="sm"
+          >
             <CirclePlus color="white" /> New Tax
           </Button>
         </div>
       </div>
       <div className="mt-6">
-        <Table columns={dummyColumns} data={dummyData} searchPlaceholder={"Search Taxes"} searchableFields={["TaxName"]}
-          loading={false} onRowClick={HanldeEyeClick} />
+        <Table
+          columns={dummyColumns}
+          data={dummyData}
+          searchPlaceholder={"Search Taxes"}
+          searchableFields={["TaxName"]}
+          loading={false}
+          onRowClick={handleEyeClick}
+        />
       </div>
 
       <Modal
@@ -87,7 +124,7 @@ function TaxRate({ }: Props) {
         <div
           className="mt-4 p-6 rounded-2xl flex justify-between items-center relative bg-cover bg-no-repeat bg-right"
           style={{
-            backgroundImage: `url(${accountsBgImage})`,
+            backgroundImage: url(${accountsBgImage}),
           }}
         >
           <div className="relative flex-1">
@@ -106,31 +143,21 @@ function TaxRate({ }: Props) {
             <div className="mt-4 flex items-center justify-between w-full">
               <div className="flex flex-col w-[48%]">
                 <label className="mb-1">Rate</label>
-                <Select
-                  options={[]}
-                  placeholder="Enter tax rate"
-                />
+                <Select options={[]} placeholder="Enter tax rate" />
               </div>
               <div className="flex flex-col w-[48%]">
                 <label className="mb-1">CGST</label>
-                <Input
-                  placeholder="CGST"
-                />
+                <Input placeholder="CGST" />
               </div>
             </div>
             <div className="mt-4 flex items-center justify-between w-full">
-              <div className="flex flex-col w-[48%]">g
+              <div className="flex flex-col w-[48%]">
                 <label className="mb-1">Rate</label>
-                <Select
-                  options={[]}
-                  placeholder="Enter tax rate"
-                />
+                <Select options={[]} placeholder="Enter tax rate" />
               </div>
               <div className="flex flex-col w-[48%]">
                 <label className="mb-1">CGST</label>
-                <Input
-                  placeholder="CGST"
-                />
+                <Input placeholder="CGST" />
               </div>
             </div>
           </form>
@@ -143,8 +170,14 @@ function TaxRate({ }: Props) {
           <Button>save</Button>
         </div>
       </Modal>
+
+      <ViewTaxDetails
+        gstRate={selectedGstRate}
+        open={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+      />
     </div>
-  )
+  );
 }
 
-export default TaxRate
+export default TaxRate;
