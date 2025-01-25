@@ -25,7 +25,7 @@ function GstSettings({ }: Props) {
               <div className={`w-11 h-6 rounded-full shadow-inner transition-colors ${isGstRegistered ? 'bg-[#97998E]' : 'bg-[#DCDEE2]'}`}></div>
               <div className={`dot absolute w-4 h-4 bg-white rounded-full top-1 transition-transform ${isGstRegistered ? 'transform translate-x-full left-2' : 'left-1'}`}></div>
             </div>
-            <div className="ml-3 text-textColor  text-sm">{isGstRegistered ? 'No' : 'Yes'}</div>
+            <div className="ml-3 text-[#495160]  text-sm">{isGstRegistered ? 'No' : 'Yes'}</div>
           </label>
         </div>
       </div>
@@ -34,22 +34,26 @@ function GstSettings({ }: Props) {
         {isGstRegistered && (
           <div className="p-6 rounded-lg bg-white mt-4">
             <form  className="flex justify-between gap-4">
-              <div className="text-[#495160] text-sm w-[50%]">
+              <div className="text-[#4B5C79] text-sm w-[50%]">
                 <div>
                   <label htmlFor="gstIn">GSTIN <span className="text-xs">(Maximum 15 Digits)</span></label>
+                  <div className="mt-1.5">
                   <Input
                     type="text"
                     name="gstIn"
                     placeholder="Enter GSTIN"
-                  />
+                    />
+                    </div>
                 </div>
                 <div className="mt-5">
-                  <label htmlFor="gstBusinessTradeName">Business Trade Name</label>
+                  <label htmlFor="gstBusinessTradeName">Business Trade Name</label><br />
+                  <div className="mt-1.5">
                   <Input
                    type="text"
                    name="gstBusinessTradeName"
                    placeholder="Enter Business Trade Name"
-                  />
+                   />
+                   </div>
                 </div>
                 <div className="mt-5">
                   <label className="block mb-1.5 text-dropdownText font-semibold">
@@ -79,21 +83,24 @@ function GstSettings({ }: Props) {
                   </div>
                 </div>
               </div>
-              <div className="text-[#495160] text-sm w-[50%]">
+              <div className="text-[#4B5C79] text-sm w-[50%]">
                 <div>
                   <label htmlFor="gstBusinessLegalName">Business Legal Name</label>
+                  <div className="mt-1.5">
                   <Input
                   type="text"
                   name="gstBusinessLegalName"
                   placeholder="Enter Business Legal Name"
                   />
+                  </div>
                 </div>
                 <div className="mt-5">
-                  <label htmlFor="gstRegisteredDate" className="block mb-1">
+                  <label htmlFor="gstRegisteredDate" className="block mb-1.5">
                     GST Registered On Date
                   </label>
                   <div className="relative w-full">
                     <Input
+                    type="date"
                     placeholder="Select Date"
                     />
                   </div>

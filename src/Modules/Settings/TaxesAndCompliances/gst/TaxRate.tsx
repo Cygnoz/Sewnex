@@ -119,7 +119,7 @@ function TaxRate({ }: Props) {
               </div>
             </div>
             <div className="mt-4 flex items-center justify-between w-full">
-              <div className="flex flex-col w-[48%]">
+              <div className="flex flex-col w-[48%]">g
                 <label className="mb-1">Rate</label>
                 <Select
                   options={[]}

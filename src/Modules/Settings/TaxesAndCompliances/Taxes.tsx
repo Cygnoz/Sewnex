@@ -87,7 +87,7 @@ function Taxes({}: Props) {
                   label="GST"
                   selected={selected}
                   onChange={handleChange}
-                  labelClassName="text-base text-[#495160] font-semibold cursor-pointer"
+                  className="text-base text-[#495160] font-semibold cursor-pointer"
                 />
                 {/* VAT Radio Button */}
                 <RadioButton
@@ -96,7 +96,7 @@ function Taxes({}: Props) {
                   label="VAT"
                   selected={selected}
                   onChange={handleChange}
-                  labelClassName="text-base text-[#495160] font-semibold cursor-pointer"
+                  className="text-base text-[#495160] font-semibold cursor-pointer"
                 />
               </div>
             </div>
