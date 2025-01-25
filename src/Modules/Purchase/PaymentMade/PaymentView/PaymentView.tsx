@@ -46,7 +46,7 @@ function PaymentView({}: Props) {
             style={{ borderRadius: "50%" }}
             className="w-[40px] h-[40px] flex items-center justify-center bg-[#F6F6F6]"
           >
-            <ChevronLeft color={''} />
+            <ChevronLeft  />
           </div>
         </Link>
         <h1 className="text-[20px] font-bold text-[#303F58]">View Payment</h1>
@@ -64,8 +64,8 @@ function PaymentView({}: Props) {
             Edit
           </Button>
 
-          <Button variant="secondary" size="sm" className="px-2">
-                    <PrinterIcon color="#0b9d56" height={16} width={16} />
+          <Button className="h-[38px] w-[100px] flex justify-center items-center" variant="secondary" size="sm" >
+                    <PrinterIcon color="#0b9d56"  />
                     Print
                   </Button>
          

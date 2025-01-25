@@ -289,11 +289,11 @@ function OrderView({ data, page, organization }: Props) {
                   <Button variant="secondary" size="sm" className="px-4">
                     Cancel
                   </Button>
-                  <Button variant="secondary" size="sm" className="px-2">
-                    <PrinterIcon color="#0b9d56" height={16} width={16} />
+                  <Button variant="secondary" size="sm" >
+                    <PrinterIcon color="#0b9d56"   />
                     Print
                   </Button>
-                  <Button variant="primary" size="sm" className="px-3">
+                  <Button variant="primary" size="sm" >
                     Save & Send
                   </Button>
                 </div>

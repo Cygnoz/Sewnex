@@ -12,6 +12,8 @@ export const endpoints ={
     GET_DEBIT_NOTE:``,
     GET_PAYMENT:``,
     GET_CURRENCIES:``,
+    ADD_CURRENCIES:``,
+    DELETE_CURRENCIES:``,
 
     GET_ALL_TAX:""
 }
