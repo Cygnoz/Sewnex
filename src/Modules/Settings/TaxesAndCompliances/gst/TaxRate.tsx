@@ -121,10 +121,10 @@ function TaxRate({}: Props) {
         onClose={closeModal}
         className="w-[50%] px-8 py-6"
       >
-        <div
+         <div
           className="mt-4 p-6 rounded-2xl flex justify-between items-center relative bg-cover bg-no-repeat bg-right"
           style={{
-            backgroundImage: url(${accountsBgImage}),
+            backgroundImage: `url(${accountsBgImage})`,
           }}
         >
           <div className="relative flex-1">
