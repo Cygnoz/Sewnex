@@ -20,6 +20,16 @@ const SideBar = ({ activeIndex, setActiveIndex }: Props) => {
     }
   }, [location.pathname, setActiveIndex]);
 
+  // Scroll to the active item smoothly
+  useEffect(() => {
+    if (activeIndex !== null && itemRefs.current[activeIndex]) {
+      itemRefs.current[activeIndex]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center", // Align the active item to the center of the container
+      });
+    }
+  }, [activeIndex]);
+
   const handleClick = (index: number) => {
     setActiveIndex(index);
     localStorage.setItem("savedIndex", index.toString());
@@ -36,10 +46,10 @@ const SideBar = ({ activeIndex, setActiveIndex }: Props) => {
         {navList.map((item, index) => (
           <Link to={item.route} key={index}>
             <li
-              ref={(el) => (itemRefs.current[index] = el)}
+              ref={(el) => (itemRefs.current[index] = el)} // Add ref to each list item
               onClick={() => handleClick(index)}
               className={`relative flex items-center space-x-4 p-3.5 mb-1 cursor-pointer ${
-                activeIndex === index ? "bg-[#E6E9EC14]" : "hover:bg-[] "
+                activeIndex === index ? "bg-[#E6E9EC14]" : "hover:bg-[#006666]"
               }`}
             >
               {activeIndex === index && (
