@@ -1,10 +1,39 @@
 import { useNavigate } from "react-router-dom"
 import Table from "../../../Components/Table/Table"
 import NewAccountModal from "./NewAccountModal"
+import useApi from "../../../Hooks/useApi";
+import { endpoints } from "../../../Services/apiEdpoints";
+import toast from "react-hot-toast";
 
 type Props = {}
+interface Account {
+  _id: string;
+  accountName: string;
+  accountCode: string;
+  accountSubhead: string;
+  accountHead: string;
+  description: string;
+}
 
 function ChartOfAccountant({}: Props) {
+  const { request: fetchOneItem } = useApi("get", 5001);
+  const { request: deleteAccount } = useApi("delete", 5001);
+  const getOneItem = async (item: Account) => {
+    try {
+      const url = `${endpoints.GET_ONE_ACCOUNT}/${item._id}`;
+      const { response, error } = await fetchOneItem(url);
+      if (!error && response) {
+        // setOneAccountData(response.data);
+        console.log(response.data);
+      } else {
+        console.error("Failed to fetch one item data.");
+      }
+    } catch (error) {
+      toast.error("Error in fetching one item data.");
+      console.error("Error in fetching one item data", error);
+    }
+  };
+
   const dummyColumns = [
     { id: "name", label: "Name", visible: true },
     { id: "Balance", label: "Balance", visible: true },
