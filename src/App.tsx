@@ -16,6 +16,7 @@ import Login from "./pages/Login/Login";
 import Otp from "./pages/Login/Otp";
 import PosReceipt from "./pages/pos/PosReceipt";
 import { useAuth } from "./Context/AuthContext";
+import { OrganizationProvider } from "./Context/OrganizationContext";
 
 const Layout = lazy(() => import("./layout/Layout"));
 const Dashboard = lazy(() => import("./pages/DashBoard"));
@@ -77,15 +78,17 @@ const App: React.FC = () => {
   const element = useRoutes(routes);
 
   return (
-    <Suspense
-      fallback={
-        <div>
-          <p>Loading...</p>
-        </div>
-      }
-    >
-      {element}
-    </Suspense>
+   <OrganizationProvider>
+      <Suspense
+        fallback={
+          <div>
+            <p>Loading...</p>
+          </div>
+        }
+      >
+        {element}
+      </Suspense>
+   </OrganizationProvider>
   );
 };
 
