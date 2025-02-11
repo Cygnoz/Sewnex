@@ -1,27 +1,67 @@
 import { useNavigate } from "react-router-dom"
 import Table from "../../../Components/Table/Table"
 import NewBankModal from "./NewBankModal"
+import { endpoints } from "../../../Services/apiEdpoints";
+import { useEffect, useState } from "react";
+import useApi from "../../../Hooks/useApi";
 
 type Props = {}
 
+interface Account {
+  _id: string;
+  accountName: string;
+  accountCode: string;
+  accountSubhead: string;
+  accountHead: string;
+  description: string;
+}
+
 function BankHome({}: Props) {
-    const dummyColumns = [
-        { id: "AccountName", label: "Account Name", visible: true },
-        { id: "AccountCode", label: "Account Code", visible: true },
-        { id: "AccountType", label: "Account Type", visible: true },
-        { id: "Document", label: "Document", visible: true },
-        { id: "ParentAccountType", label: "Parent Account Type", visible: true },
+  const [accountData, setAccountData] = useState<Account[]>([]);
+  const [loading, setLoading] = useState({
+    skeleton: false,
+    noDataFound: false
+  });
+
+  const { request: AllAccounts } = useApi("get", 5001);
+
+  const fetchAllAccounts = async () => {
+    try {
+      setLoading({ ...loading, skeleton: true, noDataFound: false });
+      const url = `${endpoints.Get_ALL_Acounts}`;
+      const apiResponse = await AllAccounts(url);
+      const { response, error } = apiResponse;
+  
+      if (!error && response) {
+        setAccountData(
+          response.data.filter(
+            (account: Account) => account.accountSubhead === "Bank"
+          )
+        );
+        setLoading({ ...loading, skeleton: false });
+      } else {
+        setLoading({ ...loading, skeleton: false, noDataFound: true });
+      }
+    } catch (error) {
+      console.error("Error fetching accounts:", error);
+      setLoading({ ...loading, skeleton: false, noDataFound: true });
+    }
+  };
+  useEffect(() => {
+    fetchAllAccounts();
+  }, []);
+  
+    const Columns = [
+        { id: "accountName", label: "Account Name", visible: true },
+        { id: "accountCode", label: "Account Code", visible: true },
+        { id: "accountSubhead", label: "Account Type", visible: true },
+        { id: "description", label: "Document", visible: true },
+        { id: "accountHead", label: "Parent Account Type", visible: true },
       ]
-      
-      const dummyData = [
-        { AccountName: "John Doe", AccountCode: "AC-001", AccountType: "Bank" ,Document:"Telephone Expense" ,ParentAccountType:"Lorem ipsum anga" },
-        { AccountName: "Jane Smith", AccountCode: "AC-001", AccountType: "Bank" ,Document:"Telephone Expense" ,ParentAccountType:"Lorem ipsum anga"},
-        { AccountName: "Bob Brown", AccountCode: "AC-001", AccountType: "Bank",Document:"Telephone Expense" ,ParentAccountType:"Lorem ipsum anga"},
-      ]
-      
+            
       const navigate=useNavigate()
-      const HanldeNavigate=()=>{
-        navigate("/accountant/viewOne")
+      const HanldeNavigate=(id:string)=>{
+        navigate(`/accountant/viewOne/${id}`)
       }
 
   return (
@@ -36,7 +76,7 @@ function BankHome({}: Props) {
         </div>
     </div>
     <div className="mt-6">
-      <Table columns={dummyColumns} data={dummyData} searchPlaceholder={"Search account"}  searchableFields={["AccountName", "AccountCode"]}
+      <Table columns={Columns} data={accountData} searchPlaceholder={"Search account"}  searchableFields={["AccountName", "AccountCode"]}
           loading={false}  isPrint onRowClick={HanldeNavigate}/>  
     </div>
     </div>

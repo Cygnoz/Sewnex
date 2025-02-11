@@ -127,7 +127,7 @@ const Table: React.FC<TableProps> = ({
               ))
             ) : filteredData && filteredData.length > 0 ? (
               filteredData.map((item, rowIndex) => (
-                <tr key={item.id} className="relative cursor-pointer">
+                <tr key={item.id} className="relative">
                   <td className="py-2.5 px-4 border-y border-tableBorder text-[#818894]">
                     {(currentPage - 1) * rowsPerPage + rowIndex + 1}
                   </td>
