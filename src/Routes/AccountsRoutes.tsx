@@ -20,7 +20,7 @@ const AccountsRoutes = () => {
         <Route path="manualJournal" element={<ManualJournalHome/>}></Route>
         <Route path="newJournal" element={<NewJournal/>}></Route>
         <Route path="viewOne/:id" element={<AccountantViewOne/>}></Route>
-        <Route path="viewOneJournal" element={<ManualJournalView/>}></Route>
+        <Route path="viewOneJournal/:id" element={<ManualJournalView/>}></Route>
       </Routes>
     );
   };

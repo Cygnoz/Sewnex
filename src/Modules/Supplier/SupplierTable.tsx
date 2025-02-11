@@ -52,7 +52,6 @@ function SupplierTable({ }: Props) {
         <div>
             <div>
                 <Table
-                    page="supplier"
                     columns={columns}
                     data={data}
                     onRowClick={handleRowClick}
@@ -62,6 +61,9 @@ function SupplierTable({ }: Props) {
                     searchPlaceholder="Search Supplier"
                     loading={false}
                     searchableFields={["CompanyName", "Name", "email"]}
+                    // renderActions={(item) => (
+                    //     <AddSupplierModal id={item._id} />
+                    // )}
                 />
             </div>
         </div>
