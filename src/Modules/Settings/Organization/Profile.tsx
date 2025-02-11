@@ -7,7 +7,7 @@ import Plus from "../../../assets/icons/Plus";
 import Banner from "./Banner";
 import Trash from "../../../assets/icons/Trash";
 import Input from "../../../Components/Form/Input";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Select from "../../../Components/Form/Select";
@@ -27,7 +27,7 @@ interface InputData {
   organizationPhNum: string;
   website?: string;
   baseCurrency: string;
-  fiscalYear?: string;
+  fiscalYear: string;
   timeZone: string;
   timeZoneExp?: string;
   dateFormat: string;
@@ -44,8 +44,7 @@ const Profile = () => {
   const [stateList, setStateList] = useState<any | []>([]);
   const { request: getAdditionalData } = useApi("get", 5004);
   const { request: createOrganization } = useApi("post", 5004);
-  const { request: getCurrencyData } = useApi("get", 5004);
-  const { request: getCountryData } = useApi("get", 5004);
+  const { request: getOneOrganization } = useApi("get", 5004);
 
   const [inputData, setInputData] = useState<InputData>({
     organizationLogo: "",
@@ -84,7 +83,7 @@ const Profile = () => {
     organizationPhNum: yup.string().required("Phone is a required field"),
     website: yup.string(),
     baseCurrency: yup.string().required("Base Currency is a required field"),
-    fiscalYear: yup.string().optional(),
+    fiscalYear: yup.string().required("Financial is a required field"),
     timeZone: yup.string().required("Time Zone is a required field"),
     timeZoneExp: yup.string().optional(),
     dateFormat: yup.string().required("Date Format is a required field"),
@@ -98,7 +97,6 @@ const Profile = () => {
     handleSubmit,
     watch,
     setValue,
-    clearErrors,
     formState: { errors },
   } = useForm<InputData>({
     resolver: yupResolver(validationSchema),
@@ -134,10 +132,7 @@ const Profile = () => {
     ]);
   };
 
-  const handleFileChange = (
-    e: ChangeEvent<HTMLInputElement>,
-    key: string // Specify the key to update, e.g., "organizationLogo"
-  ) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>, key: string) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
@@ -154,56 +149,15 @@ const Profile = () => {
     }
   };
 
-  // const selectTimeZone = (e: any) => {
-  //   const selectedZone = e.target.value;
-
-  //   const selectedTimeZone = additionalData.timezones.find(
-  //     (timezone: any) => timezone.zone === selectedZone
-  //   );
-
-  //   console.log(selectedTimeZone);
-
-  //   if (selectedTimeZone) {
-  //     setInputData((prevDetails) => ({
-  //       ...prevDetails,
-  //       timeZone: selectedZone,
-  //       timeZoneExp: selectedTimeZone.timeZone,
-  //     }));
-  //   }
-  // };
-
-  // const selectDateFormat = (e: any) => {
-  //   const selectedFormat = e.target.value;
-
-  //   const selectedDateFormat = [
-  //     ...additionalData.dateFormats.short,
-  //     ...additionalData.dateFormats.medium,
-  //     ...additionalData.dateFormats.long,
-  //   ].find((dateFormat) => dateFormat.format === selectedFormat);
-
-  //   console.log(selectedDateFormat);
-
-  //   if (selectedDateFormat) {
-  //     setInputData((prevDetails: any) => ({
-  //       ...prevDetails,
-  //       dateFormat: selectedFormat,
-  //       dateFormatExp: selectedDateFormat.dateFormat,
-  //     }));
-  //   }
-  // };
-
-  const onSubmit: SubmitHandler<InputData> = async (data, event) => {
-    event?.preventDefault();
-    console.log("Form Data:", data);
-
+  const onSubmit = async () => {
     try {
       const { response, error } = await createOrganization(
         endpoints.CREATE_ORGANIZATION,
-        data
+        inputData
       );
       if (response && !error) {
         toast.success(response.data.message);
-      } else if (error) {
+      } else {
         toast.error(error.response?.data?.message || "An error occurred.");
       }
     } catch (err) {
@@ -212,8 +166,8 @@ const Profile = () => {
   };
 
   const handleInputChange = (name: string, value: any) => {
-    setInputData((prevData) => ({
-      ...prevData,
+    setInputData((prevDetails: any) => ({
+      ...prevDetails,
       [name]: value,
     }));
     setValue(name as keyof InputData, value);
@@ -260,6 +214,30 @@ const Profile = () => {
   }, [inputData.organizationCountry, countryData, inputData.organizationLogo]);
 
   console.log(inputData, "inputData");
+
+  const fetchOrganization = async () => {
+    try {
+      const url = `${endpoints.GET_ONE_ORGANIZATION}`;
+      const { response, error } = await getOneOrganization(url);
+
+      if (!error && response) {
+        Object.keys(response.data).forEach((key) => {
+          setValue(key as keyof InputData, response.data[key]);
+        });
+        setInputData((prevDetails: any) => ({
+          ...prevDetails,
+          ...response.data,
+        }));
+        console.log(response.data, "Organization data fetched");
+      }
+    } catch (error) {
+      console.log("Error in fetching Organization", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrganization();
+  }, []);
 
   return (
     <div className="  overflow-y-scroll hide-scrollbar h-[100vh]">
@@ -384,6 +362,7 @@ const Profile = () => {
               error={errors.addline1?.message}
               {...register("addline1")}
               onChange={(e) => handleInputChange("addline1", e.target.value)}
+              value={watch("addline1")}
             />
 
             <div className="pt-2.5">
@@ -393,6 +372,7 @@ const Profile = () => {
                 error={errors.addline2?.message}
                 {...register("addline2")}
                 onChange={(e) => handleInputChange("addline2", e.target.value)}
+                value={watch("addline2")}
               />
             </div>
             <Input
@@ -401,6 +381,7 @@ const Profile = () => {
               error={errors.city?.message}
               {...register("city")}
               onChange={(e) => handleInputChange("city", e.target.value)}
+              value={watch("city")}
             />
             <Input
               label="Pin / Zip / Post Code"
@@ -408,6 +389,7 @@ const Profile = () => {
               error={errors.pincode?.message}
               {...register("pincode")}
               onChange={(e) => handleInputChange("pincode", e.target.value)}
+              value={watch("pincode")}
             />
 
             <Select
@@ -430,7 +412,7 @@ const Profile = () => {
               name="organizationPhNum"
               error={errors.organizationPhNum?.message}
               placeholder="Enter phone number"
-              value={watch("organizationPhNum")}
+              value={inputData.organizationPhNum}
               onChange={(value) => {
                 handleInputChange("organizationPhNum", value);
               }}
@@ -467,7 +449,6 @@ const Profile = () => {
             error={errors.baseCurrency?.message}
             onChange={(value) => {
               handleInputChange("baseCurrency", value);
-             
             }}
             label="Base Currency"
             options={currencyData?.map((currency: any) => ({
@@ -484,7 +465,6 @@ const Profile = () => {
             error={errors.fiscalYear?.message}
             onChange={(value) => {
               handleInputChange("fiscalYear", value);
-             
             }}
             label="Financial Year"
             options={

@@ -131,7 +131,7 @@ const Select: React.FC<SelectProps> = ({
           </div>
         </div>
       )}
-      {error && <p className="text-[#BC0000] text-sm mt-1">{error}</p>}
+      {error && <p className="text-[#BC0000] text-xs mt-1">{error}</p>}
     </div>
   );
 };
