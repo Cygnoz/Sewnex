@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from "react";
-import { useRoutes } from "react-router-dom";
+import { useRoutes, Navigate } from "react-router-dom";
 import PurchaseRoutes from "./Routes/PurchaseRoutes";
 import CustomerRoutes from "./Routes/CustomerRoutes";
 import SettingsRoutes from "./Routes/SettingsRoutes";
@@ -15,6 +15,7 @@ import ReportRoutes from "./Routes/ReportRoutes";
 import Login from "./pages/Login/Login";
 import Otp from "./pages/Login/Otp";
 import PosReceipt from "./pages/pos/PosReceipt";
+import { useAuth } from "./Context/AuthContext";
 
 const Layout = lazy(() => import("./layout/Layout"));
 const Dashboard = lazy(() => import("./pages/DashBoard"));
@@ -22,10 +23,12 @@ const Pos = lazy(() => import("./pages/pos/Pos"));
 const SettingsLayout = lazy(() => import("./layout/Settings/SettingsLayout"));
 
 const App: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+
   const routes = [
     {
       path: "/",
-      element: <Layout />,
+      element: isAuthenticated ? <Layout /> : <Navigate to="/login" />,
       children: [
         { path: "/", element: <Dashboard /> },
         { path: "purchase/*", element: <PurchaseRoutes /> },
@@ -43,7 +46,7 @@ const App: React.FC = () => {
     },
     {
       path: "/",
-      element: <SettingsLayout />,
+      element: isAuthenticated ? <SettingsLayout /> : <Navigate to="/login" />,
       children: [
         { path: "", element: <div></div> },
         { path: "settings/*", element: <SettingsRoutes /> },
@@ -51,19 +54,19 @@ const App: React.FC = () => {
     },
     {
       path: "/pos",
-      element: <Pos />,
+      element: isAuthenticated ? <Pos /> : <Navigate to="/login" />,
     },
     {
       path: "/posreciept",
-      element: <PosReceipt />,
+      element: isAuthenticated ? <PosReceipt /> : <Navigate to="/login" />,
     },
     {
       path: "/login",
-      element: <Login/>,
+      element: isAuthenticated ? <Navigate to="/" /> : <Login />,
     },
     {
       path: "/otp",
-      element:<Otp/> ,
+      element: isAuthenticated ? <Navigate to="/" /> : <Otp />,
     },
     {
       path: "*",

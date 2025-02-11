@@ -12,6 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Select from "../../../Components/Form/Select";
 import PhoneNumberInput from "../../../Components/Form/PhoneInput";
+import toast from "react-hot-toast";
 
 interface InputData {
   organizationLogo?: string;
@@ -69,7 +70,9 @@ const Profile = () => {
   });
 
   const validationSchema = yup.object({
-    organizationName: yup.string().required("Organization Name is a required field"),
+    organizationName: yup
+      .string()
+      .required("Organization Name is a required field"),
     organizationLogo: yup.string().optional(),
     organizationCountry: yup.string().required("Country is a required field"),
     organizationIndustry: yup.string(),
@@ -101,32 +104,18 @@ const Profile = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  const countrydata = [
-    {
-      name: "India",
-      flag: "/flags/india.png",
-      phoneNumberCode: "+91",
-      phoneNumberLimit: 10,
-    },
-    {
-      name: "USA",
-      flag: "/flags/usa.png",
-      phoneNumberCode: "+1",
-      phoneNumberLimit: 10,
-    },
-    // Add more countries here
-  ];
-  const countryOptions = countrydata.map((country) => ({
-    value: country.name,
-    label: country.name,
-  }));
-
   const fetchData = async (endpoint: any, setDataCallback: any) => {
     try {
       const { response, error } = await getAdditionalData(endpoint);
       if (!error && response) {
         setDataCallback(
-          response.data[0]?.countries || response.data[0] || response.data
+          endpoint === endpoints.GET_ADDITIONAL_DATA
+            ? response.data[0]
+            : endpoint === endpoints.GET_COUNTRY_DATA
+            ? response.data[0]?.countries || response.data[0] || response.data
+            : endpoint === endpoints.GET_CURRENCY_LIST
+            ? response.data
+            : []
         );
       }
     } catch (error) {
@@ -135,35 +124,14 @@ const Profile = () => {
   };
 
   const fetchAllData = async () => {
-    await fetchData(endpoints.GET_ADDITIONAL_DATA, setAdditionalData);
-    await fetchData(endpoints.GET_COUNTRY_DATA, (data: any) =>
-      setcountryData(data.countries)
-    );
-    await fetchData(endpoints.GET_CURRENCY_LIST, setcurrencyData);
-  };
-
-  const handleInputPhoneChange = (e: any) => {
-    const rawInput = e.target.value.trim();
-    const phoneNumberLimit = selectedCountry?.phoneNumberLimit || 0;
-
-    let phoneNumber = rawInput
-      .replace(selectedCountry?.phoneNumberCode, "")
-      .trim();
-
-    if (phoneNumber.length > phoneNumberLimit) {
-      phoneNumber = phoneNumber.slice(0, phoneNumberLimit);
-    }
-
-    const enteredPhone = `${
-      selectedCountry?.phoneNumberCode || ""
-    } ${phoneNumber}`;
-
-    // console.log(enteredPhone, "entered");
-
-    setInputData((prevData) => ({
-      ...prevData,
-      organizationPhNum: enteredPhone,
-    }));
+    await Promise.all([
+      fetchData(endpoints.GET_ADDITIONAL_DATA, setAdditionalData),
+      fetchData(endpoints.GET_COUNTRY_DATA, (data: any) => {
+        console.log("Fetched country data:", data);
+        setcountryData(data);
+      }),
+      fetchData(endpoints.GET_CURRENCY_LIST, setcurrencyData),
+    ]);
   };
 
   const handleFileChange = (
@@ -234,14 +202,21 @@ const Profile = () => {
         data
       );
       if (response && !error) {
-        // toast.success(response.data.message); // Show success toast
+        toast.success(response.data.message);
       } else if (error) {
-        // toast.error(error.response?.data?.message || "An error occurred.");
+        toast.error(error.response?.data?.message || "An error occurred.");
       }
     } catch (err) {
       console.error("Unexpected error submitting data:", err);
-      // toast.error("An unexpected error occurred."); // Handle unexpected errors
     }
+  };
+
+  const handleInputChange = (name: string, value: any) => {
+    setInputData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    setValue(name as keyof InputData, value);
   };
 
   const handleDeleteImage = () => {
@@ -284,16 +259,7 @@ const Profile = () => {
     }
   }, [inputData.organizationCountry, countryData, inputData.organizationLogo]);
 
-  const handleInputChange = (field: keyof InputData) => {
-    clearErrors(field);
-  };
-
-  // const setFormValues = (data: InputData) => {
-  //   Object.keys(data).forEach((key) => {
-  //     setValue(key as keyof InputData, data[key as keyof InputData]);
-  //   });
-  // };
-
+  console.log(inputData, "inputData");
 
   return (
     <div className="  overflow-y-scroll hide-scrollbar h-[100vh]">
@@ -371,7 +337,8 @@ const Profile = () => {
               placeholder="Enter organization Name"
               error={errors.organizationName?.message}
               {...register("organizationName", {
-                onChange: () => handleInputChange("organizationName"),
+                onChange: (e) =>
+                  handleInputChange("organizationName", e.target.value),
               })}
             />
 
@@ -380,10 +347,14 @@ const Profile = () => {
               placeholder="Select Country"
               error={errors.organizationCountry?.message}
               label="Organization Location"
-              options={countryOptions}
+              options={
+                countryData?.map((country: any) => ({
+                  value: country.name,
+                  label: country.name,
+                })) || []
+              }
               onChange={(value: string) => {
-                setValue("organizationCountry", value);
-                handleInputChange("organizationCountry");
+                handleInputChange("organizationCountry", value);
               }}
               value={watch("organizationCountry")}
             />
@@ -393,12 +364,16 @@ const Profile = () => {
               placeholder="Select Industry"
               error={errors.organizationIndustry?.message}
               onChange={(value: string) => {
-                setValue("organizationIndustry", value);
-                handleInputChange("organizationIndustry");
+                handleInputChange("organizationIndustry", value);
               }}
               value={watch("organizationIndustry")}
-              label="Organization Indusrty"
-              options={[]}
+              label="Organization Industry"
+              options={
+                additionalData?.industry?.map((industry: any) => ({
+                  value: industry,
+                  label: industry,
+                })) || []
+              }
             />
           </div>
 
@@ -408,7 +383,7 @@ const Profile = () => {
               placeholder="Street 1"
               error={errors.addline1?.message}
               {...register("addline1")}
-              onChange={() => handleInputChange("addline1")}
+              onChange={(e) => handleInputChange("addline1", e.target.value)}
             />
 
             <div className="pt-2.5">
@@ -417,7 +392,7 @@ const Profile = () => {
                 placeholder="Street 2"
                 error={errors.addline2?.message}
                 {...register("addline2")}
-                onChange={() => handleInputChange("addline2")}
+                onChange={(e) => handleInputChange("addline2", e.target.value)}
               />
             </div>
             <Input
@@ -425,34 +400,41 @@ const Profile = () => {
               placeholder="Enter City"
               error={errors.city?.message}
               {...register("city")}
-              onChange={() => handleInputChange("city")}
+              onChange={(e) => handleInputChange("city", e.target.value)}
             />
             <Input
               label="Pin / Zip / Post Code"
               placeholder="Pin / Zip / Post Code"
               error={errors.pincode?.message}
               {...register("pincode")}
-              onChange={() => handleInputChange("pincode")}
+              onChange={(e) => handleInputChange("pincode", e.target.value)}
             />
+
             <Select
               required
               placeholder="Select State / Region / County"
               error={errors.state?.message}
-              onChange={() => handleInputChange("state")}
+              onChange={(value: string) => {
+                handleInputChange("state", value);
+              }}
               label="State / Region / County"
-              options={[]}
+              options={stateList.map((state: any) => ({
+                value: state,
+                label: state,
+              }))}
+              value={watch("state")}
             />
+
             <PhoneNumberInput
               label="Phone"
-              name="companyPhone"
+              name="organizationPhNum"
               error={errors.organizationPhNum?.message}
               placeholder="Enter phone number"
               value={watch("organizationPhNum")}
               onChange={(value) => {
-                handleInputChange("organizationPhNum");
-                setValue("organizationPhNum", value);
+                handleInputChange("organizationPhNum", value);
               }}
-              countryData={countrydata}
+              country={inputData.organizationCountry}
             />
           </div>
         </div>
@@ -467,7 +449,10 @@ const Profile = () => {
             placeholder="Website URL"
             error={errors.website?.message}
             {...register("website")}
-            onChange={() => handleInputChange("website")}
+            onChange={(e) => {
+              handleInputChange("website", e.target.value);
+            }}
+            value={watch("website")}
           />
         </div>
 
@@ -478,19 +463,36 @@ const Profile = () => {
         <div className="bg-white p-5 rounded-lg mt-2 grid grid-cols-2 gap-4">
           <Select
             required
-            placeholder=" Select Currency"
+            placeholder="Select Currency"
             error={errors.baseCurrency?.message}
-            onChange={() => handleInputChange("baseCurrency")}
+            onChange={(value) => {
+              handleInputChange("baseCurrency", value);
+             
+            }}
             label="Base Currency"
-            options={[]}
+            options={currencyData?.map((currency: any) => ({
+              value: currency.currencyCode,
+              label: currency.currencyName + " (" + currency.currencyCode + ")",
+            }))}
+            value={watch("baseCurrency")}
           />
+
           <Select
+            value={watch("fiscalYear")}
             required
             placeholder="Select Financial Year"
             error={errors.fiscalYear?.message}
-            onChange={() => handleInputChange("fiscalYear")}
+            onChange={(value) => {
+              handleInputChange("fiscalYear", value);
+             
+            }}
             label="Financial Year"
-            options={[]}
+            options={
+              additionalData?.financialYear?.map((financialYear: any) => ({
+                value: financialYear,
+                label: financialYear,
+              })) || []
+            }
           />
         </div>
 
@@ -499,39 +501,59 @@ const Profile = () => {
         </p>
 
         <div className="grid grid-cols-12 gap-4 bg-white p-5 rounded-lg mt-2">
-          <div
-            className=" col-span-8
-            "
-          >
+          <div className="col-span-8">
             <Select
               required
               placeholder="Select Time zone"
               error={errors.timeZone?.message}
-              onChange={() => handleInputChange("timeZone")}
+              onChange={(value: string) => handleInputChange("timeZone", value)}
               label="Time Zone"
-              options={[]}
+              options={
+                additionalData?.timezones?.map((timezone: any) => ({
+                  value: timezone.zone,
+                  label: timezone.zone + " - " + timezone.description,
+                })) || []
+              }
+              value={watch("timeZone")}
             />
           </div>
-          <div
-            className=" col-span-8
-            "
-          >
+          <div className="col-span-8">
             <Select
               required
-              placeholder="Select Date Fromat"
+              placeholder="Select Date Format"
               error={errors.dateFormat?.message}
-              onChange={() => handleInputChange("dateFormat")}
+              onChange={(value: string) =>
+                handleInputChange("dateFormat", value)
+              }
               label="Date Format"
-              options={[]}
+              options={
+                [
+                  ...(additionalData?.dateFormats?.short || []),
+                  ...(additionalData?.dateFormats?.medium || []),
+                  ...(additionalData?.dateFormats?.long || []),
+                ].map((dateFormat: any) => ({
+                  value: dateFormat.format,
+                  label: dateFormat.format,
+                })) || []
+              }
+              value={watch("dateFormat")}
             />
           </div>
           <div className="col-span-4 pt-6">
             <Select
               placeholder="Select Date Split"
               error={errors.dateSplit?.message}
-              onChange={() => handleInputChange("dateSplit")}
+              onChange={(value: string) =>
+                handleInputChange("dateSplit", value)
+              }
               label=""
-              options={[]}
+              options={
+                additionalData?.dateSplit?.map((dateSplit: any) => ({
+                  value: dateSplit,
+                  label: dateSplit,
+                })) || []
+              }
+              value={watch("dateSplit")}
             />
           </div>
         </div>

@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import CheveronDown from "../../assets/icons/CheveronDown";
-// import SearchBar from "../ui/SearchBar";
 
 interface SelectProps {
   required?: boolean;
@@ -12,6 +11,7 @@ interface SelectProps {
   value?: string;
   onChange?: (value: string) => void;
   size?: "sm" | "md" | "lg"; 
+  header?: string; // Add header prop
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -24,10 +24,11 @@ const Select: React.FC<SelectProps> = ({
   value,
   onChange,
   size = "md",
+  header, // Add header to the props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchValue] = useState("");
-  const [filteredOptions, setFilteredOptions] = useState(options);
+  const [filteredOptions, setFilteredOptions] = useState<{ value: any; label: string }[]>(options);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -40,7 +41,7 @@ const Select: React.FC<SelectProps> = ({
 
     setFilteredOptions(
       allOptions.filter((option) =>
-        option.label.toLowerCase().includes(searchValue.toLowerCase())
+        option?.label?.toLowerCase().includes(searchValue.toLowerCase())
       )
     );
   }, [searchValue, options, placeholder]);
@@ -60,19 +61,6 @@ const Select: React.FC<SelectProps> = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  // useEffect(() => {
-  //   if (isOpen && dropdownRef.current) {
-  //     const dropdownRect = dropdownRef.current.getBoundingClientRect();
-  //     const viewportHeight = window.innerHeight;
-
-  //     if (dropdownRect.bottom + 150 > viewportHeight) {
-  //       setDropdownPosition("top");
-  //     } else {
-  //       setDropdownPosition("bottom");
-  //     }
-  //   }
-  // }, [isOpen]);
 
   const handleOptionSelect = (selectedValue: string) => {
     if (onChange) onChange(selectedValue);
@@ -114,13 +102,16 @@ const Select: React.FC<SelectProps> = ({
         </div>
       </div>
       {isOpen && (
-       <div className="p-1">
+        <div className="p-1">
           <div
-            className={`absolute z-10  w-[97%] ms-1  bg-white border border-gray-300 rounded-[4px] shadow-lg
-            `
-          }
+            className={`absolute z-10 w-[97%] ms-1 bg-white border border-gray-300 rounded-[4px] shadow-lg`}
             tabIndex={0}
           >
+            {header && (
+              <div className="px-4 py-2 text-sm text-gray-700 font-bold border-b">
+                {header}
+              </div>
+            )}
             <div ref={listRef} className="max-h-52 overflow-y-auto custom-scrollbar">
               {filteredOptions.map((option, index) => (
                 <div
@@ -138,7 +129,7 @@ const Select: React.FC<SelectProps> = ({
               </div>
             )}
           </div>
-       </div>
+        </div>
       )}
       {error && <p className="text-[#BC0000] text-sm mt-1">{error}</p>}
     </div>
@@ -146,5 +137,3 @@ const Select: React.FC<SelectProps> = ({
 };
 
 export default Select;
-
-//        ${dropdownPosition === "top" ? "bottom-full mb-1" : "top-full mt-1"}

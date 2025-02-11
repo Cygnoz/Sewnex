@@ -1,9 +1,20 @@
 export const endpoints ={
+
+    // login
+    LOGIN:`login`,
+    GET_OTP:`/verify-otp`,
+
+    GET_ADDITIONAL_DATA: `get-additional-data`,
     CREATE_ORGANIZATION: `setup-organization`,
-    GET_ONE_ORGANIZATION:``,
-    GET_ADDITIONAL_DATA:``,
-    GET_COUNTRY_DATA:`get-countries-data`,
-    GET_CURRENCY_LIST:``,
+    GET_ONE_ORGANIZATION: `get-one-organization`,
+    GET_COUNTRY_DATA: `get-countries-data`,
+    GET_CURRENCY_LIST: `get-currency`,
+  
+
+
+
+
+
 
     GET_ALL_ITEM: ``,
     GET_ONE_SUPPLIER:``,

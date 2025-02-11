@@ -1,112 +1,115 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Button from "../../Components/Button";
 import bgImage from "../../assets/Images/Login-image.png";
-import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import { useNavigate, useLocation } from 'react-router-dom';
+import toast  from 'react-hot-toast';
+import axios from 'axios';
+import useApi from '../../Hooks/useApi';
+import { endpoints } from '../../Services/apiEdpoints';
+import { useAuth } from '../../Context/AuthContext';
 
 type Props = {}
 
-function Otp({ }: Props) {
-    const navigate = useNavigate();
-    //   const location = useLocation();
-    useEffect(() => {
-        inputRefs[0].current?.focus();
-    }, []);
+function Otp({}: Props) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { request: verifyOtp } = useApi("post", 5004);
+  const { setIsAuthenticated } = useAuth(); // Get the setIsAuthenticated function from context
+  useEffect(() => {
+    inputRefs[0].current?.focus();
+  }, []);
 
-    // Extract email from location state or set a default for testing purposes
-    //   const email = location.state?.email || '';
+  // Extract email from location state or set a default for testing purposes
+  const email = location.state?.email || '';
 
-    const [otp, setOtp] = useState(['', '', '', '', '', '']);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-    const inputRefs = Array.from({ length: 6 }, () => useRef<HTMLInputElement>(null));
+  const inputRefs = Array.from({ length: 6 }, () => useRef<HTMLInputElement>(null));
 
-    // Handle OTP change
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        const value = e.target.value;
-        if (/^[0-9]$/.test(value)) {
-            const newOtp = [...otp];
-            newOtp[index] = value;
-            setOtp(newOtp);
-            if (index < inputRefs.length - 1) {
-                inputRefs[index + 1].current?.focus();
-            }
-        } else if (value === '') {
-            const newOtp = [...otp];
-            newOtp[index] = '';
-            setOtp(newOtp);
+  // Handle OTP change
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const value = e.target.value;
+    if (/^[0-9]$/.test(value)) {
+      const newOtp = [...otp];
+      newOtp[index] = value;
+      setOtp(newOtp);
+      if (index < inputRefs.length - 1) {
+        inputRefs[index + 1].current?.focus();
+      }
+    } else if (value === '') {
+      const newOtp = [...otp];
+      newOtp[index] = '';
+      setOtp(newOtp);
+    }
+  };
+
+  // Handle backspace key for OTP inputs
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (e.key === 'Backspace') {
+      if (otp[index] === '') {
+        if (index > 0) {
+          inputRefs[index - 1].current?.focus();
         }
-    };
+      } else {
+        const newOtp = [...otp];
+        newOtp[index] = '';
+        setOtp(newOtp);
+      }
+    }
+  };
 
-    // Handle backspace key for OTP inputs
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
-        if (e.key === 'Backspace') {
-            if (otp[index] === '') {
-                if (index > 0) {
-                    inputRefs[index - 1].current?.focus();
-                }
-            } else {
-                const newOtp = [...otp];
-                newOtp[index] = '';
-                setOtp(newOtp);
-            }
+  // Handle OTP paste
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    const pasteData = e.clipboardData.getData('text').trim();
+    if (/^\d{6}$/.test(pasteData)) {
+      const pasteOtp = pasteData.split('');
+      setOtp(pasteOtp);
+      pasteOtp.forEach((digit, index) => {
+        if (inputRefs[index].current) {
+          inputRefs[index].current!.value = digit;
         }
-    };
+      });
+      inputRefs[5].current?.focus();
+    }
+    e.preventDefault();
+  };
 
-    // Handle OTP paste
-    const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-        const pasteData = e.clipboardData.getData('text').trim();
-        if (/^\d{6}$/.test(pasteData)) {
-            const pasteOtp = pasteData.split('');
-            setOtp(pasteOtp);
-            pasteOtp.forEach((digit, index) => {
-                if (inputRefs[index].current) {
-                    inputRefs[index].current!.value = digit;
-                }
-            });
-            inputRefs[5].current?.focus();
-        }
-        e.preventDefault();
-    };
+  // Handle OTP submission
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
 
-    // Handle OTP submission
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setIsLoading(true);
-        setError(null);
+    const enteredOtp = otp.join('');
+    try {
+      const response = await verifyOtp(endpoints.GET_OTP, { email, otp: enteredOtp });
+      console.log('OTP Verification Response:', response);
 
-        // const enteredOtp = otp.join('');
-        try {
-            // Send the OTP verification request
-            //   const response = await verifyOtp(endponits.GET_OTP, { email, otp: enteredOtp });
-            //   console.log('OTP Verification Response:', response);
-
-            if (otp) {
-                // toast.success(response.response?.data.message || 'OTP verified successfully!');
-                // // Save the token and update the authentication state
-                // localStorage.setItem('authToken', response.response.data.token);
-                // setIsAuthenticated(true); // Set authentication state
-                navigate('/'); // Redirect to the home/dashboard
-            }
-            else {
-                const errorMessage = 'OTP verification failed.';
-                setError(errorMessage);
-                toast.error(errorMessage);
-            }
-        } catch (error) {
-            //   if (axios.isAxiosError(error)) {
-            //     const errorMessage = error.response?.data?.message || 'OTP verification failed. Please try again.';
-            //     setError(errorMessage);
-            //     toast.error(errorMessage);
-            //   } else {
-            // }
-            setError('OTP verification failed. Please try again.');
-            toast.error('OTP verification failed. Please try again.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
+      if (response.response?.data.success) {
+        toast.success(response.response?.data.message || 'OTP verified successfully!');
+        localStorage.setItem('authToken', response.response.data.token);
+        setIsAuthenticated(true); // Set authentication state
+        navigate('/'); // Redirect to the home/dashboard
+      } else {
+        const errorMessage = response.response?.data.message || 'OTP verification failed.';
+        setError(errorMessage);
+        toast.error(errorMessage);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.response?.data?.message || 'OTP verification failed. Please try again.';
+        setError(errorMessage);
+        toast.error(errorMessage);
+      } else {
+        setError('OTP verification failed. Please try again.');
+        toast.error('OTP verification failed. Please try again.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
     return (
         <div className="h-[100vh] flex">

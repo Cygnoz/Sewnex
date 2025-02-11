@@ -54,7 +54,7 @@ const NewCustomer = ({ page,id }: Props) => {
         </div>
     )}
 
-      <Modal  open={isModalOpen} onClose={closeModal} className="p-6 max-w-[1200px] max-h-[500px] w-full h-full pt-[32px] rounded-tl-[16px] rounded-tr-[16px] border border-t-0 border-l-0 border-r-0">
+      <Modal  open={isModalOpen} onClose={closeModal} className="p-6 text-start max-w-[1200px] max-h-[500px] w-full h-full pt-[32px] rounded-tl-[16px] rounded-tr-[16px] border border-t-0 border-l-0 border-r-0">
         <div>
           <div className="p-2 m-2 bg-white flex justify-between items-center mb-5">
                     <h1 className="font-bold text-md text-[#0B1320]">Add New Customer</h1>
