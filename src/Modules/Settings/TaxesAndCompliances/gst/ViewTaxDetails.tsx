@@ -30,31 +30,31 @@ function ViewTaxDetails({ gstRate, open, onClose }: Props) {
         <p>
           Tax Name{" "}
           <span className="ms-2 font-bold text-base text-[#303F58]">
-            {gstRate?.TaxName}
+            {gstRate?.taxName}
           </span>
         </p>
         <p className="mt-2.5">
           Rate(%){" "}
           <span className="ms-5 font-bold text-base text-[#303F58]">
-            {gstRate?.Rate}
+            {gstRate?.taxRate}
           </span>
         </p>
         <p className="mt-2.5">
           CGST{" "}
           <span className="ms-8 font-bold text-base text-[#303F58]">
-            {gstRate?.CGST}
+            {gstRate?.cgst}
           </span>
         </p>
         <p className="mt-2.5">
           SGST{" "}
           <span className="ms-8 font-bold text-base text-[#303F58]">
-            {gstRate?.SGST}
+            {gstRate?.sgst}
           </span>
         </p>
         <p className="mt-2.5">
           IGST{" "}
           <span className="ms-10 font-bold text-base text-[#303F58]">
-            {gstRate?.IGST}
+            {gstRate?.igst}
           </span>
         </p>
       </div>
