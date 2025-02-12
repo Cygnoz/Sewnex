@@ -1,6 +1,6 @@
-type Props = {color?:string};
+type Props = { color?: string, strokeWidth?: string };
 
-function CheveronDown({color}: Props) {
+function CheveronDown({ color, strokeWidth }: Props) {
   return (
     <div>
       <svg
@@ -12,8 +12,8 @@ function CheveronDown({color}: Props) {
       >
         <path
           d="M6 9L12 15L18 9"
-          stroke={color?color:"#818894"}
-          stroke-width="2"
+          stroke={color ? color : "#818894"}
+          stroke-width={strokeWidth ? strokeWidth : "2"}
           stroke-linecap="round"
           stroke-linejoin="round"
         />

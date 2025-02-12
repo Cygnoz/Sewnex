@@ -4,6 +4,7 @@ import NewAccountModal from "./NewAccountModal";
 import { useEffect, useState } from "react";
 import useApi from "../../../Hooks/useApi";
 import { endpoints } from "../../../Services/apiEdpoints";
+import toast from "react-hot-toast";
 
 type Props = {};
 
@@ -55,13 +56,52 @@ function ChartOfAccountant({ }: Props) {
     { id: "accountSubhead", label: "Account Type", visible: true },
     { id: "accountHead", label: "Parent Account Type", visible: true }
   ];
+  const HandleOnSave = () =>{
+    fetchAllAccounts();
+  }
+  const [oneAccountData, setOneAccountData] = useState<any>({});
+  console.log(oneAccountData, "oneAccountData");
+
+  const { request: fetchOneItem } = useApi("get", 5001);
+  const { request: deleteAccount } = useApi("delete", 5001);
+  const getOneItem = async (item: Account) => {
+    try {
+      const url = `${endpoints.GET_ONE_ACCOUNT}/${item._id}`;
+      const { response, error } = await fetchOneItem(url);
+      if (!error && response) {
+        setOneAccountData(response.data);
+        console.log(response.data);
+      } else {
+        console.error("Failed to fetch one item data.");
+      }
+    } catch (error) {
+      toast.error("Error in fetching one item data.");
+      console.error("Error in fetching one item data", error);
+    }
+  };
 
   const navigate = useNavigate();
   
   const handleNavigate = (id:string) => {
     navigate(`/accountant/viewOne/${id}`);
   };
-
+  const handleDelete=async(id:string)=>{
+    try {
+      const url = `${endpoints.DELETE_ACCONUT}/${id}`;
+      const { response, error } = await deleteAccount(url);
+      if (!error && response) {
+        toast.success(response.data.message);
+        fetchAllAccounts()
+        console.log(response.data);
+      } else {
+        toast.error(error.response.data.message);
+      }
+    } catch (error) {
+      toast.error("Error in fetching one item data.");
+      console.error("Error in fetching one item data", error);
+    }
+  }
+  
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -72,7 +112,7 @@ function ChartOfAccountant({ }: Props) {
           </p>
         </div>
         <div>
-          <NewAccountModal />
+          <NewAccountModal accountData={accountData} fetchAllAccounts={HandleOnSave}/>
         </div>
       </div>
       <div className="mt-6">
@@ -84,6 +124,20 @@ function ChartOfAccountant({ }: Props) {
           loading={loading.skeleton}
           isPrint
           onRowClick={handleNavigate}
+          onDelete={handleDelete}
+          renderActions={(item) => (
+            <div
+            onClick={() => {
+              getOneItem(item);
+            }}
+          >
+            <NewAccountModal
+              page="Edit"
+              fetchAllAccounts={() => {}}
+              accountData={oneAccountData}
+            />
+          </div>
+          )}
         />
       </div>
     </div>

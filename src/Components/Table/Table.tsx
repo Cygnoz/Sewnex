@@ -7,8 +7,8 @@ import ChevronLeft from "../../assets/icons/ChevronLeft";
 import Button from "../Button";
 import PrinterIcon from "../../assets/icons/PrinterIcon";
 import TrashIcon from "../../assets/icons/TrashIcon";
-import NoDataFoundTable from "./NoDataFoundTable";
 import EditIcon from "../../assets/icons/EditIcon";
+import NoDataFoundTable from "./NoDataFoundTable";
 
 interface Column {
   id: string;
