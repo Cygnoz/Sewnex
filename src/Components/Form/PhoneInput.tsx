@@ -125,7 +125,7 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
 
   {/* Dropdown List */}
   {dropdownOpen && (
-    <div className="absolute top-full left-0 mt-1 bg-white shadow-md rounded-md z-10 max-h-60 overflow-y-auto border border-gray-300 w-full">
+    <div className="absolute top-full left-0 mt-1 bg-white shadow-md rounded-md z-10 max-h-60 overflow-y-auto border border-gray-300 w-full min-w-full">
       {countryList.map((country, index) => (
         <div
           key={index}
@@ -143,17 +143,19 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
   {/* Input Field - Modified with flex-1 */}
   <Input
     name={name}
-    value={phoneNumber}
+    value={value || phoneNumber}
     placeholder={placeholder}
     size={size}
     onChange={handlePhoneNumberChange}
-    className={`flex-1 ${sizeClasses[size]} text-xs rounded-r-[40px] text-textPrimary border px-2 ${
+    className={`flex-1 w-full min-w-full ${sizeClasses[size]} text-xs rounded-r-[40px] text-textPrimary border px-2 ${
       error
         ? "border-[#BC0000]"
         : "border-borderColor focus:border-primary-default focus:outline-none focus:ring-primary-default"
     }`}
   />
 </div>
+
+
   
     {/* Error Message */}
     {error && <p className="text-[#BC0000] text-sm mt-1">{error}</p>}

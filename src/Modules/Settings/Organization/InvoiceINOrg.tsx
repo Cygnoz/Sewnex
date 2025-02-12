@@ -2,7 +2,6 @@ import { useState } from "react";
 import Banner from "./Banner";
 import ChevronRight from "../../../assets/icons/ChevronRight";
 import Modal from "../../../Components/modal/Modal";
-import CirclePlus from "../../../assets/icons/CirclePlus";
 import Button from "../../../Components/Button";
 import Plus from "../../../assets/icons/Plus";
 import QrCode from "../../../assets/images/Frame 629654.png";
@@ -13,6 +12,10 @@ import linkedinlog from "../../../assets/images/linkedin logo.png";
 import facebooklogo from "../../../assets/images/Group.png";
 import Checkbox from "../../../Components/Form/Checkbox";
 import Input from "../../../Components/Form/Input";
+import CirclePlus from "../../../assets/icons/circleplus";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 interface InvoiceSettings {
   organizationAddressFormat?: string;
@@ -106,43 +109,43 @@ const InvoiceINOrg = () => {
     "Dheeraj@",
   ];
 
-  // const validationSchema = yup.object({
-  //   organizationAddressFormat: yup.string().optional(),
-  //   qrLocation: yup.string().optional(),
-  //   displayQrLocation: yup.boolean().optional(),
-  //   qrPayment: yup.string().optional(),
-  //   displayQrPayment: yup.boolean().optional(),
-  //   digitalSignature: yup.string().optional(),
-  //   displayDigitalSignature: yup.boolean().optional(),
-  //   xLink: yup.string().url("Must be a valid URL").optional(),
-  //   displayXLink: yup.boolean().optional(),
-  //   instagramLink: yup.string().url("Must be a valid URL").optional(),
-  //   displayInstagramLink: yup.boolean().optional(),
-  //   linkedinLink: yup.string().url("Must be a valid URL").optional(),
-  //   displayLinkedinLink: yup.boolean().optional(),
-  //   facebookLink: yup.string().url("Must be a valid URL").optional(),
-  //   displayFacebookLink: yup.boolean().optional(),
-  //   accountHolderName: yup.string().optional(),
-  //   displayAccountHolderName: yup.boolean().optional(),
-  //   bankName: yup.string().optional(),
-  //   displayBankName: yup.boolean().optional(),
-  //   accNum: yup.string().optional(),
-  //   displayAccNum: yup.boolean().optional(),
-  //   ifsc: yup.string().optional(),
-  //   displayIfsc: yup.boolean().optional(),
-  //   defaultTermsAndCondition: yup.string().optional(),
-  // });
+  const validationSchema = yup.object({
+    organizationAddressFormat: yup.string().optional(),
+    qrLocation: yup.string().optional(),
+    displayQrLocation: yup.boolean().optional(),
+    qrPayment: yup.string().optional(),
+    displayQrPayment: yup.boolean().optional(),
+    digitalSignature: yup.string().optional(),
+    displayDigitalSignature: yup.boolean().optional(),
+    xLink: yup.string().url("Must be a valid URL").optional(),
+    displayXLink: yup.boolean().optional(),
+    instagramLink: yup.string().url("Must be a valid URL").optional(),
+    displayInstagramLink: yup.boolean().optional(),
+    linkedinLink: yup.string().url("Must be a valid URL").optional(),
+    displayLinkedinLink: yup.boolean().optional(),
+    facebookLink: yup.string().url("Must be a valid URL").optional(),
+    displayFacebookLink: yup.boolean().optional(),
+    accountHolderName: yup.string().optional(),
+    displayAccountHolderName: yup.boolean().optional(),
+    bankName: yup.string().optional(),
+    displayBankName: yup.boolean().optional(),
+    accNum: yup.string().optional(),
+    displayAccNum: yup.boolean().optional(),
+    ifsc: yup.string().optional(),
+    displayIfsc: yup.boolean().optional(),
+    defaultTermsAndCondition: yup.string().optional(),
+  });
 
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   watch,
-  //   setValue,
-  //   clearErrors,
-  //   formState: { errors },
-  // } = useForm<InvoiceSettings>({
-  //   resolver: yupResolver(validationSchema),
-  // });
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    clearErrors,
+    formState: { errors },
+  } = useForm<InvoiceSettings>({
+    resolver: yupResolver(validationSchema),
+  });
 
   const encodeFileToBase64 = (file: any) => {
     return new Promise((resolve, reject) => {
@@ -153,7 +156,7 @@ const InvoiceINOrg = () => {
     });
   };
 
- 
+  console.log(invoiceSettings, "qwertyu");
 
   const openModal = (
     placeholder = false,
@@ -206,13 +209,16 @@ const InvoiceINOrg = () => {
       [varName]: value, // Update the correct property
     }));
   };
-  
 
-  const handleRadioChange = (checked: boolean, varName: string) => {
+  const handleRadioChange = (
+    checked: boolean,
+    varName: keyof InvoiceSettings
+  ) => {
     setInvoiceSettings((prevState) => ({
       ...prevState,
       [varName]: checked,
     }));
+    setValue(varName, checked);
   };
 
   return (
@@ -337,6 +343,8 @@ const InvoiceINOrg = () => {
             <input
               type="file"
               className="hidden"
+              {...register("qrLocation")}
+              value={watch("qrLocation")}
               onChange={(e) => handleFileChange(e, "qrLocation")}
             />
           </label>
@@ -369,6 +377,8 @@ const InvoiceINOrg = () => {
                     type="file"
                     id="qrLocation"
                     className="hidden"
+                    {...register("qrLocation")}
+                    value={watch("qrLocation")}
                     onChange={(e) => handleFileChange(e, "qrLocation")}
                   />
                 </label>
@@ -381,7 +391,7 @@ const InvoiceINOrg = () => {
         </div>
         <Checkbox
           label="Display QR Code in invoice"
-          checked={invoiceSettings.displayQrLocation}
+          checked={watch("displayQrLocation")}
           onChange={(checked) =>
             handleRadioChange(checked, "displayQrLocation")
           }
@@ -426,6 +436,8 @@ const InvoiceINOrg = () => {
             <input
               type="file"
               className="hidden"
+              {...register("qrPayment")}
+              value={watch("qrPayment")}
               onChange={(e) => handleFileChange(e, "qrPayment")}
             />
           </label>
@@ -451,20 +463,19 @@ const InvoiceINOrg = () => {
               </div>
               <div className="flex items-center gap-4">
                 <label htmlFor="qrPayment" className="cursor-pointer">
-                  <Button variant="primary" >
+                  <Button variant="primary">
                     <p className="text-xs font-medium text-white">Replace QR</p>
                   </Button>
                   <input
                     type="file"
                     id="qrPayment"
                     className="hidden"
+                    {...register("qrPayment")}
+                    value={watch("qrPayment")}
                     onChange={(e) => handleFileChange(e, "qrPayment")}
                   />
                 </label>
-                <Button
-                  onClick={() => closeModal()}
-                  variant="secondary"
-                >
+                <Button onClick={() => closeModal()} variant="secondary">
                   <p className="text-xs font-medium ">Close</p>
                 </Button>
               </div>
@@ -547,9 +558,7 @@ const InvoiceINOrg = () => {
               <div className="flex items-center gap-4">
                 <label htmlFor="digitalSignature" className="cursor-pointer">
                   <Button variant="primary">
-                    <p className="text-xs font-medium ">
-                      Replace Sign
-                    </p>
+                    <p className="text-xs font-medium ">Replace Sign</p>
                   </Button>
                   <input
                     type="file"
@@ -558,10 +567,7 @@ const InvoiceINOrg = () => {
                     onChange={(e) => handleFileChange(e, "digitalSignature")}
                   />
                 </label>
-                <Button
-                  onClick={() => closeModal()}
-                  variant="secondary"
-                >
+                <Button onClick={() => closeModal()} variant="secondary">
                   <p className="text-xs font-medium ">Close</p>
                 </Button>
               </div>
@@ -593,14 +599,13 @@ const InvoiceINOrg = () => {
                 <img width={25} src={twitterLogo} alt="" />
               </div>
               <input
-  type="text"
-  placeholder="Add X Link"
-  onChange={(e) => handleEventBindChange(e, "xLink")}
-  value={invoiceSettings.xLink}
-  className="pl-4 mt-3 text-xs w-[100%] rounded-md text-start bg-white border border-slate-300 h-[39px] p-2 focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
-  name="twitter"
-/>
-
+                type="text"
+                placeholder="Add X Link"
+                onChange={(e) => handleEventBindChange(e, "xLink")}
+                value={invoiceSettings.xLink}
+                className="pl-4 mt-3 text-xs w-[100%] rounded-md text-start bg-white border border-slate-300 h-[39px] p-2 focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
+                name="twitter"
+              />
 
               {/* <img src={xMark} className="mt-3" alt="" /> */}
             </div>
@@ -628,7 +633,6 @@ const InvoiceINOrg = () => {
                 value={invoiceSettings.instagramLink}
                 name="instagramLink"
                 onChange={(e) => handleEventBindChange(e, "instagramLink")}
-
               />
               {/* <img src={xMark} className="mt-3" alt="" /> */}
             </div>
@@ -659,7 +663,6 @@ const InvoiceINOrg = () => {
                 className="pl-4 mt-3 text-xs w-[100%] rounded-md text-start bg-white border border-slate-300 h-[39px] p-2 focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
                 name="linkedin"
                 onChange={(e) => handleEventBindChange(e, "linkedin")}
-
                 value={invoiceSettings.linkedinLink}
               />
               {/* <img src={xMark} className="mt-3" alt="" /> */}
@@ -686,7 +689,6 @@ const InvoiceINOrg = () => {
                 placeholder="Add Facebook Link"
                 className="pl-4 mt-3 text-xs w-[100%] rounded-md text-start bg-white border border-slate-300 h-[39px] p-2 focus:outline-none focus:ring-1 focus:ring-[#7E0D0B]"
                 onChange={(e) => handleEventBindChange(e, "facebookLink")}
-
                 value={invoiceSettings.facebookLink}
                 name="facebook"
               />

@@ -157,8 +157,9 @@ const Profile = () => {
       );
       if (response && !error) {
         toast.success(response.data.message);
+        console.log(response , )
       } else {
-        toast.error(error.response?.data?.message || "An error occurred.");
+        toast.error(error.response?.data?.message );
       }
     } catch (err) {
       console.error("Unexpected error submitting data:", err);
@@ -481,22 +482,28 @@ const Profile = () => {
         </p>
 
         <div className="grid grid-cols-12 gap-4 bg-white p-5 rounded-lg mt-2">
-          <div className="col-span-8">
+            <div className="col-span-8">
             <Select
               required
               placeholder="Select Time zone"
               error={errors.timeZone?.message}
-              onChange={(value: string) => handleInputChange("timeZone", value)}
+              onChange={(value: string) => {
+              handleInputChange("timeZone", value);
+              const selectedTimezone = additionalData?.timezones?.find(
+                (timezone: any) => timezone.zone === value
+              );
+              handleInputChange("timeZoneExp", selectedTimezone?.timeZone || "");
+              }}
               label="Time Zone"
               options={
-                additionalData?.timezones?.map((timezone: any) => ({
-                  value: timezone.zone,
-                  label: timezone.zone + " - " + timezone.description,
-                })) || []
+              additionalData?.timezones?.map((timezone: any) => ({
+                value: timezone.zone,
+                label: timezone.zone + " - " + timezone.description,
+              })) || []
               }
               value={watch("timeZone")}
             />
-          </div>
+            </div>
           <div className="col-span-8">
             <Select
               required
@@ -513,6 +520,7 @@ const Profile = () => {
                   ...(additionalData?.dateFormats?.long || []),
                 ].map((dateFormat: any) => ({
                   value: dateFormat.format,
+                  exp:dateFormat.dateFormat,
                   label: dateFormat.format,
                 })) || []
               }

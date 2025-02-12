@@ -117,7 +117,7 @@ export const endpoints = {
     //Currency
     GET_CURRENCIES: "get-currency",
     ADD_CURRENCIES: "add-currency",
-    DELETE_CURRENCIES: (id: string) => `delete-currency/${id}`,
+    DELETE_CURRENCIES: `delete-currency`,
     EDIT_CURRENCIES: `edit-currency`,
     GET_ONE_CURRENCY: (id: string) => `/view-currency/${id}`,
   

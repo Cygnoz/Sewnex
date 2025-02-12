@@ -1,30 +1,37 @@
 import toast from "react-hot-toast";
+import * as Yup from "yup";
 import Button from "../../../../Components/Button";
 import Input from "../../../../Components/Form/Input";
 import Select from "../../../../Components/Form/Select";
 import Modal from "../../../../Components/modal/Modal";
-import { ChangeEvent, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import useApi from "../../../../Hooks/useApi";
 import topImg from "../../../../assets/Images/image 43.png";
 import bgImg from "../../../../assets/images/Group (1).png";
 import bgimg2 from "../../../../assets/images/Mask group (2).png";
 import Pen from "../../../../assets/icons/Pen";
 import CirclePlus from "../../../../assets/icons/circleplus";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { endpoints } from "../../../../Services/apiEdpoints";
+import { CurrencyResponseContext } from "../../../../Context/ContextShare";
+// import { watch } from "fs";
 
-type Props = {page?:string};
+type Props = { page?: string; selectedCurrency?: any };
 
 interface InputCurrencyData {
   currencyCode: string;
   currencySymbol: string;
   currencyName: string;
-  decimalPlaces: string;
-  format: string;
+  decimalPlaces?: string;
+  format?: string;
 }
 
-const AddCurrency = ({page}: Props) => {
+const AddCurrency = ({ page, selectedCurrency }: Props) => {
   const { request: CreateNewCurrency } = useApi("post", 5004);
+  const { request: editCurrency } = useApi("put", 5004);
   const [newCurrencyModal, setNewCurrencyModal] = useState(false);
-
+  const { setCurrencyResponse } = useContext(CurrencyResponseContext)!;
   const [newCurrency, setNewCurrency] = useState<InputCurrencyData>({
     currencyCode: "",
     currencySymbol: "",
@@ -32,6 +39,34 @@ const AddCurrency = ({page}: Props) => {
     decimalPlaces: "",
     format: "",
   });
+
+  const validationSchema = Yup.object().shape({
+    currencyCode: Yup.string().required("Currency Code is required"),
+    currencySymbol: Yup.string().required("Currency Symbol is required"),
+    currencyName: Yup.string().required("Currency Name is required"),
+    decimalPlaces: Yup.string().optional(),
+    format: Yup.string().optional(),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+  const decimalPlacesOptions = [
+    { label: "2", value: "2" },
+    { label: "3", value: "3" },
+  ];
+
+  const formatOptions = [
+    { label: "2", value: "2" },
+    { label: "3", value: "3" },
+  ];
 
   const openModal = () => {
     setNewCurrencyModal(true);
@@ -46,63 +81,92 @@ const AddCurrency = ({page}: Props) => {
       decimalPlaces: "",
       format: "",
     });
-  };
-
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setNewCurrency((prevCurrencyAccount) => ({
-      ...prevCurrencyAccount,
-      [name]: value,
-    }));
+    setValue("currencyCode", "");
+    setValue("currencySymbol", "");
+    setValue("currencyName", "");
+    setValue("decimalPlaces", "");
+    setValue("format", "");
   };
 
   const onSubmit = async () => {
     try {
-      const url = `/api/currency`; // Update with your actual endpoint
-      const { response, error } = await CreateNewCurrency(url, newCurrency);
+  const api = page === "edit" ? editCurrency : CreateNewCurrency;
+  const url = page === "edit" ?`${endpoints.EDIT_CURRENCIES}` :endpoints.ADD_CURRENCIES  ;
+  const { response, error } = await api(url, newCurrency);
+  if (response && !error) {
+    toast.success(response.data);
+    closeModal();
+    setNewCurrency({
+      currencyCode: "",
+      currencySymbol: "",
+      currencyName: "",
+      decimalPlaces: "",
+      format: "",
+    });
+    setValue("currencyCode", "");
+    setValue("currencySymbol", "");
+    setValue("currencyName", "");
+    setValue("decimalPlaces", "");
+    setValue("format", "");
 
-      if (error) {
-        const errorMessage =
-          error?.response?.data?.message ||
-          "An error occurred while adding currency.";
-        toast.error(errorMessage);
-        return;
-      }
-
-      if (response) {
-        closeModal();
-        console.log("Currency added successfully:", response.data);
-        toast.success("Currency added successfully!");
-      }
-    } catch (error) {
-      console.error("Error occurred while adding currency:", error);
-      toast.error("An unexpected error occurred.");
+    setCurrencyResponse((prevCurrencyResponse: any) => ({
+      ...prevCurrencyResponse,
+      ...newCurrency,
+    }));
+  } else {
+    toast.error(error.response?.data || "An error occurred.");
+  }
+} catch (err) {
+      console.error("Unexpected error submitting data:", err);
     }
   };
 
+  const handleInputChange = (name: string, value: any) => {
+    setNewCurrency((prevDetails: any) => ({
+      ...prevDetails,
+      [name]: value,
+    }));
+    setValue(name as keyof InputCurrencyData, value);
+  };
+
+  useEffect(() => {
+    if (page === "edit" && selectedCurrency) {
+      setNewCurrency((prevData) => ({
+        ...prevData,
+        currencyCode: selectedCurrency.currencyCode,
+        currencySymbol: selectedCurrency.currencySymbol,
+        currencyName: selectedCurrency.currencyName,
+        decimalPlaces: selectedCurrency.decimalPlaces,
+        format: selectedCurrency.format,
+        currencyId: selectedCurrency._id,
+      }));
+      setValue("currencyCode", selectedCurrency.currencyCode);
+      setValue("currencySymbol", selectedCurrency.currencySymbol);
+      setValue("currencyName", selectedCurrency.currencyName);
+      setValue("decimalPlaces", selectedCurrency.decimalPlaces);
+      setValue("format", selectedCurrency.format);
+    }
+  }, [selectedCurrency]);
+
+  console.log("newCurrency", newCurrency);
+
   return (
     <div>
- {
-  page === "add" ? (
-    <Button onClick={openModal} variant="primary" size="sm">
-      <CirclePlus size={16} color={"white"} />
-      <p className="text-sm">New Currency</p>
-    </Button>
-  ) : (
-   <button onClick={openModal} > <Pen color={"#3d7fbc"} /></button>
-  )
-}
-
-
-
-
+      {page === "add" ? (
+        <Button onClick={openModal} variant="primary" size="sm">
+          <CirclePlus size={16} color={"white"} />
+          <p className="text-sm">New Currency</p>
+        </Button>
+      ) : (
+        <button onClick={openModal}>
+          <Pen color={"#3d7fbc"} />
+        </button>
+      )}
 
       <Modal
         open={newCurrencyModal}
         onClose={closeModal}
-        className="w-[48%] text-start h-auto"
+        className="w-[50%] text-start h-auto"
       >
         <div className="p-5 mt-3">
           <div className="mb-5 flex p-4 rounded-xl bg-gradient-to-br from-[#F7ECD9] to-[#B5F0D3] relative overflow-hidden">
@@ -115,7 +179,7 @@ const AddCurrency = ({page}: Props) => {
             ></div>
             <div className="relative z-10">
               <h3 className="text-sm font-bold text-[#004D4D]">
-              {page=="add"?"  Create New Currency":"Edit Currency"}
+                {page === "add" ? "Create New Currency" : "Edit Currency"}
               </h3>
               <p className="text-text_tertiary text-xs mt-1">
                 Open a new bank account swiftly and securely.
@@ -132,57 +196,69 @@ const AddCurrency = ({page}: Props) => {
             </div>
           </div>
 
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="bg-[#faf7f2] p-4 rounded-2xl">
               <div className="grid grid-cols-2 my-2 gap-4">
-                <Select
-                  value={newCurrency.currencyCode}
-                 
-                  options={[
-                    { label: "USD", value: "USD" },
-                    { label: "EUR", value: "EUR" },
-                    { label: "INR", value: "INR" },
-                  ]}
+                <Input
+                  required
                   label="Currency Code"
                   placeholder="Select Currency Code"
+                  {...register("currencyCode", {
+                    onChange: (e) =>
+                      handleInputChange("currencyCode", e.target.value),
+                  })}
+                  error={errors.currencyCode?.message}
+                  value={watch("currencyCode")}
                 />
                 <Input
-                  name="currencySymbol"
-                  value={newCurrency.currencySymbol}
-                  placeholder="Enter Currency Symbol"
+                  required
                   label="Currency Symbol"
+                  placeholder="Enter Currency Symbol"
+                  {...register("currencySymbol", {
+                    onChange: (e) =>
+                      handleInputChange("currencySymbol", e.target.value),
+                  })}
+                  error={errors.currencySymbol?.message}
+                  value={watch("currencySymbol")}
                 />
-              </div>
-              <Input
-                name="currencyName"
-                value={newCurrency.currencyName}
-                onChange={handleChange}
-                placeholder="Enter Currency Name"
-                label="Currency Name"
-              />
-              <div className="grid grid-cols-2 gap-4 mt-2">
-                <Select
-                  value={newCurrency.decimalPlaces}
-                  options={[
-                    { label: "2", value: "2" },
-                    { label: "3", value: "3" },
-                  ]}
-                  label="Decimal Place"
-                  placeholder="Select Decimal place"
+                <Input
+                  required
+                  label="Currency Name"
+                  placeholder="Enter Currency Name"
+                  {...register("currencyName", {
+                    onChange: (e) =>
+                      handleInputChange("currencyName", e.target.value),
+                  })}
+                  error={errors.currencyName?.message}
+                  value={watch("currencyName")}
                 />
-                <Select
-                  value={newCurrency.format}
-                  options={[
-                    { label: "Comma", value: "Comma" },
-                    { label: "Dot", value: "Dot" },
-                  ]}
-                  label="Format Value"
-                  placeholder="Select Format value"
-                />
+                <div className="grid grid-cols-2 gap-4 ">
+                  <Select
+                    value={watch("decimalPlaces")}
+                    onChange={(value: string) =>
+                      handleInputChange("decimalPlaces", value)
+                    }
+                    options={decimalPlacesOptions}
+                    label="Decimal Place"
+                    placeholder="Select Decimal place"
+                    error={errors.decimalPlaces?.message}
+                  />
+                  <Select
+                    value={watch("format")}
+                    onChange={(value: string) =>
+                      handleInputChange("format", value)
+                    }
+                    label="Format Value"
+                    placeholder="Select Format value"
+                    error={errors.format?.message}
+                    options={formatOptions}
+                  />
+                </div>
               </div>
             </div>
             <div className="mt-3 flex justify-end gap-3">
               <Button
+                type="button"
                 onClick={closeModal}
                 variant="secondary"
                 size="sm"
@@ -191,7 +267,7 @@ const AddCurrency = ({page}: Props) => {
                 Cancel
               </Button>
               <Button
-                onClick={onSubmit}
+                type="submit"
                 variant="primary"
                 size="sm"
                 className="w-28 h-[42px] text-sm flex justify-center"
@@ -207,3 +283,5 @@ const AddCurrency = ({page}: Props) => {
 };
 
 export default AddCurrency;
+
+

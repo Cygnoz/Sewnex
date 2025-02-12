@@ -3,12 +3,12 @@ import ChevronLeft from "../../../../assets/icons/ChevronLeft";
 import Trash from "../../../../assets/icons/Trash";
 import Banner from "../Banner";
 import Button from "../../../../Components/Button";
-import CirclePlus from "../../../../assets/icons/CirclePlus";
 import Modal from "../../../../Components/modal/Modal";
 import Input from "../../../../Components/Form/Input";
 import { useState } from "react";
 import bgImg from "../../../../assets/images/Group (1).png";
 import bgimg2 from "../../../../assets/images/Mask group (2).png";
+import CirclePlus from "../../../../assets/icons/circleplus";
 
 type Props = {};
 
