@@ -22,6 +22,7 @@ interface HomeCardProps {
     descriptionColor,
     numberColor,
     border,
+
   }: HomeCardProps) => {
     return (
       <div

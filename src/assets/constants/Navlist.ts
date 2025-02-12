@@ -107,10 +107,10 @@ export const navList = [
         headName: "Cash",
         subRoute: "/accountant/cash",
       },
-      {
-        headName: "Day Book",
-        subRoute: "/accountant/daybook",
-      },
+      // {
+      //   headName: "Day Book",
+      //   subRoute: "/accountant/daybook",
+      // },
     ],
   },
   {

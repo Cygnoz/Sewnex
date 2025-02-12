@@ -1,7 +1,6 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import BackIcon from "../../../../assets/icons/BackIcon"
 import Input from "../../../../Components/Form/Input"
-import Select from "../../../../Components/Form/Select"
 import { useEffect, useState } from "react"
 import AccountDropdown from "./AccountDropdown"
 import toast from "react-hot-toast"
@@ -9,11 +8,21 @@ import TrashIcon from "../../../../assets/icons/TrashIcon"
 import Button from "../../../../Components/Button"
 import journalBgImage from "../../../../assets/images/journalBgImage.png"
 import CirclePlus from "../../../../assets/icons/circleplus"
+import useApi from "../../../../Hooks/useApi"
+import { useOrganization } from "../../../../Context/OrganizationContext"
+import { endpoints } from "../../../../Services/apiEdpoints"
+import CheveronDown from "../../../../assets/icons/CheveronDown"
 
-type Props = {}
+type Props = { page?: string };
 
-function NewJournal({ }: Props) {
-
+function NewJournal({ page }: Props) {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { request: NewJournalAdd } = useApi("post", 5001);
+  const { request: EditJournal } = useApi("put", 5001);
+  const { request: GetLastJournelPrefix } = useApi("get", 5001);
+  const { request: GetAllAcounts } = useApi("get", 5001);
+  const { organization } = useOrganization()
   // Initialize with two non-deletable rows
   const initialTransactions = [
     {
@@ -38,8 +47,6 @@ function NewJournal({ }: Props) {
 
 
   const [accountOptions, setAccountOptions] = useState(null);
-
-
   const [totalResult, setTotalResult] = useState({
     totalDebit: 0,
     totalCredit: 0,
@@ -48,7 +55,7 @@ function NewJournal({ }: Props) {
   });
   const [newJournalDatas, setNewJournelDatas] = useState({
     journel: "",
-    date: "",
+    date: new Date().toISOString().split("T")[0],
     reference: "",
     note: "",
     cashBasedJournal: false,
@@ -57,6 +64,8 @@ function NewJournal({ }: Props) {
     totalDebitAmount: 0,
     totalCreditAmount: 0,
   });
+  console.log(newJournalDatas, "newJournalDatas");
+
 
   const tableHeaders = [
     "Account",
@@ -142,44 +151,41 @@ function NewJournal({ }: Props) {
     { value: "SEK", display: "SEK - Swedish Krona" },
     { value: "NOK", display: "NOK - Norwegian Krone" },
   ];
-  console.log(setAccountOptions);
-  console.log(currencies);
 
-  // const getLastJournelsPrefix = async () => {
-  //   try {
-  //     const url = `${endponits.Get_LAST_Journel_Prefix}`;
-  //     const { response, error } = await GetLastJournelPrefix(url);
-  //     if (!error && response) {
-  //       console.log("response", response);
-  //       setNewJournelDatas({ ...newJournalDatas, journel: response?.data });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching accounts:", error);
-  //   }
-  // };
+  const getLastJournelsPrefix = async () => {
+    try {
+      const url = `${endpoints.Get_LAST_Journel_Prefix}`;
+      const { response, error } = await GetLastJournelPrefix(url);
+      if (!error && response) {
+        console.log("response", response);
+        setNewJournelDatas({ ...newJournalDatas, journel: response?.data });
+      }
+    } catch (error) {
+      console.error("Error fetching accounts:", error);
+    }
+  };
 
-  // const getAllAccounts = async () => {
-  //   try {
-  //     const url = `${endponits.Get_ALL_Acounts}`;
-  //     const { response, error } = await GetAllAcounts(url);
-  //     if (!error && response) {
-  //       setAccountOptions(response.data);
-  //       console.log("All accounts", response);
-  //       return response.data;
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching accounts:", error);
-  //   }
-  // };
+  const getAllAccounts = async () => {
+    try {
+      const url = `${endpoints.Get_ALL_Acounts}`;
+      const { response, error } = await GetAllAcounts(url);
+      if (!error && response) {
+        setAccountOptions(response.data);
+        console.log("All accounts", response);
+        return response.data;
+      }
+    } catch (error) {
+      console.error("Error fetching accounts:", error);
+    }
+  };
 
-  // useEffect(() => {
-  //   getLastJournelsPrefix();
-  //   getAllAccounts();
-  // }, []);
+  useEffect(() => {
+    getLastJournelsPrefix();
+    getAllAccounts();
+  }, []);
 
   useEffect(() => {
     if (!Array.isArray(newJournalDatas.transaction)) {
-      // Ensure transaction is always an array
       return;
     }
 
@@ -227,80 +233,81 @@ function NewJournal({ }: Props) {
     });
   }, [newJournalDatas.transaction]);
 
-  // const handleAddNewJournel = async () => {
-  //   const {
-  //     journel,
-  //     date,
-  //     reference,
-  //     note,
-  //     currency,
-  //     transaction,
-  //     totalDebitAmount,
-  //     totalCreditAmount,
-  //   } = newJournalDatas;
-  //   console.log(newJournalDatas);
+  const handleAddNewJournel = async () => {
+    const {
+      journel,
+      date,
+      reference,
+      note,
+      currency,
+      transaction,
+      totalDebitAmount,
+      totalCreditAmount,
+    } = newJournalDatas;
+    console.log(newJournalDatas);
 
-  //   let errors = [];
+    let errors = [];
 
-  //   // Validate required fields
-  //   if (!journel) errors.push("Journal");
-  //   if (!date) errors.push("Date");
-  //   if (!reference) errors.push("Reference");
-  //   if (!note) errors.push("Note");
-  //   if (!currency) errors.push("Currency");
-  //   if (totalDebitAmount === undefined || totalCreditAmount === undefined) {
-  //     errors.push("Total Debit and Credit Amounts");
-  //   }
-  //   if (totalResult && totalResult.difference) {
-  //     errors.push("Ensure that the debit and credits are equal!");
-  //   }
+    // Validate required fields
+    if (!journel) errors.push("Journal");
+    if (!date) errors.push("Date");
+    if (!reference) errors.push("Reference");
+    if (!note) errors.push("Note");
+    if (!currency) errors.push("Currency");
+    if (totalDebitAmount === undefined || totalCreditAmount === undefined) {
+      errors.push("Total Debit and Credit Amounts");
+    }
+    if (totalResult && totalResult.difference) {
+      errors.push("Ensure that the debit and credits are equal!");
+    }
 
-  //   // Validate minimum two transactions and fields in transactions
-  //   if (transaction.length < 2) {
-  //     errors.push("At least two transactions");
-  //   }
+    // Validate minimum two transactions and fields in transactions
+    if (transaction.length < 2) {
+      errors.push("At least two transactions");
+    }
 
-  //   transaction.forEach((txn, index) => {
-  //     if (!txn.accountId) errors.push(`Transaction ${index + 1}: Account ID`);
-  //     if (txn.debitAmount === undefined && txn.creditAmount === undefined) {
-  //       errors.push(`Transaction ${index + 1}: Debit or Credit Amount`);
-  //     }
-  //   });
+    transaction.forEach((txn, index) => {
+      if (!txn.accountId) errors.push(`Transaction ${index + 1}: Account ID`);
+      if (txn.debitAmount === undefined && txn.creditAmount === undefined) {
+        errors.push(`Transaction ${index + 1}: Debit or Credit Amount`);
+      }
+    });
 
-  //   // Show detailed toast message if there are errors
-  //   if (errors.length > 0) {
-  //     toast.error(`Please fill the following fields: ${errors.join(", ")}`);
-  //   } else {
-  //     try {
-  //       const url = `${endponits.Add_NEW_Journel}`;
-  //       const apiResponse = await NewJournalAdd(url, newJournalDatas);
-  //       console.log("api response", apiResponse);
-  //       const { response, error } = apiResponse;
-  //       if (!error && response) {
-  //         toast.success(response.data.message);
-  //         setNewJournelDatas({
-  //           journel: "",
-  //           date: "",
-  //           reference: "",
-  //           note: "",
-  //           cashBasedJournal: false,
-  //           currency: "INR",
-  //           transaction: initialTransactions,
-  //           totalDebitAmount: 0,
-  //           totalCreditAmount: 0,
-  //         });
-  //         setTimeout(() => {
-  //           navigate("/accountant/manualjournal");
-  //         }, 2000);
-  //       } else {
-  //         toast.error(error?.response.data.message);
-  //         console.log("error", error);
-  //       }
-  //     } catch (error) {
-  //       console.log("Error during API call", error);
-  //     }
-  //   }
-  // };
+    // Show detailed toast message if there are errors
+    if (errors.length > 0) {
+      toast.error(`Please fill the following fields: ${errors.join(", ")}`);
+    } else {
+      try {
+        const url = page === "edit" ? `${endpoints.EDIT_JOURNAL}/${id}` : `${endpoints.Add_NEW_Journel}`;
+        const apiRequest = page === "edit" ? EditJournal : NewJournalAdd
+        const apiResponse = await apiRequest(url, newJournalDatas);
+        console.log("api response", apiResponse);
+        const { response, error } = apiResponse;
+        if (!error && response) {
+          toast.success(response.data.message);
+          setNewJournelDatas({
+            journel: "",
+            date: "",
+            reference: "",
+            note: "",
+            cashBasedJournal: false,
+            currency: "INR",
+            transaction: initialTransactions,
+            totalDebitAmount: 0,
+            totalCreditAmount: 0,
+          });
+          setTimeout(() => {
+            navigate("/accountant/manualjournal");
+          }, 100);
+        } else {
+          toast.error(error?.response.data.message);
+          console.log("error", error);
+        }
+      } catch (error) {
+        console.log("Error during API call", error);
+      }
+    }
+  };
 
   const handleAccountSelect = (index: number, account: any) => {
     const newTransaction = [...newJournalDatas.transaction];
@@ -317,17 +324,6 @@ function NewJournal({ }: Props) {
       isAccountDropdownOpen.map((open, i) => (i === index ? false : open))
     );
   };
-  // const handleContactSelect = (index: number, contact: string) => {
-  //   const newTransaction = [...newJournalDatas.transaction];
-  //   newTransaction[index].contact = contact;
-  //   setNewJournelDatas({
-  //     ...newJournalDatas,
-  //     transaction: newTransaction,
-  //   });
-  //   setIsContactDropdownOpen(
-  //     isContactDropdownOpen.map((open, i) => (i === index ? false : open))
-  //   );
-  // };
 
   const handleAccountSearchChange = (index: number, value: string) => {
     const newSearch = [...accountSearch];
@@ -335,35 +331,18 @@ function NewJournal({ }: Props) {
     setAccountSearch(newSearch);
   };
 
-  // const handleContactSearchChange = (index: number, value: string) => {
-  //   const newSearch = [...contactSearch];
-  //   newSearch[index] = value;
-  //   setContactSearch(newSearch);
-  // };
-
   const handleAccountDropdownToggle = (index: number, isOpen: boolean) => {
     setIsAccountDropdownOpen(
       isAccountDropdownOpen.map((open, i) => (i === index ? isOpen : open))
     );
   };
 
-  // const handleContactDropdownToggle = (index: number, isOpen: boolean) => {
-  //   setIsContactDropdownOpen(
-  //     isContactDropdownOpen.map((open, i) => (i === index ? isOpen : open))
-  //   );
-  // };
 
   const clearAccountSearch = (index: number) => {
     const newSearch = [...accountSearch];
     newSearch[index] = "";
     setAccountSearch(newSearch);
   };
-
-  // const clearContactSearch = (index: number) => {
-  //   const newSearch = [...contactSearch];
-  //   newSearch[index] = "";
-  //   setContactSearch(newSearch);
-  // };
 
   const handleInputChange = (index: number, field: string, value: any) => {
     const newTransaction = [...newJournalDatas.transaction];
@@ -394,6 +373,29 @@ function NewJournal({ }: Props) {
   };
 
 
+  const { request: getOneJournal } = useApi("get", 5001);
+  useEffect(() => {
+    const fetchJournal = async () => {
+      if (page === "edit") {
+        try {
+          const url = `${endpoints.GET_ONE_JOURNAL}/${id}`;
+          const { response, error } = await getOneJournal(url);
+          if (!error && response) {
+            setNewJournelDatas((prevData) => ({
+              ...prevData,
+              ...response.data,
+              transaction: response.data.transaction || initialTransactions,
+            }));
+          }
+        } catch (error) {
+          console.log("Error in fetching", error);
+        }
+      }
+    };
+
+    fetchJournal();
+  }, [page, id]);
+
   return (
     <div>
       <div className="flex items-center gap-4">
@@ -408,22 +410,56 @@ function NewJournal({ }: Props) {
           <div className="flex items-center justify-between w-full gap-9">
             <div className="w-[40%]">
               <label className="block text-sm text-text_tertiary mb-2">Date</label>
-              <Input placeholder="Select date" />
+              <Input
+                type="date"
+                value={newJournalDatas.date}
+                onChange={(e) =>
+                  setNewJournelDatas({
+                    ...newJournalDatas,
+                    date: e.target.value,
+                  })
+                }
+                placeholder="Select date" />
             </div>
             <div className="w-[26%]">
               <label className="block text-sm text-text_tertiary mb-2">Journal#</label>
-              <Input placeholder="Enter Journal" />
+              <Input
+                disabled
+                value={newJournalDatas.journel}
+                onChange={(e) =>
+                  setNewJournelDatas({
+                    ...newJournalDatas,
+                    journel: e.target.value,
+                  })
+                }
+                placeholder="Enter Journal" />
             </div>
             <div className="w-[40%]">
               <label className="block text-sm text-text_tertiary mb-2">Reference#</label>
-              <Input placeholder="Enter refrence" />
+              <Input
+                value={newJournalDatas.reference}
+                onChange={(e) =>
+                  setNewJournelDatas({
+                    ...newJournalDatas,
+                    reference: e.target.value,
+                  })
+                }
+                placeholder="Enter refrence" />
             </div>
           </div>
 
           <div className="flex items-center justify-between w-full gap-9">
             <div className="w-[50%]">
               <label className="block text-sm text-text_tertiary mb-2">Notes</label>
-              <Input placeholder="Enter Notes" />
+              <Input
+                value={newJournalDatas.note}
+                onChange={(e) =>
+                  setNewJournelDatas({
+                    ...newJournalDatas,
+                    note: e.target.value,
+                  })
+                }
+                placeholder="Enter Notes" />
             </div>
             <div className="w-[26%]">
               <label className="block text-sm text-text_tertiary mb-2">
@@ -434,17 +470,42 @@ function NewJournal({ }: Props) {
                   type="checkbox"
                   id="checkbox3"
                   className="h-[16px] w-[16px] accent-[#97998E]"
+                  checked={newJournalDatas.cashBasedJournal}
+                  onChange={(e) =>
+                    setNewJournelDatas({
+                      ...newJournalDatas,
+                      cashBasedJournal: e.target.checked,
+                    })
+                  }
                 />
                 <label htmlFor="checkbox3" className="text-sm cursor-pointer font-semibold text-[#2C3E50] ms-3">
                   Cash based journal ?
                 </label>
               </div>
             </div>
-            <div className="w-[50%]">
-              <label className="block text-sm text-text_tertiary mb-2">Currency</label>
-              <Select options={[]} placeholder="Select Currency" />
-
+            <div className="w-[50%] relative">
+              <label className="block text-sm text-text_tertiary mb-1">Currency</label>
+              <select
+                className="mt-1 w-full border border-inputBorder bg-white rounded-full text-sm p-2 pl-4 appearance-none pr-10"
+                value={newJournalDatas.currency}
+                onChange={(e) =>
+                  setNewJournelDatas({
+                    ...newJournalDatas,
+                    currency: e.target.value,
+                  })
+                }
+              >
+                {currencies.map((currency) => (
+                  <option key={currency.value} value={currency.value}>
+                    {currency.display}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-4 top-[45%] flex items-center pointer-events-none">
+                <CheveronDown strokeWidth="1.2" color="#495160" />
+              </div>
             </div>
+
           </div>
         </div>
 
@@ -494,13 +555,14 @@ function NewJournal({ }: Props) {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       <Input placeholder="0.00" min={0}
+                      type="number"
+                        value={row.debitAmount || ""} // Bind the value
                         onChange={(e) => {
-                          let value = parseFloat(e.target.value);
+                          let value = parseFloat(e.target.value) || 0;
 
-                          // If the entered value is negative, reset it to 0
+                          // Prevent negative values
                           if (value < 0) {
                             value = 0;
-                            e.target.value = "0"; // Update the displayed value to 0
                           }
 
                           if (!row.creditAmount) {
@@ -515,6 +577,7 @@ function NewJournal({ }: Props) {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       <Input min={0} type="number"
+                       value={row.creditAmount || ""}
                         placeholder="0.00"
                         onChange={(e) => {
                           let value = parseFloat(e.target.value);
@@ -573,19 +636,19 @@ function NewJournal({ }: Props) {
           </div>
           <div className="col-span-3 flex flex-col gap-3">
             <h4 className="text-[14px] text-[#4B5C79]">
-              INR {totalResult.totalDebit.toFixed(2)}
+            {organization?.baseCurrency} {totalResult.totalDebit.toFixed(2)}
             </h4>
             <span className="text-textColor font-bold text-base">
-              INR{" "}{totalResult.totalDebit.toFixed(2)}
+            {organization?.baseCurrency}{" "}{totalResult.totalDebit.toFixed(2)}
             </span>
           </div>
 
           <div className="col-span-3 flex flex-col w-  gap-3 me-20">
             <h4 className="text-[14px] text-[#4B5C79] text-end">
-              INR {totalResult.totalCredit.toFixed(2)}
+            {organization?.baseCurrency} {totalResult.totalCredit.toFixed(2)}
             </h4>
             <span className="text-textColor font-bold text-base text-end">
-              INR {totalResult.totalCredit.toFixed(2)}
+            {organization?.baseCurrency} {totalResult.totalCredit.toFixed(2)}
             </span>
           </div>
           <div className="col-span-2 flex flex-col gap-1 bg-[#FEF7F7] py-[4px] px-[14px]">
@@ -600,14 +663,14 @@ function NewJournal({ }: Props) {
         </div>
       </div>
       <br />
-        <div className="flex items-center justify-end gap-3">
-          <Button className="text-sm" variant="secondary">
-            Cancel
-          </Button>
-          <Button className="text-sm" variant="primary">
-            Save
-          </Button>
-        </div>
+      <div className="flex items-center justify-end gap-3">
+        <Button className="text-sm" variant="secondary">
+          Cancel
+        </Button>
+        <Button onClick={handleAddNewJournel} className="text-sm" variant="primary">
+          Save
+        </Button>
+      </div>
     </div>
   )
 }
