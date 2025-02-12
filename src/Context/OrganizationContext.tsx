@@ -24,7 +24,6 @@ export const OrganizationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
             if (!error && response) {
             setOrganization(response.data);
-            console.log(response.data,"qwertyui")
             setHasFetched(true); // Mark as fetched
             }
         } catch (error) {
