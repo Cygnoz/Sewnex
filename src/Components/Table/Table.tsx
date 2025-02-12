@@ -1,15 +1,14 @@
 import { useState } from "react";
 import TableSkelton from "./TableSkelton";
 import Eye from "../../assets/icons/Eye";
-import Trash2 from "../../assets/icons/Trash";
-import Pen from "../../assets/icons/Pen";
 import SearchBar from "../SearchBar";
 import ChevronRight from "../../assets/icons/ChevronRight";
 import ChevronLeft from "../../assets/icons/ChevronLeft";
 import Button from "../Button";
 import PrinterIcon from "../../assets/icons/PrinterIcon";
-import AddSupplierModal from "../../Modules/Supplier/AddSupplierModal";
-import NewCustomer from "../../Modules/Customer/NewCustomer";
+import TrashIcon from "../../assets/icons/TrashIcon";
+import NoDataFoundTable from "./NoDataFoundTable";
+import EditIcon from "../../assets/icons/EditIcon";
 
 interface Column {
   id: string;
@@ -31,7 +30,7 @@ interface TableProps {
   isPrint?: boolean
   onEditClick?: (id: string) => void;
   onPrintClick?: (id: string) => void;
-  page?: string
+  renderActions?: (item: any) => JSX.Element;
 }
 
 const Table: React.FC<TableProps> = ({
@@ -46,7 +45,7 @@ const Table: React.FC<TableProps> = ({
   searchableFields,
   onEditClick,
   onPrintClick,
-  page
+  renderActions
 }) => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
@@ -79,7 +78,7 @@ const Table: React.FC<TableProps> = ({
   return (
     <div className="border border-b bg-white rounded-lg">
       <div className="flex items-center gap-4 justify-between px-6 mt-6 mb-4">
-      { searchPlaceholder && <SearchBar
+        {searchPlaceholder && <SearchBar
           placeholder={searchPlaceholder}
           searchValue={searchValue}
           onSearchChange={(value) => {
@@ -147,47 +146,42 @@ const Table: React.FC<TableProps> = ({
                         </td>
                       )
                   )}
-                  <td className="py-3 px-4 border-b border-tableBorder text-[#495160] flex items-center justify-center gap-2">
-                    {
+                  <td className="py-3 px-4 border-b border-tableBorder text-[#495160] flex items-center justify-center gap-3">
+                    {renderActions ? (
+                      renderActions(item)
+                    ) : (
                       onEditClick && (
-                        <>
-                          {page === "supplier" ? (
-                            <AddSupplierModal id={item._id} />
-                          ) : page === "Customer" ? (
-                            <NewCustomer id={item._id}/>
-                          ) : (
-                            <button onClick={() => onEditClick && onEditClick(item._id)}>
-                              <Pen color={"#3C7FBC"} size={18} />
-                            </button>
-                          )}
-                        </>
-                      )
-                    }
-
-                    {
-                      onRowClick && (
-                        <button onClick={() => onRowClick && onRowClick(item._id)}>
-                          <Eye color={"#9A9436"} />
+                        <button onClick={() => onEditClick(item._id)}>
+                          <EditIcon color={"#C88000"} />
                         </button>
                       )
-                    }
+                    )}
+
+                    {onRowClick && (
+                      <button onClick={() => onRowClick(item._id)}>
+                        <Eye size={22} color={"#3C7FBC"} />
+                      </button>
+                    )}
+
                     {onPrintClick && (
-                      <button onClick={() => onDelete && onDelete(item._id)}>
+                      <button onClick={() => onPrintClick(item._id)}>
                         <PrinterIcon color="#EA1E4F" />
                       </button>
                     )}
+
                     {onDelete && (
-                      <button onClick={() => onDelete && onDelete(item._id)}>
-                        <Trash2 color="#EA1E4F" size={18} />
+                      <button onClick={() => onDelete(item._id)}>
+                        <TrashIcon color="#EA1E4F" />
                       </button>
                     )}
-
                   </td>
+
+
                   <td className="py-3 px-4 border-b border-tableBorder"></td>
                 </tr>
               ))
             ) : (
-              <p>No Data found</p>
+              <NoDataFoundTable columns={columns} />
             )}
           </tbody>
         </table>
