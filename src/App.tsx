@@ -70,6 +70,10 @@ const App: React.FC = () => {
       element: isAuthenticated ? <Navigate to="/" /> : <Otp />,
     },
     {
+      path: "/login",
+      element: <Login />,
+    },
+    {
       path: "*",
       element: <div>Error</div>,
     },

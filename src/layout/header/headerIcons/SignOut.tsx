@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import CheveronDown from "../../../assets/icons/CheveronDown";
 import LogoutIcon from "../../../assets/icons/LogoutIcon";
+import ConfirmModal from "../../../Components/ConfirmModal";
 
 type Props = {};
 
-function SignOut({}: Props) {
+function SignOut({ }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -28,6 +29,19 @@ function SignOut({}: Props) {
       document.removeEventListener("click", handleOutsideClick);
     };
   }, [isOpen]);
+  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
+
+  const confirmLogout = () => {
+    setLogoutModalOpen(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setLogoutModalOpen(false);
+    window.location.href = "/login";
+  };
+
+
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -38,12 +52,19 @@ function SignOut({}: Props) {
       {/* Dropdown content */}
       {isOpen && (
         <div
-          className="absolute right-0 mt-1 w-32 cursor-pointer  px-4 py-3 bg-white rounded-lg flex justify-center items-center gap-3 shadow-lg"
+          onClick={confirmLogout}
+          className="absolute right-0 mt-2 w-32 cursor-pointer  px-4 py-3 bg-white rounded-lg flex justify-center items-center gap-3 shadow-lg"
         >
           <LogoutIcon />
           <p className="text-[#495160] font-semibold text-sm">Sign Out</p>
         </div>
       )}
+      <ConfirmModal
+        open={isLogoutModalOpen}
+        onClose={() => setLogoutModalOpen(false)}
+        onConfirm={handleLogout}
+        message="Are you sure you want to log out?"
+      />
     </div>
   );
 }
