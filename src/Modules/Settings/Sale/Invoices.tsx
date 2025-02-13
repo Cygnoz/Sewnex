@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import CheveronDown from "../../../assets/icons/CheveronDown";
 import Button from "../../../Components/Button";
@@ -10,23 +10,27 @@ import Checkbox from "../../../Components/Form/Checkbox";
 import RadioButton from "../../../Components/Form/RadioButton";
 import Input from "../../../Components/Form/Input";
 import TextArea from "../../../Components/Form/TextArea";
+import { settingsdataResponseContext } from "../../../Context/ContextShare";
+import { endpoints } from "../../../Services/apiEdpoints";
 
 type Props = {};
 
-function Invoices({}: Props) {
+function Invoices({ }: Props) {
   const { request: AddSalesInvoiceSettings } = useApi("put", 5007);
   const [invoiceURLDropdown, setInvoiceURLDropdown] = useState(false);
-
+  const { settingsResponse, getSettingsData } = useContext(
+    settingsdataResponseContext
+  )!;
   const [invoiceState, setInvoiceState] = useState({
     invoiceEdit: false,
-    displayExpenseReceipt: false,
+    displayExpenseReceipt: false, 
     salesOrderNumber: "orderNum",
     paymentReceipt: false,
-    invoiceQrCode: false,
-    invoiceQrType: "InvoiceURL",
-    invoiceQrDescription: "",
-    zeroValue: false,
-    salesInvoiceTC: "",
+    invoiceQrCode: false, 
+    invoiceQrType: "InvoiceURL", 
+    invoiceQrDescription: "", 
+    zeroValue: false, 
+    salesInvoiceTC: "", 
     salesInvoiceCN: "",
   });
 
@@ -40,7 +44,7 @@ function Invoices({}: Props) {
   const handleSalesInvoiceSettings = async (e: any) => {
     e.preventDefault();
     try {
-      const url = ``;
+      const url = `${endpoints.ADD_SALES_INVOICE_SETTINGS}`;
       const apiResponse = await AddSalesInvoiceSettings(url, invoiceState);
       const { response, error } = apiResponse;
       if (!error && response) {
@@ -52,6 +56,20 @@ function Invoices({}: Props) {
       toast.error(`Error during API call: ${error}`);
     }
   };
+
+  useEffect(() => {
+    getSettingsData();
+  }, []);
+
+  useEffect(() => {
+    if (settingsResponse) {
+      setInvoiceState((prevData) => ({
+        ...prevData,
+        ...settingsResponse?.data?.salesInvoiceSettings,
+      }));
+    }
+  }, [settingsResponse]);
+  console.log(settingsResponse?.data);
 
   return (
     <div className="m-4 pb-5 text-[#303F58] h-[100vh] overflow-scroll hide-scrollbar">
@@ -83,24 +101,24 @@ function Invoices({}: Props) {
         <div className="bg-white w-full p-6 text-[14px] rounded-lg space-y-3">
           <p className="font-bold">Invoice Order Number</p>
           <div className="flex gap-1 items-center mt-3">
-          
-              <RadioButton
-                id="orderNum"
-                name="salesOrderNumber"
-                label="Use Sales Order Number"
-                selected={invoiceState.salesOrderNumber}
-                onChange={() =>
-                  handleInputChange("salesOrderNumber", "orderNum")
-                }
-              />
-         
+
+            <RadioButton
+              id="orderNum"
+              name="salesOrderNumber"
+              label="Use Sales Order Number"
+              selected={invoiceState.salesOrderNumber}
+              onChange={() =>
+                handleInputChange("salesOrderNumber", "orderNum")
+              }
+            />
+
           </div>
           <div className="flex gap-1 items-center mt-3">
             <RadioButton
               id="refNum"
               name="salesOrderNumber"
               label="Use Sales Order Reference Number"
-              selected={ invoiceState.salesOrderNumber}
+              selected={invoiceState.salesOrderNumber}
               onChange={() =>
                 handleInputChange("salesOrderNumber", "refNum")
               }
@@ -142,18 +160,16 @@ function Invoices({}: Props) {
                   className="sr-only"
                 />
                 <div
-                  className={`w-9 h-5 rounded-full shadow-inner transition-colors ${
-                    invoiceState.invoiceQrCode
+                  className={`w-9 h-5 rounded-full shadow-inner transition-colors ${invoiceState.invoiceQrCode
                       ? "bg-[#97998d]"
                       : "bg-[#97998d]"
-                  }`}
+                    }`}
                 ></div>
                 <div
-                  className={`dot absolute w-3 h-3 bg-white rounded-full top-1 transition-transform ${
-                    invoiceState.invoiceQrCode
+                  className={`dot absolute w-3 h-3 bg-white rounded-full top-1 transition-transform ${invoiceState.invoiceQrCode
                       ? "transform translate-x-full left-2"
                       : "left-1"
-                  }`}
+                    }`}
                 ></div>
               </div>
               <div className="ml-2 text-textColor font-semibold text-sm">
@@ -173,11 +189,10 @@ function Invoices({}: Props) {
                 >
                   <p
                     id="qrCodeType"
-                    className={`appearance-none w-full text-slate-600 bg-white text-sm h-[39px] pl-3 pr-8 rounded-sm leading-tight focus:outline-none border focus:bg-white ${
-                      invoiceURLDropdown
+                    className={`appearance-none w-full text-slate-600 bg-white text-sm h-[39px] pl-3 pr-8 rounded-sm leading-tight focus:outline-none border focus:bg-white ${invoiceURLDropdown
                         ? "border-darkRed"
                         : "border-inputBorder"
-                    } flex items-center`}
+                      } flex items-center`}
                   >
                     {invoiceState.invoiceQrType || "Invoice URL"}
                   </p>
@@ -250,7 +265,7 @@ function Invoices({}: Props) {
               </div>
 
               <div className='col-span-6'>
-                <Input label="QR Code Description" placeholder="Enter Description"/>
+                <Input label="QR Code Description" placeholder="Enter Description" />
               </div>
             </div>
           )}
@@ -259,7 +274,7 @@ function Invoices({}: Props) {
         <div className="bg-white w-full p-6 text-xs rounded-lg space-y-3">
           <p className="font-bold text-sm">Zero-value line items</p>
           <div className="flex items-center space-x-2 mt-4">
-          <Checkbox
+            <Checkbox
               label="Hide zero-value line items"
               checked={invoiceState.zeroValue}
               onChange={(checked) =>
@@ -278,8 +293,8 @@ function Invoices({}: Props) {
           </div>
         </div>
 
-            {/* Terms & Condition */}
-            <div className="bg-white w-full p-6 text-[14px] rounded-lg space-y-2">
+        {/* Terms & Condition */}
+        <div className="bg-white w-full p-6 text-[14px] rounded-lg space-y-2">
           <p className="font-bold text-textColor text-sm">Terms & Conditions</p>
           <TextArea
             value={invoiceState.salesInvoiceTC}
@@ -308,7 +323,7 @@ function Invoices({}: Props) {
 
         <div className="pt-4 flex justify-between">
           <Button
-           
+
             type="submit"
           >Save</Button>
         </div>

@@ -1,4 +1,4 @@
-import {  useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Button from "../../../Components/Button";
 import Banner from "../Organization/Banner";
@@ -11,6 +11,8 @@ import Checkbox from "../../../Components/Form/Checkbox";
 import Input from "../../../Components/Form/Input";
 import TextArea from "../../../Components/Form/TextArea";
 import CirclePlus from "../../../assets/icons/circleplus";
+import { endpoints } from "../../../Services/apiEdpoints";
+import { settingsdataResponseContext } from "../../../Context/ContextShare";
 
 type Props = {};
 
@@ -24,7 +26,7 @@ interface creditNote {
   creditNoteCN: string;
 }
 
-function CreditNotes({}: Props) {
+function CreditNotes({ }: Props) {
   const organizationDetails = [
     "${ORGANIZATION.CITY} ${ORGANIZATION.STATE} ${ORGANIZATION.POSTAL_CODE}",
     "${ORGANIZATION.COUNTRY}",
@@ -71,10 +73,13 @@ function CreditNotes({}: Props) {
     ],
   };
 
+
+
   const { request: addCrditNote } = useApi("put", 5007);
   const [invoiceURLDropdown, setInvoiceURLDropdown] = useState(false);
   const [configureModal, setConfigureModal] = useState(false);
   const [placeHolderModal, setPlaceHolderModal] = useState(false);
+  const { settingsResponse, getSettingsData } = useContext(settingsdataResponseContext)!;
 
   const [inputData, setInputData] = useState<creditNote>({
     overRideCostPrice: false,
@@ -89,26 +94,38 @@ function CreditNotes({}: Props) {
   // console.log(inputData);
 
   const handleInputChange = (
-    e:any
+    eventOrChecked: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | boolean,
+    name?: string
   ) => {
-    const { name, type } = e.target;
-
-    if (type === "checkbox") {
-      const target = e.target as HTMLInputElement;
-      const checked = target.checked;
+    if (typeof eventOrChecked === "boolean" && name) {
+      // If it's a checkbox value (boolean), update state directly
       setInputData((prevData) => ({
         ...prevData,
-        [name]: checked,
+        [name]: eventOrChecked,
       }));
     } else {
-      const target = e.target as HTMLSelectElement;
-      const value = target.value;
-      setInputData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
+      // Handle input/select/textarea changes
+      const event = eventOrChecked as ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
+      const { name, type } = event.target;
+
+      if (type === "checkbox") {
+        const target = event.target as HTMLInputElement;
+        setInputData((prevData) => ({
+          ...prevData,
+          [name]: target.checked,
+        }));
+      } else {
+        const target = event.target as HTMLSelectElement | HTMLTextAreaElement;
+        setInputData((prevData) => ({
+          ...prevData,
+          [name]: target.value,
+        }));
+      }
     }
   };
+
+
+
 
   const handleOptionClick = (option: string) => {
     setInputData((prevData) => ({
@@ -120,7 +137,7 @@ function CreditNotes({}: Props) {
 
   const handleSaveCreditNote = async () => {
     try {
-      const url = ``;
+      const url = `${endpoints.ADD_CREDIT_NOTE_SETTINGS}`;
       const apiResponse = await addCrditNote(url, inputData);
       console.log(apiResponse);
       const { response, error } = apiResponse;
@@ -150,9 +167,9 @@ function CreditNotes({}: Props) {
     }
   };
 
-  // useEffect(() => {
-  //   getSettingsData();
-  // }, []);
+  useEffect(() => {
+    getSettingsData();
+  }, []);
 
   useEffect(() => {
     if (!inputData.creditNoteQr) {
@@ -162,18 +179,22 @@ function CreditNotes({}: Props) {
         creditNoteQrType: "",
       }));
     }
+
+
   }, [inputData.creditNoteQr]);
 
-  // useEffect(() => {
-  //   console.log("Settings Response: ", settingsResponse);
-  //   console.log("Input Data: ", inputData);
-  //   if (settingsResponse) {
-  //     setInputData((prevData) => ({
-  //       ...prevData,
-  //       ...settingsResponse?.data?.creditNoteSettings,
-  //     }));
-  //   }
-  // }, [settingsResponse]);
+
+  useEffect(() => {
+    console.log("Settings Response: ", settingsResponse);
+    console.log("Input Data: ", inputData);
+    if (settingsResponse) {
+      setInputData((prevData) => ({
+        ...prevData,
+        ...settingsResponse?.data?.creditNoteSettings,
+      }));
+    }
+  }, [settingsResponse]);
+
 
   return (
     <div className="p-5 text-[#303F58] h-[100vh] hide-scrollbar overflow-scroll">
@@ -183,23 +204,22 @@ function CreditNotes({}: Props) {
       {/* Cost Price Preference */}
       <div className="mt-4 p-6 rounded-lg bg-white space-y-2">
         <p className="font-semibold text-sm">Cost Price Preference</p>
-        
-            <Checkbox
-              label=" Allow users to override cost prices in credit notes"
-              checked={inputData.overRideCostPrice}
-              onChange={(checked) =>
-                handleInputChange( checked)
-              }
-            />
-          
-            <p className="text-xs mt-2 text-[#818894]">
-              Mark this option to allow users to manually edit and update the
-              cost price that is fetched from the recent transaction. Once you
-              override the cost price, the latest cost price will not be updated
-              based on the recent transaction.
-            </p>
-       
-   
+
+        <Checkbox
+          label="Allow users to override cost prices in credit notes"
+          checked={inputData.overRideCostPrice}
+          onChange={(checked) => handleInputChange(checked, "overRideCostPrice")}
+        />
+
+
+        <p className="text-xs mt-2 text-[#818894]">
+          Mark this option to allow users to manually edit and update the
+          cost price that is fetched from the recent transaction. Once you
+          override the cost price, the latest cost price will not be updated
+          based on the recent transaction.
+        </p>
+
+
       </div>
 
       {/* QR Code Toggle */}
@@ -215,7 +235,7 @@ function CreditNotes({}: Props) {
           </p>
           <label className="flex items-center cursor-pointer">
             <div className="relative">
-              
+
               <input
                 type="checkbox"
                 className="sr-only"
@@ -224,16 +244,14 @@ function CreditNotes({}: Props) {
                 onChange={handleInputChange}
               />
               <div
-                className={`w-9 h-5 rounded-full shadow-inner transition-colors ${
-                  inputData.creditNoteQr ? "bg-[#97998d]" : "bg-[#97998d]"
-                }`}
+                className={`w-9 h-5 rounded-full shadow-inner transition-colors ${inputData.creditNoteQr ? "bg-[#97998d]" : "bg-[#97998d]"
+                  }`}
               ></div>
               <div
-                className={`dot absolute w-3 h-3 bg-white rounded-full top-1 transition-transform ${
-                  inputData.creditNoteQr
-                    ? "transform translate-x-full left-2"
-                    : "left-1"
-                }`}
+                className={`dot absolute w-3 h-3 bg-white rounded-full top-1 transition-transform ${inputData.creditNoteQr
+                  ? "transform translate-x-full left-2"
+                  : "left-1"
+                  }`}
               ></div>
             </div>
             <div className="ml-2   font-semibold text-xs">
@@ -253,9 +271,8 @@ function CreditNotes({}: Props) {
               >
                 <p
                   id="qrCodeType"
-                  className={`appearance-none w-full text-slate-600 bg-white text-xs h-[39px] pl-3 pr-8 rounded-3xl leading-tight focus:outline-none border focus:bg-white ${
-                    invoiceURLDropdown ? "border-darkRed" : "border-inputBorder"
-                  } flex items-center`}
+                  className={`appearance-none w-full text-slate-600 bg-white text-xs h-[39px] pl-3 pr-8 rounded-3xl leading-tight focus:outline-none border focus:bg-white ${invoiceURLDropdown ? "border-darkRed" : "border-inputBorder"
+                    } flex items-center`}
                 >
                   {inputData.creditNoteQrType || "Select an option"}
                 </p>
@@ -322,8 +339,8 @@ function CreditNotes({}: Props) {
             </div>
 
             <div className="relative col-span-8">
-             
-             <Input placeholder="Enter Description " label=" QR Code Description"/>
+
+              <Input placeholder="Enter Description " label=" QR Code Description" />
             </div>
 
             <div className="col-span-12">
@@ -343,10 +360,10 @@ function CreditNotes({}: Props) {
                   <div className="mb-5 flex p-4 items-center rounded-xl h-[64px] bg-gradient-to-br from-[#F7ECD9] to-[#B5F0D3]  relative overflow-hidden">
                     <div
                       className="absolute top-0 -right-8 w-[178px] h-[68px]"
-                      // style={{
-                      //   backgroundImage: `url(${topImg})`,
-                      //   backgroundRepeat: "no-repeat",
-                      // }}
+                    // style={{
+                    //   backgroundImage: `url(${topImg})`,
+                    //   backgroundRepeat: "no-repeat",
+                    // }}
                     ></div>
                     <div className="relative z-10">
                       <h3 className="text-base font-bold text-text_primary">
@@ -457,16 +474,14 @@ function CreditNotes({}: Props) {
                 onChange={handleInputChange}
               />
               <div
-                className={`w-9 h-5 rounded-full shadow-inner transition-colors ${
-                  inputData.recordLocking ?"bg-[#97998d]" : "bg-[#97998d]"
-                }`}
+                className={`w-9 h-5 rounded-full shadow-inner transition-colors ${inputData.recordLocking ? "bg-[#97998d]" : "bg-[#97998d]"
+                  }`}
               ></div>
               <div
-                className={`dot absolute w-3 h-3 bg-white rounded-full top-1 transition-transform ${
-                  inputData.recordLocking
-                    ? "transform translate-x-full left-2"
-                    : "left-1"
-                }`}
+                className={`dot absolute w-3 h-3 bg-white rounded-full top-1 transition-transform ${inputData.recordLocking
+                  ? "transform translate-x-full left-2"
+                  : "left-1"
+                  }`}
               ></div>
             </div>
             <div className="ml-2   font-semibold text-sm">

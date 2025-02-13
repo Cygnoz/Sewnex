@@ -1,11 +1,11 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
-import CehvronDown from "../../../assets/icons/CheveronDown";
-
 import Button from "../../../Components/Button";
 import useApi from "../../../Hooks/useApi";
+import toast from "react-hot-toast";
+import { settingsdataResponseContext } from "../../../Context/ContextShare";
 import { endpoints } from "../../../Services/apiEdpoints";
 import Banner from "../Organization/Banner";
-import RadioButton from "../../../Components/Form/RadioButton";
+import CheveronDown from "../../../assets/icons/CheveronDown";
 
 type Props = {};
 
@@ -29,9 +29,9 @@ interface item {
   trackCostOnItems: boolean;
 }
 
-function Items({}: Props) {
+function Items({ }: Props) {
   const [selectedRadio, setSelectedRadio] = useState<string>("");
-  // const {settingsResponse, getSettingsData } = useContext(settingsdataResponseContext)!;
+  const { settingsResponse, getSettingsData } = useContext(settingsdataResponseContext)!;
   const { request: addItem } = useApi("put", 5003);
   const [inputData, setInputData] = useState<item>({
     itemDecimal: "",
@@ -54,28 +54,30 @@ function Items({}: Props) {
     trackCostOnItems: false,
   });
 
+
   // console.log(inputData);
 
-  // useEffect(() => {
-  //   getSettingsData();
-  // }, []);
+  useEffect(() => {
+    getSettingsData();
+  }, []);
 
-  // useEffect(() => {
-  //   if (settingsResponse) {
-  //     setInputData((prevData) => ({
-  //       ...prevData,
-  //       ...settingsResponse?.data?.itemSettings,
-  //     }));
-  //   }
-  // }, [settingsResponse]);
+  useEffect(() => {
+    if (settingsResponse) {
+      setInputData((prevData) => ({
+        ...prevData,
+        ...settingsResponse?.data?.itemSettings,
+      }));
+    }
+  }, [settingsResponse]);
 
-  // useEffect(() => {
-  //   if (inputData.hsnSac) {
-  //     setSelectedRadio(inputData.hsnDigits || "4");
-  //   } else {
-  //     setSelectedRadio("");
-  //   }
-  // }, [inputData.hsnSac, inputData.hsnDigits]);
+  useEffect(() => {
+    if (inputData.hsnSac) {
+      setSelectedRadio(inputData.hsnDigits || "4");
+    } else {
+      setSelectedRadio("");
+    }
+  }, [inputData.hsnSac, inputData.hsnDigits]);
+
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -106,24 +108,26 @@ function Items({}: Props) {
 
   const handleSave = async () => {
     try {
-      const url = `${endpoints}`;
+      const url = `${endpoints.ADD_ITEMS}`;
       const { response, error } = await addItem(url, inputData);
       console.log(response);
       console.log(error);
 
       if (!error && response) {
-        // toast.success(response?.data);
-      } else {
-        // toast.error(error?.response?.data?.message)
+        toast.success(response?.data);
+      }
+      else {
+        toast.error(error?.response?.data?.message)
       }
     } catch (error) {
       console.log(error, "Something went wrong");
     }
   };
 
+
   return (
-    <div className=" text-[#303F58]  overflow-y-scroll hide-scrollbar h-[100vh]">
-     <Banner seeOrgDetails />
+    <div className="m-4 text-[#303F58]">
+      <Banner />
 
       <p className="text-[20px] font-bold mt-3">Item</p>
       <div className="space-y-4 mt-2">
@@ -131,15 +135,15 @@ function Items({}: Props) {
         <div className="bg-white w-full p-6 rounded-lg">
           <div className="space-y-4">
             <div className="grid grid-cols-12 items-center space-x-20">
-              <p className="col-span-5 text-[14px] ">
+              <p className="col-span-4 text-[14px] font-semibold">
                 Set decimal rate of your item quantity:
               </p>
-              <div className="relative col-span-2 w-[70px]">
+              <div className="relative col-span-2 w-[60px]">
                 <select
                   name="itemDecimal"
                   value={inputData.itemDecimal}
                   onChange={handleInputChange}
-                  className="block appearance-none text-zinc-400 bg-white border border-inputBorder text-sm h-[24px] w-[68px] pl-2 rounded-md focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
+                  className="block appearance-none text-zinc-400 bg-white border border-inputBorder text-sm h-[24px] w-[58px] pl-2 rounded-md focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
                 >
                   <option className="hidden">1</option>
 
@@ -147,22 +151,22 @@ function Items({}: Props) {
                   <option value="2">2</option>
                   <option value="3">3</option>
                 </select>
-                <div className="pointer-events-none  absolute inset-y-0 right-0 flex items-center px-1 text-gray-700">
-                  <CehvronDown color="gray" />
+                <div className="pointer-events-none  absolute inset-y-0 right-1 flex items-center px-1 text-gray-700">
+                  <CheveronDown size="19" strokeWidth="1.2" color="#495160" />
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-12 items-center space-x-20">
-              <p className="col-span-5 text-[14px] ">
+              <p className="col-span-4 text-[14px] font-semibold">
                 Measure item dimensions:
               </p>
-              <div className="relative col-span-2 w-[70px]">
+              <div className="relative col-span-2 w-[60px]">
                 <select
                   name="itemDimensions"
                   value={inputData.itemDimensions}
                   onChange={handleInputChange}
-                  className="block appearance-none text-zinc-400 bg-white border border-inputBorder text-sm h-[24px] w-[68px] pl-2 rounded-md focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
+                  className="block appearance-none text-zinc-400 bg-white border border-inputBorder text-sm h-[24px] w-[58px] pl-2 rounded-md focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
                 >
                   <option className="hidden" value="">
                     CM
@@ -172,22 +176,22 @@ function Items({}: Props) {
                   <option value="m">M</option>
                   <option value="inch">Inch</option>
                 </select>
-                <div className="pointer-events-none  absolute inset-y-0 right-0 flex items-center px-1 text-gray-700">
-                  <CehvronDown color="gray" />
+                <div className="pointer-events-none  absolute inset-y-0 right-1 flex items-center px-1 text-gray-700">
+                  <CheveronDown strokeWidth="1.2" size="19" color="#495160" />
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-12 items-center space-x-20">
-              <p className="col-span-5 text-[14px] ">
+              <p className="col-span-4 text-[14px] font-semibold">
                 Measure item weights In:
               </p>
-              <div className="relative col-span-2 w-[70px]">
+              <div className="relative col-span-2 w-[60px]">
                 <select
                   name="itemWeights"
                   value={inputData.itemWeights}
                   onChange={handleInputChange}
-                  className="block appearance-none text-zinc-400 bg-white border border-inputBorder text-sm h-[24px] w-[68px] pl-2 rounded-md focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
+                  className="block appearance-none text-zinc-400 bg-white border border-inputBorder text-sm h-[24px] w-[58px] pl-2 rounded-md focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
                 >
                   <option className="hidden" value="">
                     KG
@@ -197,77 +201,27 @@ function Items({}: Props) {
                   <option value={"g"}>g</option>
                   <option value="lb">lb</option>
                 </select>
-                <div className="pointer-events-none  absolute inset-y-0 right-0 flex items-center px-1 text-gray-700">
-                  <CehvronDown color="gray" />
+                <div className="pointer-events-none  absolute inset-y-0 right-1 flex items-center px-1 text-gray-700">
+                  <CheveronDown size="19" strokeWidth="1.2" color="#495160" />
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-12 items-center space-x-20">
-              <p className="col-span-5 text-[14px]">
-                Selected items when barcodes are scanned using:
-              </p>
-              <div className="relative col-span-2 w-[70px]">
-                <select
-                  value={inputData.barcodeScan}
-                  onChange={handleInputChange}
-                  name="barcodeScan"
-                  className="block appearance-none text-zinc-400 bg-white border border-inputBorder text-sm h-[24px] w-[68px] pl-2 rounded-md focus:outline-none focus:bg-white focus:border-gray-500 cursor-pointer"
-                >
-                  <option className="hidden" value="">
-                    SKU
-                  </option>
-                  <option value="SKU">SKU</option>
-                </select>
-                <div className="pointer-events-none  absolute inset-y-0 right-0 flex items-center px-1 text-gray-700">
-                  <CehvronDown color="gray" />
-                </div>
-              </div>
-            </div>
           </div>
         </div>
-        {/* Default item type */}
-        <div className="bg-white w-full p-6 text-[14px] rounded-lg space-y-3">
-          <p className="font-bold">Default Item Type</p>
-          <p className="text-[#818894]">
-            Select the default Item type based on the kind of Item you usually
-            set your products or services to. The default Item type will be
-            pre-selected in the Item creation form.
-          </p>
-          <div className="space-y-4 mt-3">
-            <div className="flex justify-start">
-              <RadioButton
-                id="Goods"
-                name="Goods"
-                label="Goods"
-                selected={selectedRadio}
-                onChange={handleRadioChange}
-              />
-            </div>
-            <div className="flex justify-start">
-              <RadioButton
-                id="Services"
-                name="Services"
-                label="Services"
-                selected={selectedRadio}
-                onChange={handleRadioChange}
-              />
-            </div>
-          </div>
-        </div>
-
         {/* Duplicate Item name */}
         <div className="bg-white  w-full p-6 text-[14px] rounded-lg space-y-3">
           <p className="font-bold ">Duplicate Item Name</p>
           <div className="flex items-center space-x-2 mt-3">
             <input
               type="checkbox"
-              id="customCheckbox"
+              id="customCheckbox1"
               name="itemDuplicateName"
               checked={inputData.itemDuplicateName}
               onChange={handleInputChange}
+              className="accent-[#c78000] cursor-pointer w-5 h-5"
             />{" "}
-            <label className=" font-medium  ">Allow duplicate item names</label>
+            <label htmlFor="customCheckbox1" className=" font-medium  ">Allow duplicate item names</label>
           </div>
           <p className="text-[#818894]">
             If you allow duplicate item names, all imports involving items will
@@ -280,12 +234,13 @@ function Items({}: Props) {
           <div className="flex items-center space-x-2 mt-3">
             <input
               type="checkbox"
-              id="customCheckbox"
+              id="customCheckbox2"
               checked={inputData.hsnSac}
               onChange={handleInputChange}
               name="hsnSac"
+              className="accent-[#c78000] cursor-pointer w-5 h-5"
             />
-            <label>Enable the HSN Code or SAC field</label>
+            <label htmlFor="customCheckbox2">Enable the HSN Code or SAC field</label>
           </div>
           {inputData.hsnSac && (
             <>
@@ -296,20 +251,18 @@ function Items({}: Props) {
                     type="radio"
                     name="hsnDigits"
                     value="4"
-                    className={`col-start-1 row-start-1 appearance-none shrink-0 w-5 h-5 rounded-full border  ${
-                      selectedRadio === "4"
-                        ? "border-8 border-neutral-400"
-                        : "border-1 border-neutral-400"
-                    }`}
+                    className={`col-start-1 row-start-1 appearance-none shrink-0 w-5 h-5 rounded-full border  ${selectedRadio === "4"
+                      ? "border-8 border-fourthiary_main"
+                      : "border-1 border-neutral-400"
+                      }`}
                     checked={selectedRadio === "4"}
                     onChange={() => handleRadioChange("4")}
                   />
                   <div
-                    className={`col-start-1 row-start-1 w-2 h-2 rounded-full ${
-                      selectedRadio === "4"
-                        ? "bg-neutral-100"
-                        : "bg-transparent"
-                    }`}
+                    className={`col-start-1 row-start-1 w-2 h-2 rounded-full ${selectedRadio === "4"
+                      ? "bg-neutral-100"
+                      : "bg-transparent"
+                      }`}
                   />
                 </div>
                 <label htmlFor="4" className="text-slate-600">
@@ -329,20 +282,18 @@ function Items({}: Props) {
                     type="radio"
                     name="hsnDigits"
                     value="6"
-                    className={`col-start-1 row-start-1 appearance-none shrink-0 w-5 h-5 rounded-full border  ${
-                      selectedRadio === "6"
-                        ? "border-8 border-neutral-400"
-                        : "border-1 border-neutral-400"
-                    }`}
+                    className={`col-start-1 row-start-1 appearance-none shrink-0 w-5 h-5 rounded-full border  ${selectedRadio === "6"
+                      ? "border-8 border-fourthiary_main"
+                      : "border-1 border-neutral-400"
+                      }`}
                     checked={selectedRadio === "6"}
                     onChange={() => handleRadioChange("6")}
                   />
                   <div
-                    className={`col-start-1 row-start-1 w-2 h-2 rounded-full ${
-                      selectedRadio === "6"
-                        ? "bg-neutral-100"
-                        : "bg-transparent"
-                    }`}
+                    className={`col-start-1 row-start-1 w-2 h-2 rounded-full ${selectedRadio === "6"
+                      ? "bg-neutral-100"
+                      : "bg-transparent"
+                      }`}
                   />
                 </div>
                 <label htmlFor="6" className="text-slate-600">
@@ -363,12 +314,13 @@ function Items({}: Props) {
           <div className="flex items-center space-x-2 mt-3">
             <input
               type="checkbox"
-              id="customCheckbox"
+              id="customCheckbox3"
               checked={inputData.priceList}
               name="priceList"
               onChange={handleInputChange}
+              className="accent-[#c78000] cursor-pointer w-5 h-5"
             />
-            <label>Enable Price List</label>
+            <label htmlFor="customCheckbox3">Enable Price List</label>
           </div>
           <p className="text-[#818894]">
             Price Lists enables you to customise the rates of the items in your
@@ -379,12 +331,13 @@ function Items({}: Props) {
               <div className="flex items-center space-x-2 mt-3">
                 <input
                   type="checkbox"
-                  id="customCheckbox"
+                  id="customCheckbox4"
                   checked={inputData.priceListAtLineLevel}
                   name="priceListAtLineLevel"
                   onChange={handleInputChange}
+                  className="accent-[#c78000] cursor-pointer w-5 h-5"
                 />
-                <label>Apply price list at line time level</label>
+                <label htmlFor="customCheckbox4">Apply price list at line time level</label>
               </div>
               <p className="text-[#818894]">
                 Select this option if you want to apply different price lists
@@ -399,12 +352,13 @@ function Items({}: Props) {
           <div className="flex items-center space-x-2 mt-3">
             <input
               type="checkbox"
-              id="customCheckbox"
+              id="customCheckbox5"
               checked={inputData.compositeItem}
               name="compositeItem"
               onChange={handleInputChange}
+              className="accent-[#c78000] cursor-pointer w-5 h-5"
             />
-            <label>Enable Composite Items</label>
+            <label htmlFor="customCheckbox5">Enable Composite Items</label>
           </div>
         </div>
         {/* Advanced Inventory Tracking */}
@@ -413,66 +367,39 @@ function Items({}: Props) {
           <div className="flex items-center space-x-2 mt-3">
             <input
               type="checkbox"
-              id="customCheckbox"
+              id="customCheckbox6"
               checked={inputData.stockBelowZero}
               name="stockBelowZero"
               onChange={handleInputChange}
+              className="accent-[#c78000] cursor-pointer w-5 h-5"
             />
-            <label>Prevent stock from going below zero</label>
+            <label htmlFor="customCheckbox6">Prevent stock from going below zero</label>
           </div>
           <div className="flex items-center space-x-2 mt-3">
             <input
               type="checkbox"
-              id="customCheckbox"
+              id="customCheckbox7"
               checked={inputData.outOfStockBelowZero}
               name="outOfStockBelowZero"
               onChange={handleInputChange}
+              className="accent-[#c78000] cursor-pointer w-5 h-5"
             />
-            <label>
+            <label htmlFor="customCheckbox7">
               Show an Out of Stock warning when an item's stock drops below
-              zero 
+              zero
             </label>
           </div>
-          {/* <div className="flex items-center space-x-2 mt-3">
-            <input
-              type="checkbox"
-              id="customCheckbox"
-              checked={inputData.notifyReorderPoint}
-              name="notifyReorderPoint"
-              onChange={handleInputChange}
-            />
-            <label>
-              Notify me if an item's quantity reaches the reorder point
-            </label>
-          </div>
-          {inputData.notifyReorderPoint && (
-            <div className="mt-2 space-y-2">
-              <p>Notify To</p>
-              <div className="relative w-[286px] mt-2">
-                <select
-                  name="state"
-                  id="state"
-                  className="block appearance-none w-full text-zinc-400 bg-white border border-inputBorder text-sm h-[39px] pl-3 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                >
-                  <option value="abc@mail.com">
-                    abc@mail.com
-                  </option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                  <CehvronDown color="gray" />
-                </div>
-              </div>
-            </div>
-          )} */}
+
           <div className="flex items-center space-x-2 mt-3">
             <input
               type="checkbox"
-              id="customCheckbox"
+              id="customCheckbox8"
               name="trackCostOnItems"
               checked={inputData.trackCostOnItems}
               onChange={handleInputChange}
+              className="accent-[#c78000] cursor-pointer w-5 h-5"
             />
-            <label>Track landed cost on items</label>
+            <label htmlFor="customCheckbox8">Track landed cost on items</label>
           </div>
         </div>
         <Button
