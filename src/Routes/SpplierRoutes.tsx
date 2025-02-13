@@ -8,7 +8,7 @@ const SupplierRoutes = () => {
     return (
       <Routes>
         <Route path="/" element={<Supplier/>}></Route>
-        <Route path="/view" element={<ViewSupplier/>}></Route>
+        <Route path="/view/:id" element={<ViewSupplier/>}></Route>
 
       </Routes>
     );
