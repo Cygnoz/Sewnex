@@ -150,4 +150,3 @@ const CreateCustomerModal = () => {
 }
 
 export default CreateCustomerModal
-

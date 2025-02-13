@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import CehvronDown from "../../assets/icons/CheveronDown";
+import CheveronDown from "../../assets/icons/CheveronDown";
 
 type Props = {
   discount?: number;
@@ -76,7 +76,7 @@ function PosDiscount({
             <option value="Currency">INR</option>
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-            <CehvronDown color="gray" />
+          <CheveronDown strokeWidth="1.2" color="#495160" />
           </div>
         </div>
       </div>
