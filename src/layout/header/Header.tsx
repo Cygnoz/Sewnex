@@ -22,19 +22,12 @@ function Header({ }: Props) {
 
   const { request: getOneOrganization } = useApi("get", 5004);
 
-  const handleLogout = () => {
-    ['authToken', 'savedIndex', 'savedSelectedIndex'].forEach(item => localStorage.removeItem(item));
-    navigate("/login");
-    toast.error("Session expired. Please log in again.");
-  };
-
   useEffect(() => {
     const fetchOrganization = async () => {
       try {
         const url = `${endpoints.GET_ONE_ORGANIZATION}`;
         const apiResponse = await getOneOrganization(url);
         if (!apiResponse.response?.data) {
-          handleLogout();
         } else {
           setOrganizationData(apiResponse.response.data);
         }
