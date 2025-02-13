@@ -68,7 +68,7 @@ function Expense({}: Props) {
     navigate("view");
   };
 
-  const { request: deleteExpense } = useApi("delete", 5001);
+  const { request: deleteExpense } = useApi("delete", 5008);
   const handleDelete = async () => {
     if (!deleteId) return;
     try {
