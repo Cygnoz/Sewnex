@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import useApi from "../../Hooks/useApi";
 import { endpoints } from "../../Services/apiEdpoints";
 import CheveronLeftIcon from "../../assets/icons/ChevronLeft";
-import DollarSign from "../../assets/icons/Dollarsign";
 import { ExpenseDollar } from "../../assets/icons/ExpenseDollar";
 import { PrintIcon } from "../../assets/icons/PrintIcon";
 
@@ -47,53 +46,24 @@ const ExpenseView = ({}: Props) => {
     },
   ];
 
-  const sampleExpenses = {
-    data: {
-      expenseDate: "2024-05-30",
-      grandTotal: "5000",
-      paidThrough: "Bank Transfer",
-      supplierDisplayName: "ABC Supplies",
-      gstTreatment: "Registered Business",
-      gstin: "27AABCU9603R1ZN",
-      sourceOfSupply: "Maharashtra",
-      destinationOfSupply: "Karnataka",
-      expense: [
-        {
-          expenseAccount: "Office Supplies",
-          igst: 18,
-          igstAmount: 900,
-          sgst: 9,
-          cgst: 9,
-        },
-      ],
-    },
-  };
 
-  //   const getExpenses = async () => {
-  //     try {
-  //       const url = `${endpoints}`;
-  //       const { response, error } = await getExpense(url);
 
-  //       if (!error && response) {
-  //         setExpense(response.data);
-  //         setExpenseData(response.data.expense);
-  //         console.log(response.data, "response");
-  //       } else {
-  //       }
-  //     } catch (error) {
-  //       console.log("Error in fetching expense", error);
-  //     }
-  //   };
-  const getExpenses = async () => {
-    try {
-      const response = sampleExpenses; // Use sample data here
-      setExpense(response.data);
-      setExpenseData(response.data.expense);
-      console.log(response.data, "response");
-    } catch (error) {
-      console.log("Error in fetching expense", error);
-    }
-  };
+    const getExpenses = async () => {
+      try {
+        const url = `${endpoints}/${id}`;
+        const { response, error } = await getExpense(url);
+
+        if (!error && response) {
+          setExpense(response.data);
+          setExpenseData(response.data.expense);
+          console.log(response.data, "response");
+        } else {
+        }
+      } catch (error) {
+        console.log("Error in fetching expense", error);
+      }
+    };
+
 
   console.log(expensedata, "ksjhdguyftgyhjjhgfdxxcfgvbh");
 

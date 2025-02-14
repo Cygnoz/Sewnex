@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useContext, useEffect, useRef, useState } from "react";
-import CirclePlus from "../../../../assets/icons/circleplus";
+import CirclePlus from "../../../../assets/icons/CirclePlus";
 import Button from "../../../../Components/Button";
 import Modal from "../../../../Components/modal/Modal";
 import Table from "../../../../Components/Table/Table";

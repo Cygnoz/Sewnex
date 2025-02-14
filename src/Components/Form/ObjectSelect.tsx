@@ -64,6 +64,7 @@ const ObjectSelect = ({
     setOpenDropdown(false);
   };
 
+  console.log(NewItem,renderOptionContent)
   return (
     <div>
       <label className="block text-xs mb-1 text-text_tertiary">

@@ -12,7 +12,7 @@ import linkedinlog from "../../../assets/images/linkedin logo.png";
 import facebooklogo from "../../../assets/images/Group.png";
 import Checkbox from "../../../Components/Form/Checkbox";
 import Input from "../../../Components/Form/Input";
-import CirclePlus from "../../../assets/icons/circleplus";
+import CirclePlus from "../../../assets/icons/CirclePlus";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -138,11 +138,9 @@ const InvoiceINOrg = () => {
 
   const {
     register,
-    handleSubmit,
     watch,
     setValue,
-    clearErrors,
-    formState: { errors },
+    formState: {  },
   } = useForm<InvoiceSettings>({
     resolver: yupResolver(validationSchema),
   });

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom"
 import Button from "../../../Components/Button"
-import CirclePlus from "../../../assets/icons/circleplus"
+import CirclePlus from "../../../assets/icons/CirclePlus"
 import Table from "../../../Components/Table/Table"
 import { endpoints } from "../../../Services/apiEdpoints"
 import { useContext, useEffect, useState } from "react"

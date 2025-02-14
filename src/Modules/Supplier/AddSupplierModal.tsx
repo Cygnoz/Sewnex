@@ -7,7 +7,6 @@ import CheveronDown from "../../assets/icons/CheveronDown";
 // import PhoneInput from "react-phone-input-2";
 import Trash from "../../assets/icons/Trash";
 import Upload from "../../assets/icons/Upload";
-import CirclePlus from "../../assets/icons/circleplus";
 import Select from "../../Components/Form/Select";
 import Input from "../../Components/Form/Input";
 import PhoneNumberInput from "../../Components/Form/PhoneInput";
@@ -168,6 +167,8 @@ function AddSupplierModal({ page , supplierData , fetchAllSuppliers,id }: Props)
     ],
     remarks: "",
   });
+  console.log(supplierData);
+  
 
   // ...existing code...
 
@@ -747,7 +748,6 @@ function AddSupplierModal({ page , supplierData , fetchAllSuppliers,id }: Props)
         </div>
       ) : (
         <Button onClick={openModal}>
-          <CirclePlus />
           <p> Add Suppier</p>
         </Button>
       )}
@@ -1857,7 +1857,7 @@ function AddSupplierModal({ page , supplierData , fetchAllSuppliers,id }: Props)
                           className="flex my-5 gap-2 text-darkRed items-center font-bold cursor-pointer"
                           onClick={addNewBankAccount}
                         >
-                          <CirclePlus color="darkRed" size={22} /> Add New Bank
+                         Add New Bank
                           Account
                         </div>
                       </div>

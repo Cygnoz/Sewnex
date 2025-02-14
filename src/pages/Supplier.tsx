@@ -32,7 +32,7 @@ function Supplier({ }: Props) {
   const { request: AllSuppliers } = useApi("get", 5009);
   const { supplierResponse } = useContext(SupplierResponseContext)!;
   const { loading, setLoading } = useContext(TableResponseContext)!;
-  const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const [activeFilter] = useState<string | null>(null);
 
   const fetchAllSuppliers = async () => {
     try {
@@ -123,6 +123,8 @@ function Supplier({ }: Props) {
     }
     return true;
   });
+
+  console.log(filteredSuppliers)
 
   const navigate = useNavigate();
   const columns = [

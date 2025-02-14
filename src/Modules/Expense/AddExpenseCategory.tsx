@@ -2,12 +2,11 @@ import { useState } from "react";
 import Button from "../../Components/Button";
 import Modal from "../../Components/modal/Modal";
 import SearchBar from "../../Components/SearchBar";
-import PencilLine from "../../assets/icons/PencilLine";
 import Trash from "../../assets/icons/Trash";
 
 
 import Select from "../../Components/Form/Select";
-import CirclePlus from "../../assets/icons/circleplus";
+import CirclePlus from "../../assets/icons/CirclePlus";
 import Pen from "../../assets/icons/Pen";
 
 

@@ -10,7 +10,7 @@ import topImg from "../../../../assets/Images/image 43.png";
 import bgImg from "../../../../assets/images/Group (1).png";
 import bgimg2 from "../../../../assets/images/Mask group (2).png";
 import Pen from "../../../../assets/icons/Pen";
-import CirclePlus from "../../../../assets/icons/circleplus";
+import CirclePlus from "../../../../assets/icons/CirclePlus";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { endpoints } from "../../../../Services/apiEdpoints";

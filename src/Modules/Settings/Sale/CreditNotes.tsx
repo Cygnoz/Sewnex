@@ -10,7 +10,7 @@ import Modal from "../../../Components/modal/Modal";
 import Checkbox from "../../../Components/Form/Checkbox";
 import Input from "../../../Components/Form/Input";
 import TextArea from "../../../Components/Form/TextArea";
-import CirclePlus from "../../../assets/icons/circleplus";
+import CirclePlus from "../../../assets/icons/CirclePlus";
 import { endpoints } from "../../../Services/apiEdpoints";
 import { settingsdataResponseContext } from "../../../Context/ContextShare";
 

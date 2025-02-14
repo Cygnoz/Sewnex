@@ -54,7 +54,6 @@ function CustomerTable({ }: Props) {
         <div>
             <div>
                 <Table
-                    page="Customer"
                     columns={columns}
                     data={data}
                     onRowClick={handleRowClick}

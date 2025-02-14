@@ -4,7 +4,7 @@ import Modal from "../../../Components/modal/Modal"
 import accountsBgImage from "../../../assets/images/accountsBgIMage.png"
 import Input from "../../../Components/Form/Input";
 import CheveronDown from "../../../assets/icons/CheveronDown";
-import CirclePlus from "../../../assets/icons/circleplus";
+import CirclePlus from "../../../assets/icons/CirclePlus";
 import useApi from "../../../Hooks/useApi";
 import { endpoints } from "../../../Services/apiEdpoints";
 import toast from "react-hot-toast";

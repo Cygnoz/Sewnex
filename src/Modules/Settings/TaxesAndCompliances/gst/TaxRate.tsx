@@ -1,6 +1,6 @@
 import Table from "../../../../Components/Table/Table";
 import Button from "../../../../Components/Button";
-import CirclePlus from "../../../../assets/icons/circleplus";
+import CirclePlus from "../../../../assets/icons/CirclePlus";
 import Modal from "../../../../Components/modal/Modal";
 import { ChangeEvent, FormEvent, useContext, useEffect, useRef, useState } from "react";
 import accountsBgImage from "../../../../assets/images/bankBgImage.png";

@@ -73,6 +73,8 @@ const ItemTable = ({ state, setState, isInterState, isNonTaxable }: Props) => {
     }
   };
 
+  console.log(isNonTaxable)
+
   const handleClickOutside = (event: MouseEvent) => {
     if (
       dropdownRef.current &&

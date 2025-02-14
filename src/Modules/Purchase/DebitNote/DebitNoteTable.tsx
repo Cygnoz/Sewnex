@@ -5,7 +5,7 @@ import SearchBar from "../../../Components/SearchBar";
 import toast from "react-hot-toast";
 import useApi from "../../../Hooks/useApi";
 import { endpoints } from "../../../Services/apiEdpoints";
-import CirclePlus from "../../../assets/icons/circleplus";
+import CirclePlus from "../../../assets/icons/CirclePlus";
 
 type Row = {
   itemImage?: string;

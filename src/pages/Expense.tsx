@@ -2,7 +2,7 @@
 import HomeCard from "../Components/HomeCards";
 import Table from "../Components/Table/Table";
 import AddExpenseCategory from "../Modules/Expense/AddExpenseCategory";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TodaysExpense } from "../assets/icons/TodaysExpense";
 import { MonthExpense } from "../assets/icons/MonthExpense";
 import { WeekExpense } from "../assets/icons/WeekExpense";
@@ -12,7 +12,7 @@ import { endpoints } from "../Services/apiEdpoints";
 import useApi from "../Hooks/useApi";
 import toast from "react-hot-toast";
 import ConfirmModal from "../Components/ConfirmModal";
-import AddExpenseModal from "../Modules/Expense/AddExpensePage";
+import Button from "../Components/Button";
 
 type Props = {};
 
@@ -110,8 +110,9 @@ function Expense({}: Props) {
             <div className="flex gap-3">
               {/* Add Category Button */}
               <AddExpenseCategory />
-              <AddExpenseModal />
-
+              <Link to="/expense/add-expense">
+                <Button>Add Expense</Button>
+              </Link>
             </div>
           </div>
         </div>

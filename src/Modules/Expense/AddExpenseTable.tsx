@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CirclePlus from "../../assets/icons/circleplus";
+import CirclePlus from "../../assets/icons/CirclePlus";
 import CheveronDown from "../../assets/icons/CheveronDown";
 CheveronDown
 type Props = {

@@ -10,7 +10,7 @@ import Snap from "../../assets/icons/Snap";
 import FaceBook from "../../assets/icons/FaceBook";
 import Select from "../../Components/Form/Select";
 import CrossIcon from "../../assets/icons/CrossIcon";
-import CirclePlus from "../../assets/icons/circleplus";
+import CirclePlus from "../../assets/icons/CirclePlus";
 import CheveronDown from "../../assets/icons/CheveronDown";
 import Pen from "../../assets/icons/Pen";
 
@@ -25,6 +25,8 @@ const NewCustomer = ({ page,id }: Props) => {
       setActiveTab(activeTab + 1);
     }
   };
+
+  console.log(id)
 
   const handleBack = () => {
     if (activeTab > 1) {
