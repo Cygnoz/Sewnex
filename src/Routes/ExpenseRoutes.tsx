@@ -1,16 +1,15 @@
 import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import NewExpense from "../Modules/Expense/NewExpense";
-import ExpenseView from "../Modules/Expense/ExpenseView";
 
 const Expense = lazy(() => import("../pages/Expense")); 
- 
+ const AddExpensePage = lazy(() => import("../Modules/Expense/AddExpensePage"));
+const ExpenseView = lazy(() => import("../Modules/Expense/ExpenseView"));
 const ExpenseRoutes = () => {
     return (
       <Routes>
         <Route path="/" element={<Expense/>}></Route>
-        <Route path="add-expense" element={<NewExpense/>}></Route>
+        <Route path="add-expense" element={<AddExpensePage/>}></Route>
         <Route path="view" element={<ExpenseView/>}></Route>
       
       </Routes>

@@ -3,10 +3,10 @@ import HomeCard from "../Components/HomeCards";
 import Table from "../Components/Table/Table";
 import AddExpenseCategory from "../Modules/Expense/AddExpenseCategory";
 import { useNavigate } from "react-router-dom";
-import AddExpenseModal from "../Modules/Expense/AddExpenseModal";
 import { TodaysExpense } from "../assets/icons/TodaysExpense";
 import { MonthExpense } from "../assets/icons/MonthExpense";
 import { WeekExpense } from "../assets/icons/WeekExpense";
+import AddExpenseModal from "../Modules/Expense/AddExpenseModal";
 
 type Props = {};
 
@@ -56,14 +56,12 @@ function Expense({}: Props) {
       paymentMethod: "Credit Card",
       addedDate: "2025-01-15",
     },
- 
   ];
-  
+
   // const handlePrintClick = (id: string) => {
   //   console.log(`Printing record with ID: ${id}`);
   //   // Add your print logic here
   // };
-  
 
   const handleRowClick = () => {
     navigate("view");
@@ -106,15 +104,15 @@ function Expense({}: Props) {
             <div className="flex gap-3">
               {/* Add Category Button */}
               <AddExpenseCategory />
-
               <AddExpenseModal />
+
             </div>
           </div>
         </div>
 
         <div className="flex justify-evenly items-center mt-3">
           <HomeCard
-            icon={<TodaysExpense/>}
+            icon={<TodaysExpense />}
             title="Today's"
             description=""
             number={5000}
@@ -126,7 +124,7 @@ function Expense({}: Props) {
             border="#FFFFFF"
           />
           <HomeCard
-            icon={<WeekExpense/>}
+            icon={<WeekExpense />}
             title="This week's expense"
             description=""
             number={5000}
@@ -152,31 +150,34 @@ function Expense({}: Props) {
         </div>
 
         <div className="mt-2">
-  <Table
-    columns={columns}
-    data={data}
-    searchPlaceholder="Search by Name or Category"
-    searchableFields={["name", "category"]}
-    loading={false}
-    onRowClick={handleRowClick}
-    onDelete={handleDelete}
-    onEditClick={handleEditClick}
-    isPrint={true} // Enable the print button
-    // onPrintClick={handlePrintClick} // Pass the print click handler
-    renderColumnContent={(colId, item) => {
-      if (colId === "actions") {
-        return (
-          <div className="flex gap-2">
-            <button onClick={() => handleEditClick(item.id)}>Edit</button>
-            <button onClick={() => handleDelete(item.id)}>Delete</button>
-          </div>
-        );
-      }
-      return item[colId];
-    }}
-  />
-</div>
-
+          <Table
+            columns={columns}
+            data={data}
+            searchPlaceholder="Search by Name or Category"
+            searchableFields={["name", "category"]}
+            loading={false}
+            onRowClick={handleRowClick}
+            onDelete={handleDelete}
+            onEditClick={handleEditClick}
+            isPrint={true} // Enable the print button
+            // onPrintClick={handlePrintClick} // Pass the print click handler
+            renderColumnContent={(colId, item) => {
+              if (colId === "actions") {
+                return (
+                  <div className="flex gap-2">
+                    <button onClick={() => handleEditClick(item.id)}>
+                      Edit
+                    </button>
+                    <button onClick={() => handleDelete(item.id)}>
+                      Delete
+                    </button>
+                  </div>
+                );
+              }
+              return item[colId];
+            }}
+          />
+        </div>
 
         {/* Modal for Add Category */}
       </div>

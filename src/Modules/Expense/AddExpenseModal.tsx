@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import CirclePlus from "../../assets/icons/circleplus";
 import Button from "../../Components/Button";
-import CirclePlus from "../../assets/icons/CirclePlus";
-
 
 // import other assets as needed
 
@@ -21,9 +20,9 @@ const AddExpenseModal = ({}: Props) => {
           onClick={handleAddExpenseClick}
           variant="primary"
           className="flex items-center"
-          size="md"
+          size="sm"
         >
-          <CirclePlus color="white" />
+          <CirclePlus color="white" size={14} />{" "}
           <p className="text-md">Add Expense</p>
         </Button>
       </div>
@@ -32,3 +31,4 @@ const AddExpenseModal = ({}: Props) => {
 };
 
 export default AddExpenseModal;
+
