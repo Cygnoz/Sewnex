@@ -1271,7 +1271,9 @@ useEffect(() => {
                         </div>
                       )}
                       <div className="hover:bg-gray-100 cursor-pointer border border-slate-400 rounded-lg py-4">
-                        <AddSupplierModal page="purchase" />
+                        <AddSupplierModal page="purchase" supplierData={undefined} fetchAllSuppliers={function (): void {
+                          throw new Error("Function not implemented.");
+                        } } />
                       </div>
                     </div>
                   )}
@@ -1922,7 +1924,8 @@ useEffect(() => {
                       </div>
                     )}
                     <div className="hover:bg-gray-100 cursor-pointer border border-slate-400 rounded-lg py-4">
-                      <AddSupplierModal page="purchase" />
+                    <AddSupplierModal supplierData={supplierData} fetchAllSuppliers={() => {}} />
+
                     </div>
                   </div>
                 )}

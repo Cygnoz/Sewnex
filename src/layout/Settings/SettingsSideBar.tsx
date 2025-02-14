@@ -42,7 +42,7 @@ const SettingsSidebar = ({}: Props) => {
   };
 
   return (
-    <div className="overflow-y-scroll h-[100vh]  py-6 hide-scrollbar col-span-3 border-neutral-300 text-textColor border-r-2 px-7 border  bg-white w-[27%]">
+    <div className="overflow-y-scroll h-[85vh]  py-6 hide-scrollbar col-span-3 border-neutral-300 text-textColor border-r-2 px-7 border  bg-white w-[27%]">
       <button onClick={handleBackClick} className="flex border border-[#CECECE] py-[12px] px-[12px]  rounded-lg ">
         <ChevronLeft color="#495160" className="h-5 w-5 me-2" strokeWidth="2" />
         <p className="text-sm text-[#495160] text-[14px] font-semibold">Back</p>

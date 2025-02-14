@@ -1,18 +1,16 @@
 import backHomeIcon from "../../assets/Images/Frame 630214.png";
 import calenderIcon from "../../assets/Images/Frame 630162 (1).png";
 import timeIcon from "../../assets/Images/Frame 630162.png";
-import Button from "../../Components/Button";
-import PlusCircle from "../../assets/icons/Plus";
-import SelectCustomerModal from "./SelectedCustomerModal";
+import SelectCustomerModal from "./SelectCustomerModal";
 import { useLocation, useNavigate } from "react-router-dom";
-import CreateCustomerModal from "./CreateCustomerModal";
-// import { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
+import CreateCustomerModal from "./CreateCustomerModal.tsx";
 
 type Props = {
-  onSelectCustomer: (customer: any) => void; 
+  onSelectCustomer: (customer: any) => void;
 };
 
-function PosHeader({onSelectCustomer }: Props) {
+function PosHeader({ onSelectCustomer }: Props) {
   const today = new Date();
   const formattedDate = new Intl.DateTimeFormat("en-US", {
     weekday: "short",
@@ -27,16 +25,16 @@ function PosHeader({onSelectCustomer }: Props) {
   });
 
   const handleSelectedCustomer = (customer: any) => {
-    onSelectCustomer(customer); 
+    onSelectCustomer(customer);
   };
   const Navigate = useNavigate();
   const location = useLocation();
-  
+
   const handleGoBack = () => {
     if (location.state?.from === "/landing") {
-      Navigate("/landing"); 
+      Navigate("/landing");
     } else {
-      Navigate("/sales/invoice"); 
+      Navigate("/sales/invoice");
     }
   };
   return (
@@ -54,16 +52,16 @@ function PosHeader({onSelectCustomer }: Props) {
       <div className="flex justify-center items-center gap-5">
         <div className="bg-white rounded px-4 py-2 flex items-center gap-2.5">
           <img src={timeIcon} className="w-6" alt="Time Icon" />
-          <span className="text-dropdownText text-[10px] font-bold">{formattedDate}</span>
+          <span className="text-[#4B5C79] text-[10px] font-bold">{formattedDate}</span>
         </div>
         <div className="bg-white rounded px-4 py-2 flex items-center gap-2.5">
           <img src={calenderIcon} className="w-6" alt="Calendar Icon" />
-          <span className="text-dropdownText text-[10px] font-bold">{formattedTime}</span>
+          <span className="text-[#4B5C79] text-[10px] font-bold">{formattedTime}</span>
         </div>
         <SelectCustomerModal onButtonClick={handleSelectedCustomer} />
-        <CreateCustomerModal/>   
+        <CreateCustomerModal />
       </div>
-      {/* <Toaster reverseOrder={false} /> */}
+      <Toaster reverseOrder={false} />
     </div>
   );
 }

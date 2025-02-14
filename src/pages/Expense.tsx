@@ -6,85 +6,91 @@ import { useNavigate } from "react-router-dom";
 import { TodaysExpense } from "../assets/icons/TodaysExpense";
 import { MonthExpense } from "../assets/icons/MonthExpense";
 import { WeekExpense } from "../assets/icons/WeekExpense";
-import AddExpenseModal from "../Modules/Expense/AddExpenseModal";
+import { useContext, useEffect, useState } from "react";
+import { TableResponseContext } from "../Context/ContextShare";
+import { endpoints } from "../Services/apiEdpoints";
+import useApi from "../Hooks/useApi";
+import toast from "react-hot-toast";
+import ConfirmModal from "../Components/ConfirmModal";
+import AddExpenseModal from "../Modules/Expense/AddExpensePage";
 
 type Props = {};
 
 function Expense({}: Props) {
-  // const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
   const navigate = useNavigate();
+  const { loading, setLoading } = useContext(TableResponseContext)!;
+  const [allExpense, setAllExpense] = useState<any[]>([]);
+  const { request: getExpense } = useApi("get", 5008);
+
+  const getAllExpenses = async () => {
+    try {
+      setLoading({ ...loading, skeleton: true, noDataFound: false });
+
+      const url = `${endpoints.GET_ALL_EXPENSE}`;
+      const { response, error } = await getExpense(url);
+
+      if (!error && response) {
+        console.log("Fetched Expenses:", response.data);
+        setAllExpense(response.data);
+        setLoading({ ...loading, skeleton: false, noDataFound: false });
+      } else {
+        console.log("Error fetching data:", error);
+        setLoading({ ...loading, skeleton: false, noDataFound: true });
+      }
+    } catch (error) {
+      console.error("API call error:", error);
+      setLoading({ ...loading, skeleton: false, noDataFound: true });
+    }
+  };
+
+  useEffect(() => {
+    getAllExpenses();
+  }, []);
 
   const columns = [
-    { id: "slNo", label: "Sl No", visible: true },
-    { id: "name", label: "Name", visible: true },
-    { id: "category", label: "Category", visible: true },
-    { id: "paymentMethod", label: "Payment Method", visible: true },
-    { id: "addedDate", label: "Added Date", visible: true },
-    { id: "actions", label: "Actions", visible: true },
+    { id: "expenseDate", label: "Date", visible: true },
+    { id: "expense.expenseAccount", label: "Name", visible: true },
+    { id: "expenseCategory", label: "Category", visible: true },
+    { id: "supplierDisplayName", label: "Vendor Name", visible: true },
+    { id: "paidThrough", label: "Paid Through", visible: true },
+    { id: "grandTotal", label: "Amount", visible: true },
   ];
 
-  const data = [
-    {
-      id: "1",
-      slNo: 1,
-      name: "Abhinu",
-      category: "Electronics",
-      paymentMethod: "Credit Card",
-      addedDate: "2025-01-15",
-    },
-    {
-      id: "2",
-      slNo: 2,
-      name: "Abhinu",
-      category: "Electronics",
-      paymentMethod: "Credit Card",
-      addedDate: "2025-01-15",
-    },
-    {
-      id: "3",
-      slNo: 3,
-      name: "Abhinu",
-      category: "Electronics",
-      paymentMethod: "Credit Card",
-      addedDate: "2025-01-15",
-    },
-    {
-      id: "4",
-      slNo: 4,
-      name: "Abhinu",
-      category: "Electronics",
-      paymentMethod: "Credit Card",
-      addedDate: "2025-01-15",
-    },
-  ];
+  const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  // const handlePrintClick = (id: string) => {
-  //   console.log(`Printing record with ID: ${id}`);
-  //   // Add your print logic here
-  // };
+  const confirmDelete = (id: string) => {
+    setDeleteId(id);
+    setConfirmModalOpen(true);
+  };
 
   const handleRowClick = () => {
     navigate("view");
   };
 
-  const handleDelete = (id: string) => {
-    console.log("Delete clicked for ID:", id);
+  const { request: deleteExpense } = useApi("delete", 5008);
+  const handleDelete = async () => {
+    if (!deleteId) return;
+    try {
+      const url = `${endpoints.DELETE_EXPENSE}/${deleteId}`;
+      const { response, error } = await deleteExpense(url);
+      if (!error && response) {
+        toast.success(response.data.message);
+        getAllExpenses();
+      } else {
+        toast.error(error.response.data.message);
+      }
+    } catch (error) {
+      toast.error("Error occurred while deleting.");
+    } finally {
+      setConfirmModalOpen(false);
+      setDeleteId(null);
+    }
   };
 
   const handleEditClick = (id: string) => {
     console.log("Edit clicked for ID:", id);
   };
-
-  // const openModal = () => {
-  //   setIsModalOpen(true);
-  // };
-
-  // const closeModal = () => {
-  //   setIsModalOpen(false);
-  // };
-  // const handleAddExpenseClick = () => {
-  //   navigate("/expense/add-expense");
-  // };
 
   return (
     <>
@@ -93,7 +99,7 @@ function Expense({}: Props) {
           {/* Header Section */}
           <div>
             <p className="head1">Expense</p>
-            <p className="text-[#818894] text-[16px]">
+            <p className="text-[#818894] text-xs">
               Lorem ipsum dolor sit amet consectetur. Commodo enim odio
               fringilla
             </p>
@@ -110,7 +116,7 @@ function Expense({}: Props) {
           </div>
         </div>
 
-        <div className="flex justify-evenly items-center mt-3">
+        <div className="flex justify-evenly items-center mt-4">
           <HomeCard
             icon={<TodaysExpense />}
             title="Today's"
@@ -121,7 +127,6 @@ function Expense({}: Props) {
             titleColor="#495160"
             descriptionColor="#555555"
             numberColor="#0B1320"
-            border="#FFFFFF"
           />
           <HomeCard
             icon={<WeekExpense />}
@@ -133,7 +138,6 @@ function Expense({}: Props) {
             titleColor="#495160"
             descriptionColor="#555555"
             numberColor="#0B1320"
-            border="#FFFFFF"
           />
           <HomeCard
             icon={<MonthExpense />}
@@ -145,41 +149,29 @@ function Expense({}: Props) {
             titleColor="#495160"
             descriptionColor="#555555"
             numberColor="#0B1320"
-            border="#FFFFFF"
           />
         </div>
 
-        <div className="mt-2">
+        <div className="mt-3">
           <Table
             columns={columns}
-            data={data}
+            data={allExpense}
             searchPlaceholder="Search by Name or Category"
-            searchableFields={["name", "category"]}
+            searchableFields={["expense.expenseAccount", "expenseCategory"]}
             loading={false}
             onRowClick={handleRowClick}
-            onDelete={handleDelete}
+            onDelete={confirmDelete}
             onEditClick={handleEditClick}
-            isPrint={true} // Enable the print button
-            // onPrintClick={handlePrintClick} // Pass the print click handler
-            renderColumnContent={(colId, item) => {
-              if (colId === "actions") {
-                return (
-                  <div className="flex gap-2">
-                    <button onClick={() => handleEditClick(item.id)}>
-                      Edit
-                    </button>
-                    <button onClick={() => handleDelete(item.id)}>
-                      Delete
-                    </button>
-                  </div>
-                );
-              }
-              return item[colId];
-            }}
+            isPrint={true}
           />
         </div>
 
-        {/* Modal for Add Category */}
+        <ConfirmModal
+          open={isConfirmModalOpen}
+          onClose={() => setConfirmModalOpen(false)}
+          onConfirm={handleDelete}
+          message="Are you sure you want to delete?"
+        />
       </div>
     </>
   );

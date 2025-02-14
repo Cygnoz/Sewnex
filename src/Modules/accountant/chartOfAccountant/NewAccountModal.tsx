@@ -10,6 +10,7 @@ import { endpoints } from "../../../Services/apiEdpoints";
 import toast from "react-hot-toast";
 import chartOfAcc from "../../../assets/constants/ChartOfAcc";
 import EditIcon from "../../../assets/icons/EditIcon";
+import Checkbox from "../../../Components/Form/Checkbox";
 
 type Props = {
   accountData: any;
@@ -238,10 +239,13 @@ function NewAccountModal({ page, accountData, fetchAllAccounts }: Props) {
 
   const handleExternalSubmit = () => {
     if (formRef.current) {
-      formRef.current.requestSubmit(); 
+      formRef.current.requestSubmit();
     }
   };
 
+  const handleCheckboxChange = (checked: boolean) => {
+    setIsSubAccount(checked);
+  };
 
   return (
     <div>
@@ -340,13 +344,12 @@ function NewAccountModal({ page, accountData, fetchAllAccounts }: Props) {
               ].includes(formValues.accountSubhead) && (
                 <>
                   <div className="mb-2 mt-4 flex items-center gap-1 text-textColor">
-                    <input
-                      type="checkbox"
-                      className="accent-[#97998E] cursor-pointer w-5 h-5 mx-1 my-1"
+                    <Checkbox
                       id="checkbox3"
                       name="returnableItem"
                       checked={isSubAccount}
-                      onChange={handleChange}
+                      onChange={handleCheckboxChange}
+                      className="w-5 h-5 mx-1 my-1 mt-1.5"
                     />
                     <label
                       htmlFor="checkbox3"

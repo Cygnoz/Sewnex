@@ -1,17 +1,65 @@
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import ChevronLeft from "../../../assets/icons/ChevronLeft"
 import Info from "../../../assets/icons/Info"
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import LineChart from "../../../assets/icons/LineChart";
 import History from "../../../assets/icons/History";
 import Overview from "./Overview/Overview";
 import PaymentHistory from "./Payment History/PaymentHistory";
 import PurchaseHistory from "./Purchase History/PurchaseHistory";
+import { SupplierDetailsContext, SupplierResponseContext } from "../../../Context/ContextShare";
+import useApi from "../../../Hooks/useApi";
+import { endpoints } from "../../../Services/apiEdpoints";
+import { SupplierData } from "../../../Types/Supplier";
 
 type Props = {}
 
+interface Status {
+    status: string;
+  }
+
 function ViewSupplier({ }: Props) {
+    
+    const {setSupplierDetails} = useContext(SupplierDetailsContext)!;
+    const { request: getOneSupplier } = useApi("get", 5009);
+    const { id } = useParams<{ id: string }>();
+    const [supplier, setSupplier] = useState<SupplierData | null>(null);
+    const { supplierResponse } = useContext(SupplierResponseContext)!;
+    const [statusData, setStatusData] = useState<Status>({ status: "" });
+
     const [activeTab, setActiveTab] = useState<string>("overview");
+
+    const getOneSupplierData = async () => {
+        if (!id) return;
+        try {
+          const url = `${endpoints.GET_ONE_SUPPLIER}/${id}`;
+          const body = { organizationId: "INDORG0001" };
+          const { response, error } = await getOneSupplier(url, body);
+          if (!error && response) {
+            setSupplier(response.data);
+            setSupplierDetails(response.data)
+            // setStatusData((prevData) => ({
+            //   ...prevData,
+            //   status: response.data.status,
+            // }));
+          }
+        } catch (error) {
+          console.error("Error fetching supplier:", error);
+        }
+      };
+    
+      useEffect(() => {
+        if (id) {
+          getOneSupplierData();
+        }
+      }, [id, supplierResponse]);
+    
+      useEffect(() => {
+        if (supplier) {
+          setStatusData({ status: supplier.status });
+        }
+      }, [supplier]);
+    
 
     const handleTabSwitch = (tabName: string) => {
         setActiveTab(tabName);
@@ -53,7 +101,7 @@ function ViewSupplier({ }: Props) {
                 </div>
                 <div className="px-5 py-3">
                     {activeTab === "overview" && (
-                        <Overview />
+                        <Overview  supplier={supplier} statusData={statusData} setStatusData={setStatusData} />
                     )}
                     {activeTab === "purchaseHistory" && (
                          <PurchaseHistory /> 

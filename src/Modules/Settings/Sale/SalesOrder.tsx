@@ -1,15 +1,18 @@
 import toast from "react-hot-toast";
 import useApi from "../../../Hooks/useApi";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Banner from "../Organization/Banner";
 import Button from "../../../Components/Button";
 import RadioButton from "../../../Components/Form/RadioButton";
 import Checkbox from "../../../Components/Form/Checkbox";
+import { settingsdataResponseContext } from "../../../Context/ContextShare";
+import { endpoints } from "../../../Services/apiEdpoints";
 
 type Props = {};
 
 function SalesOrder({}: Props) {
-  const { request: AddSalesOrderSettings } = useApi("put", 5007);
+  const { request: AddSalesOrderSettings } = useApi("put",5007);
+  const {settingsResponse, getSettingsData } = useContext(settingsdataResponseContext)!;
   const [salesOrderState, setSalesOrderState] = useState({
     salesOrderAddress: false,
     salesOrderCustomerNote: false,
@@ -20,6 +23,7 @@ function SalesOrder({}: Props) {
     customerNote: "",
   });
 
+  // Generic function to handle input changes
   const handleInputChange = (field: string, value: any) => {
     setSalesOrderState((prevState) => ({
       ...prevState,
@@ -27,16 +31,19 @@ function SalesOrder({}: Props) {
     }));
   };
 
+
   const handleSalesOrderSettings = async (e: any) => {
     e.preventDefault();
     try {
-      const url = `${""}`;
-      const apiResponse = await AddSalesOrderSettings(url, salesOrderState);
+      const url = `${endpoints.ADD_SALES_SETTINGS}`;
+      const apiResponse = await AddSalesOrderSettings(url,salesOrderState)
       const { response, error } = apiResponse;
       if (!error && response) {
         toast.success(response.data);
+        // console.log(response.data,"res")
       } else {
-        console.error(error, "res");
+        console.log(error,"res")
+
         toast.error(error.response.data);
       }
     } catch (error) {
@@ -44,8 +51,21 @@ function SalesOrder({}: Props) {
     }
   };
 
-  useEffect(() => {}, []);
-
+  
+  useEffect(() => {
+    getSettingsData();
+  }, []); 
+  
+  useEffect(() => {
+    if (settingsResponse) {
+      setSalesOrderState((prevData) => ({
+        ...prevData,
+        ...settingsResponse?.data?.salesOrderSettings,
+      }));
+    }
+  }, [settingsResponse]);
+  console.log(settingsResponse?.data);
+  
   return (
     <div className="p-5 text-text_tertiary h-[100vh] overflow-scroll hide-scrollbar">
       <Banner />

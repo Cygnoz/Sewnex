@@ -17,7 +17,7 @@ const SettingsLayout = ({}: Props) => {
         <Header />
         <div className="flex gap-6 m-6">
           {location.pathname !== "/settings" && <SettingsSidebar />}
-          <div className="w-full ">
+          <div className="w-full h-[85vh] overflow-y-scroll hide-scrollbar">
           <Outlet />
           </div>
         </div>

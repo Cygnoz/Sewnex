@@ -1,10 +1,12 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 // import bgimage from "../../../../assets/Images/Organization-banner.png";
 import toast from "react-hot-toast";
 import useApi from "../../../Hooks/useApi";
 import Button from "../../../Components/Button";
 import Banner from "../Organization/Banner";
 import TextArea from "../../../Components/Form/TextArea";
+import { settingsdataResponseContext } from "../../../Context/ContextShare";
+import { endpoints } from "../../../Services/apiEdpoints";
 
 type Props = {};
 
@@ -13,8 +15,9 @@ interface DeliveryChallan {
   deliveryChellanCN: string;
 }
 
-function DeliveryChallan({}: Props) {
+function DeliveryChallan({ }: Props) {
   const { request: addDeliveryChallan } = useApi("put", 5007);
+  const { settingsResponse, getSettingsData } = useContext(settingsdataResponseContext)!;
   const [inputData, setInputData] = useState<DeliveryChallan>({
     deliveryChellanTC: "",
     deliveryChellanCN: "",
@@ -30,7 +33,7 @@ function DeliveryChallan({}: Props) {
 
   const handleSaveDeliveryChallan = async () => {
     try {
-      const url = ``;
+      const url = `${endpoints.ADD_SALES_DELIVARY_CHALLANS}`;
       const apiResponse = await addDeliveryChallan(url, inputData);
       console.log(apiResponse);
       const { response, error } = apiResponse;
@@ -45,19 +48,19 @@ function DeliveryChallan({}: Props) {
     }
   };
 
-  // useEffect(() => {
-  //   getSettingsData();
-  // }, []);
+  useEffect(() => {
+    getSettingsData();
+  }, []);
 
-  // useEffect(() => {
-  //   if (settingsResponse) {
-  //     setInputData((prevData) => ({
-  //       ...prevData,
-  //       ...settingsResponse?.data?.deliveryChellans,
-  //     }));
-  //   }
-  // }, [settingsResponse]);
-  // console.log(settingsResponse?.data);
+  useEffect(() => {
+    if (settingsResponse) {
+      setInputData((prevData) => ({
+        ...prevData,
+        ...settingsResponse?.data?.deliveryChellans,
+      }));
+    }
+  }, [settingsResponse]);
+  console.log(settingsResponse?.data);
 
   return (
     <div className="p-5">

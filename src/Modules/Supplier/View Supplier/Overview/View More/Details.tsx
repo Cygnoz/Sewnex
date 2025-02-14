@@ -1,3 +1,4 @@
+import { useContext, useEffect } from "react";
 import CalendarCheck from "../../../../../assets/icons/CalendarCheck";
 import CalendarDays from "../../../../../assets/icons/CalendarDays";
 import Calender from "../../../../../assets/icons/Calender";
@@ -16,35 +17,48 @@ import TeenyIcon from "../../../../../assets/icons/TeenyIcon";
 import User from "../../../../../assets/icons/User";
 import UserRoundCog from "../../../../../assets/icons/UserRoundCog";
 import Wallet from "../../../../../assets/icons/Wallet";
+import { SupplierDetailsContext } from "../../../../../Context/ContextShare";
 
 type Props = { page: string }
 
+
+
 function Details({ page }: Props) {
+
+    const { supplierDetails } = useContext(SupplierDetailsContext)!;
+
+useEffect(() => {
+    console.log(supplierDetails, "data");
+}, [supplierDetails]);
 
     const OtherDetails = [
         {
             icon: <Wallet color={"#303F58"} width={17} />,
             title: "Opening Balance",
-            item: "cc"
+            item:  (supplierDetails.debitOpeningBalance ?
+                `(Db)  ${supplierDetails.debitOpeningBalance}` :
+                supplierDetails.creditOpeningBalance ?
+                    `(Cr)  ${supplierDetails.creditOpeningBalance}` :
+                    "N/A"),
         }, {
             icon: <TeenyIcon color={"#303F58"} width={17} />,
             title: "PAN",
-            item: " ",
+            item: (supplierDetails.pan ? supplierDetails.pan : "N/A"),
         },
         {
             icon: <CalendarDays color={"#303F58"} width={16} />,
             title: "Credit Days",
-            item: "",
+            item: (supplierDetails.creditDays ? supplierDetails.creditDays : "N/A"),
         },
         {
             icon: <IndianRupee color={"#303F58"} weight={2} />,
             title: "Currency",
-            item: "",
+            item:  (supplierDetails.paymentTerms ? supplierDetails.paymentTerms : "N/A"),
         },
         {
             icon: <CalendarCheck color={"#303F58"} width={16} />,
             title: "Payment Terms",
-            item: "cc",
+            item:  (supplierDetails.paymentTerms ? supplierDetails.paymentTerms : "N/A"),
         },
         {
             icon: <Languages color={"#303F58"} width={16} />,
@@ -74,12 +88,12 @@ function Details({ page }: Props) {
         {
             icon: <UserRoundCog color={"#303F58"} size={16} />,
             title: "Department",
-            item: "",
+            item:(supplierDetails.department ? supplierDetails.department : "N/A"),
         },
         {
             icon: <User color={"#303F58"} />,
             title: "Designation",
-            item: "",
+            item: (supplierDetails.designation ? supplierDetails.designation : "N/A"),
         },
 
     ];
@@ -87,7 +101,7 @@ function Details({ page }: Props) {
         {
             icon: <HandCoins color={"#303F58"} width={16} />,
             title: "GST Treatment ",
-            item: "cc",
+            item: (supplierDetails.gstTreatment ? supplierDetails.gstTreatment : "N/A"),
 
         }, {
             icon: <Dock color={"#303F58"} width={16} />,
@@ -97,17 +111,17 @@ function Details({ page }: Props) {
         {
             icon: <Locate color={"#303F58"} width={16} />,
             title: "Place of Supply",
-            item: "",
+            item: (supplierDetails.placeOfSupply ? supplierDetails.placeOfSupply : "N/A"),
         },
         {
             icon: <Factory color={"#303F58"} width={16} />,
             title: "Business Legal Name",
-            item: "cc",
+            item: (supplierDetails.businessLegalName ? supplierDetails.businessLegalName : "N/A"),
         },
         {
             icon: <Factory color={"#303F58"} width={16} />,
             title: "Business Trade Name",
-            item: "",
+            item:  (supplierDetails.businessTradeName ? supplierDetails.businessTradeName : "N/A"),
         },
     ];
     const ContactPerson = [

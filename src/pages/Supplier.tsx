@@ -10,6 +10,7 @@ import MaleIcon from "../assets/icons/MaleIcon";
 import CheckActive from "../assets/icons/CheckActive";
 import TabClose from "../assets/icons/TabClose";
 import CopyBold from "../assets/icons/CopyBold";
+import toast from "react-hot-toast";
 
 type Props = {};
 
@@ -56,6 +57,29 @@ function Supplier({ }: Props) {
     fetchAllSuppliers();
   }, [supplierResponse]);
 
+  const HandleOnSave = () =>{
+    fetchAllSuppliers();
+  }
+
+  const { request: fetchOneItem } = useApi("get", 5009);
+  const [oneSupplierData, setOneSupplierData] = useState<any>({});
+
+
+  const getOneItem = async (item: Supplier) => {
+    try {
+      const url = `${endpoints.GET_ONE_SUPPLIER}/${item._id}`;
+      const { response, error } = await fetchOneItem(url);
+      if (!error && response) {
+        setOneSupplierData(response.data);
+        console.log(response.data);
+      } else {
+        console.error("Failed to fetch one item data.");
+      }
+    } catch (error) {
+      toast.error("Error in fetching one item data.");
+      console.error("Error in fetching one item data", error);
+    }
+  };
 
   const activeSuppliers = supplierData.filter(
     (supplier) => supplier.status === "Active"
@@ -113,13 +137,39 @@ function Supplier({ }: Props) {
     navigate(`/supplier/view/${id}`);
   };
 
-  const handleDelete = (id: string) => {
-    alert(`Delete clicked for ID: ${id}`);
-  };
+  // const handleDelete = (id: string) => {
+  //   alert(`Delete clicked for ID: ${id}`);
+  // };
 
   const handleEditClick = (id: string) => {
     alert(`Edit clicked for ID: ${id}`);
   };
+
+
+
+  const { request: deleteAccount } = useApi("delete", 5009);
+
+
+  const handleDelete=async(id:string)=>{
+    try {
+      const url = `${endpoints.DELETE_SUPPLIER}/${id}`;
+      const { response, error } = await deleteAccount(url);
+      if (!error && response) {
+        toast.success(response.data.message);
+        fetchAllSuppliers()
+        console.log(response.data);
+      } else {
+        toast.error(error.response.data.message);
+      }
+    } catch (error) {
+      toast.error("Error in fetching one item data.");
+      console.error("Error in fetching one item data", error);
+    }
+  }
+
+  
+
+  
 
   const CustomerDetails = [
     {
@@ -156,7 +206,7 @@ function Supplier({ }: Props) {
             Lorem ipsum dolor sit amet consectetur. Commodo enim odio fringilla
           </p>
         </div>
-        <AddSupplierModal page="add" />
+        <AddSupplierModal supplierData={supplierData} fetchAllSuppliers={HandleOnSave} />
       </div>
 
       <div className="grid grid-cols-4 gap-4 py-3">
@@ -182,7 +232,11 @@ function Supplier({ }: Props) {
           loading={loading.skelton}
           searchableFields={["companyName", "supplierDisplayName", "supplierEmail"]}
           renderActions={(item) => (
-            <AddSupplierModal id={item._id} />
+            <div  onClick={() => {
+              getOneItem(item);
+            }}>
+            <AddSupplierModal page="Edit" fetchAllSuppliers={()=> {}}  supplierData={oneSupplierData}   id={item._id} />
+            </div>
         )}
         />
       </div>

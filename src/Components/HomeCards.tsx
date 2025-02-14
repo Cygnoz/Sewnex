@@ -28,7 +28,7 @@ interface HomeCardProps {
       <div
         className={`flex items-center justify-between w-full h-[90px] px-4 py-3  mr-6 rounded-[20px] ${
           bgColor ? `bg-[${bgColor}]` : 'bg-white'
-        } ${border ? `border border-[${border}]` : ''} rounded-lg shadow-sm`}
+        } ${border ? `border border-[${border}]` : ''} rounded-2xl shadow-sm`}
       >
         {/* Left Section: Icon, Title, and Description */}
         <div className="flex items-center">
