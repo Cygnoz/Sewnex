@@ -9,6 +9,7 @@ import PosPayment from "./PosPayment";
 import useApi from "../../Hooks/useApi";
 import { endpoints } from "../../Services/apiEdpoints";
 import CheveronDown from "../../assets/icons/CheveronDown";
+import defaultImage from "../../assets/images/image.png"
 // import noItemFoundIMage from "../../assets/Images/no item added.png"
 
 type Props = { selectedItems: any[]; onRemoveItem: (item: any) => void; selectedCustomer: any };
@@ -143,7 +144,7 @@ function AddItemsPos({ selectedItems, onRemoveItem, selectedCustomer }: Props) {
               <div className="flex justify-between items-center">
                 <div className="flex items-center w-[60%]">
                   <img
-                    src={item.itemImage || "defaultImageURL"}
+                    src={item.itemImage || defaultImage}
                     className="w-20 h-11 object-cover rounded-lg"
                     alt={item.itemName}
                   />
