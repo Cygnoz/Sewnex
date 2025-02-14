@@ -140,7 +140,7 @@ function OrderView({ data, page, organization }: Props) {
                   {/* Amount Section */}
                   <div className="text-start space-y-1 ">
                     <p className="text-xs text-text_tertiary">Amount</p>
-                    <p className="font-semibold text-sm text-text_tertiary">
+                    <p className="font-semibold text-xs text-text_tertiary">
                       {currency} {item.itemAmount || 0}
                     </p>
                   </div>
@@ -156,44 +156,44 @@ function OrderView({ data, page, organization }: Props) {
   return (
     <div className="mt-4">
       <div className="flex items-center justify-start mb-4">
-        <p className="text-text_tertiary border-r-[1px] border-borderRight pr-4 text-sm font-normal">
+        <p className="text-text_tertiary border-r-[1px] border-borderRight pr-4 text-xs font-normal">
           Order Date:{" "}
-          <span className="ms-2 text-dropdownText text-sm font-semibold">
+          <span className="ms-2 text-dropdownText text-xs font-semibold">
             {data?.orderDate}
           </span>
         </p>
-        <p className="text-text_tertiary border-r-[1px] border-borderRight px-4 text-sm font-normal">
+        <p className="text-text_tertiary border-r-[1px] border-borderRight px-4 text-xs font-normal">
           Bill Date:{" "}
-          <span className="ms-3 text-dropdownText text-sm font-semibold">
+          <span className="ms-3 text-dropdownText text-xs font-semibold">
             {data?.billDate}
           </span>
         </p>
-        <p className="text-text_tertiary border-r-[1px] border-borderRight px-4 text-sm font-normal">
+        <p className="text-text_tertiary border-r-[1px] border-borderRight px-4 text-xs font-normal">
           Due Date:{" "}
-          <span className="ms-3 text-dropdownText text-sm font-semibold">
+          <span className="ms-3 text-dropdownText text-xs font-semibold">
             {data?.dueDate}
           </span>
         </p>
 
-        <p className="text-text_tertiary border-r-[1px] border-borderRight px-4 text-sm font-normal">
+        <p className="text-text_tertiary border-r-[1px] border-borderRight px-4 text-xs font-normal">
           Expected Shipment:{" "}
-          <span className="ms-3 text-dropdownText text-sm font-semibold">
+          <span className="ms-3 text-dropdownText text-xs font-semibold">
             {data?.expectedShipmentDate}
           </span>
         </p>
 
         {page == "Bills" && (
-          <p className="text-text_tertiary pl-4 text-sm font-normal">
+          <p className="text-text_tertiary pl-4 text-xs font-normal">
             Payment Terms:{" "}
-            <span className="ms-3 text-dropdownText text-sm font-semibold">
+            <span className="ms-3 text-dropdownText text-xs font-semibold">
               {data?.paymentTerms}
             </span>
           </p>
         )}
         {page === "DebitNote" && (
-          <p className="text-text_tertiary pl-4 text-sm font-normal">
+          <p className="text-text_tertiary pl-4 text-xs font-normal">
             Supplier Debit Date:{" "}
-            <span className="ms-3 text-dropdownText text-sm font-semibold">
+            <span className="ms-3 text-dropdownText text-xs font-semibold">
               {data?.supplierDebitDate}
             </span>
           </p>
@@ -209,7 +209,7 @@ function OrderView({ data, page, organization }: Props) {
           <p className="text-base font-bold text-text_tertiary">
             Billing Address
           </p>
-          <div className="text-sm text-text_tertiary mt-2 space-y-1">
+          <div className="text-xs text-text_tertiary mt-2 space-y-1">
             {supplier ? (
               <>
                 {supplier?.supplierDisplayName && (
@@ -247,7 +247,7 @@ function OrderView({ data, page, organization }: Props) {
               <p className="text-base font-bold text-text_tertiary">
                 Order Summary
               </p>
-              <div className="mt-4 text-sm text-text_tertiary">
+              <div className="mt-4 text-xs text-text_tertiary">
                 <div className="flex justify-between ">
                   <p>Untaxed Amount</p>
                   <p>
@@ -304,7 +304,7 @@ function OrderView({ data, page, organization }: Props) {
               <p className="text-base font-bold text-textColor">
                 Order Summary
               </p>
-              <div className="mt-4 text-sm space-y-2 text-textColor">
+              <div className="mt-4 text-xs space-y-2 text-textColor">
                 {page === "PurchaseOrder" && (
                   <>
                     <div className="flex justify-between">

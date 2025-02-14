@@ -1,92 +1,94 @@
 import { useEffect, useState } from "react";
 
 type Props = {
-    paymentState?: any;
-    setPaymentState?: any;
-    supplierBills?: BillData[];
-    isFullAmt?: boolean;
-    page?: string;
+  paymentState?: any;
+  setPaymentState?: any;
+  supplierBills?: BillData[];
+  isFullAmt?: boolean;
+  page?: string;
+};
+
+interface BillData {
+  billId: string;
+  billDate: string;
+  dueDate: string;
+  billNumber: string;
+  billAmount: number;
+  amountDue: number;
+  payment: number | string;
+  paidStatus?: string;
+}
+const PaymentTable = ({
+  paymentState,
+  setPaymentState,
+  supplierBills = [],
+  page,
+}: Props) => {
+  const [data, setData] = useState<BillData[]>([]);
+  const PaymentMadeUnpaidBillTable = [
+    "Sl.No.",
+    "Date",
+    "Due Date",
+    "Bill Number",
+    "Bill Amount",
+    "Amount Due",
+    "Payment",
+  ];
+  useEffect(() => {
+    if (page === "edit") {
+      if (paymentState?.unpaidBills && paymentState.unpaidBills.length > 0) {
+        setData([...paymentState.unpaidBills]);
+      }
+    } else {
+      if (supplierBills) {
+        const filteredBills = supplierBills.filter(
+          (bill: BillData) =>
+            bill.paidStatus === "Pending" ||
+            bill.paidStatus === "Overdue" ||
+            !bill.paidStatus
+        );
+
+        console.log(filteredBills, "filteredBills");
+
+        setData(
+          filteredBills.map((bill: any) => ({
+            billId: bill._id || "",
+            billDate: bill.billDate || "",
+            dueDate: bill.dueDate || "",
+            billNumber: bill.billNumber || "",
+            billAmount: bill.grandTotal || 0,
+            amountDue: bill.balanceAmount || 0,
+            payment: bill.payment,
+            paidStatus: bill.paidStatus || "",
+          }))
+        );
+      }
+    }
+  }, [supplierBills, paymentState?.unpaidBills, page]);
+
+  const handleRowChange = (
+    index: number,
+    field: keyof BillData,
+    value: string | number
+  ) => {
+    const newData = [...data];
+    newData[index] = { ...newData[index], [field]: value };
+    setData(newData);
+
+    if (setPaymentState) {
+      const totalPayment = newData.reduce(
+        (acc, row) => acc + (Number(row.payment) || 0),
+        0
+      );
+      setPaymentState((prevData: any) => ({
+        ...prevData,
+        unpaidBills: newData,
+        total: totalPayment,
+        amountPaid: totalPayment,
+        amountUsedForPayments: totalPayment,
+      }));
+    }
   };
-  
-  interface BillData {
-    billId: string;
-    billDate: string;
-    dueDate: string;
-    billNumber: string;
-    billAmount: number;
-    amountDue: number;
-    payment: number | string;
-    paidStatus?: string;
-  }
-const PaymentTable = ({  paymentState,
-    setPaymentState,
-    supplierBills = [],
-    page,}: Props) => {
-        const [data, setData] = useState<BillData[]>([]);
-         const PaymentMadeUnpaidBillTable = [
-            "Sl.No.",
-            "Date",
-            "Due Date",
-            "Bill Number",
-            "Bill Amount",
-            "Amount Due",
-            "Payment",
-          ];
-        useEffect(() => {
-            if (page === "edit") {
-              if (paymentState?.unpaidBills && paymentState.unpaidBills.length > 0) {
-                setData([...paymentState.unpaidBills]);
-              }
-            } else {
-              if (supplierBills ) {
-                const filteredBills = supplierBills.filter(
-                  (bill: BillData) =>
-                    bill.paidStatus === "Pending" || bill.paidStatus === "Overdue" || !bill.paidStatus 
-                );
-        
-                console.log(filteredBills,"filteredBills")
-        
-                setData(
-                  filteredBills.map((bill:any) => ({
-                    billId: bill._id || "",
-                    billDate: bill.billDate || "",
-                    dueDate: bill.dueDate || "",
-                    billNumber: bill.billNumber || "",
-                    billAmount: bill.grandTotal || 0,
-                    amountDue: bill.balanceAmount || 0,
-                    payment: bill.payment ,
-                    paidStatus: bill.paidStatus || "", 
-                  }))
-                );
-              }
-            }
-          }, [supplierBills, paymentState?.unpaidBills, page]);
-        
-          
-        
-          const handleRowChange = (
-            index: number,
-            field: keyof BillData,
-            value: string | number
-          ) => {
-            const newData = [...data];
-            newData[index] = { ...newData[index], [field]: value };
-            setData(newData);
-        
-            if (setPaymentState) {
-              const totalPayment = newData.reduce(
-                (acc, row) => acc + (Number(row.payment) || 0),
-                0
-              );
-              setPaymentState((prevData: any) => ({
-                ...prevData,
-                unpaidBills: newData,
-                total: totalPayment,
-                amountPaid: totalPayment,
-                amountUsedForPayments: totalPayment,
-              }));
-            }
-          };
 
   return (
     <div>
@@ -96,7 +98,7 @@ const PaymentTable = ({  paymentState,
             <tr className="bg-[#FDF8F0]">
               {PaymentMadeUnpaidBillTable.map((item, index) => (
                 <th
-                  className="py-3 px-4 font-medium border-b border-tableBorder relative"
+                  className="py-3 px-4 font-medium border-b border-tableBorder text-gray-500 relative"
                   key={index}
                 >
                   {item}
@@ -104,7 +106,7 @@ const PaymentTable = ({  paymentState,
               ))}
             </tr>
           </thead>
-          <tbody className="text-dropdownText text-center text-[13px]">
+          <tbody className="text-dropdownText text-center text-[13px] text-gray-500">
             {data && data.length > 0 ? (
               data.map((row, index) => (
                 <tr key={index} className="relative">
@@ -165,7 +167,7 @@ const PaymentTable = ({  paymentState,
                   <td className="py-2.5 px-4 border-y border-tableBorder">
                     <input
                       disabled
-                      type="number"
+                      type="text"
                       className="w-full focus:outline-none text-center"
                       value={row.amountDue}
                       onChange={(e) =>
@@ -179,7 +181,7 @@ const PaymentTable = ({  paymentState,
                   </td>
                   <td className="py-2.5 px-4 border-y border-tableBorder">
                     <input
-                      type="number"
+                      type="text"
                       className="w-full focus:outline-none text-center"
                       value={row.payment}
                       onChange={(e) =>
@@ -195,10 +197,7 @@ const PaymentTable = ({  paymentState,
               ))
             ) : (
               <tr>
-                <td
-                  colSpan={7}
-                  className="py-4 text-center text-gray-500 "
-                >
+                <td colSpan={7} className="py-4 text-center text-gray-500 ">
                   No unpaid bills available.
                 </td>
               </tr>
@@ -210,7 +209,7 @@ const PaymentTable = ({  paymentState,
         Total <span className="ms-20 font-semibold">{paymentState?.total}</span>
       </p>
     </div>
-  )
-}
+  );
+};
 
-export default PaymentTable
+export default PaymentTable;

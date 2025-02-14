@@ -21,13 +21,16 @@ const PurchaseRoutes = () => {
         <Route path="payment-made" element={<PaymentMade />} />
         <Route path="debitnote" element={<DebitNote />} />
         <Route path="bills/new" element={<NewBill/>} />
-        <Route path="bills/view/id" element={<Purchaseview page="Bills"/>} />
+        <Route path="bills/view/:id" element={<Purchaseview page="Bills"/>} />
         <Route path="payment-made/new" element={<NewPayment/>} />
-        <Route path="payment-made/view" element={<PaymentView/>} />
+        <Route path="payment-made/view/:id" element={<PaymentView/>} />
         <Route path="debitnote/new" element={<NewDebitNote />} />
         <Route path="debitnote/view" element={<Purchaseview page="DebitNote" />} />
+      <Route  path="bills/edit/:id" element={ <NewBill page="edit" /> }/>,
+      <Route  path="payment-made/edit/:id" element={ <NewPayment page="edit" /> }/>,
 
-
+   
+     
 
       </Routes>
     );
