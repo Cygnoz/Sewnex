@@ -2,7 +2,12 @@ import { Link, useNavigate } from "react-router-dom";
 import Table from "../../../Components/Table/Table";
 import Button from "../../../Components/Button";
 import CirclePlus from "../../../assets/icons/CirclePlus";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import DotIcon from "../../../assets/icons/DotIcon";
+import useApi from "../../../Hooks/useApi";
+import { PurchaseContext, TableResponseContext } from "../../../Context/ContextShare";
+import { endpoints } from "../../../Services/apiEdpoints";
+import toast from "react-hot-toast";
 
 type Props = {};
 
@@ -10,44 +15,80 @@ const DebitNote = ({}: Props) => {
   const navigate = useNavigate();
 
   const [columns] = useState([
-    { id: "billNumber", label: "Payment#", visible: true },
+    { id: "debitNote", label: "Debit Note", visible: true },
     { id: "supplierDisplayName", label: "Supplier Name", visible: true },
-    { id: "bill", label: "Bill#", visible: true },
-    { id: "paymentMode", label: "Mode", visible: true },
-    { id: "grandTotal", label: "Amount", visible: true },
-    { id: "amount", label: "Unused Amount", visible: true },
+    { id: "supplierDebitDate", label: "Date", visible: true },
+    { id: "orderNumber", label: "orderNumber", visible: true },
+    // { id: "customerDetails", label: "Status", visible: true },
+    { id: "grandTotal", label: "Balance", visible: false },
   ]);
 
-  const [data] = useState([
-    {
-      billNumber: "PMT12345",
-      supplierDisplayName: "Supplier A",
-      bill: "BILL67890",
-      paymentMode: "Bank Transfer",
-      grandTotal: "5000",
-      amount: "1000",
-    },
-    {
-      billNumber: "PMT23456",
-      supplierDisplayName: "Supplier B",
-      bill: "BILL78901",
-      paymentMode: "Credit Card",
-      grandTotal: "8000",
-      amount: "1500",
-    },
-    {
-      billNumber: "PMT34567",
-      supplierDisplayName: "Supplier C",
-      bill: "BILL89012",
-      paymentMode: "Cash",
-      grandTotal: "3000",
-      amount: "500",
-    },
-  ]);
+  const [allDNdata, setAllDNdata] = useState<any[]>([]);
+  const { request: getDN } = useApi("get", 5005);
+  const { loading, setLoading } = useContext(TableResponseContext)!;
+    const {purchaseResponse}=useContext(PurchaseContext)!;
+    const { request: deleteAccount } = useApi("delete", 5005);
 
-  const handleRowClick = () => {
-    navigate(`/purchase/debitnote/view`);
+  const getDebitNotes = async () => {
+    try {
+      setLoading({ ...loading, skeleton: true, noDataFound: false });
+      const url = `${endpoints.GET_ALL_DEBIT_NOTE}`;
+      const { response, error } = await getDN(url);
+
+      if (!error && response ) {
+        setAllDNdata(response.data);
+        setLoading({ ...loading, skeleton: false, noDataFound: false });
+      } else {
+        setLoading({ ...loading, skeleton: false, noDataFound: true });
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading({ ...loading, skeleton: false, noDataFound: true });
+    }
   };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const url = `${endpoints.DELETE_DEBIT_NOTE}/${id}`;
+      const { response, error } = await deleteAccount(url);
+      if (!error && response) {
+        toast.success(response.data.message);
+      getDebitNotes();
+      } else {
+        toast.error(error.response.data.message);
+      }
+    } catch (error) {
+      toast.error("Error in fetching one item data.");
+      console.error("Error in fetching one item data", error);
+    }
+  };
+
+  useEffect(() => {
+    getDebitNotes();
+  }, [purchaseResponse]);
+
+  const handleRowClick = (id: string) => {
+    navigate(`/purchase/debit-note/view/${id}`);
+  };
+
+  const handleEditClick = (id: string) => {
+    navigate(`/purchase/debit-note/edit/${id}`);
+  };
+
+  const renderColumnContent = (colId: string, item: any) => {
+    if (colId === "customerDetails") {
+      return (
+        <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center gap-1.5 bg-BgSubhead rounded-2xl px-2 pt-0.5 pb-0.5">
+            <DotIcon color="#495160" />
+            <p className="text-outlineButton text-xs font-medium">{item.customerDetails}</p>
+          </div>
+        </div>
+      );
+    }
+    return item[colId as keyof typeof item] || "-";
+  };
+
 
   return (
     <div>
@@ -71,10 +112,14 @@ const DebitNote = ({}: Props) => {
       <div className="bg-white mt-2 ">
         <Table
           columns={columns}
-          data={data}
+          data={allDNdata}
+          renderColumnContent={renderColumnContent}
+          loading={loading.skeleton} 
+          onEditClick={handleEditClick}
           onRowClick={handleRowClick}
           searchPlaceholder={"Search payment"}
           searchableFields={["billNumber", "supplierDisplayName"]}
+          onDelete={handleDelete}
         />
       </div>
     </div>
