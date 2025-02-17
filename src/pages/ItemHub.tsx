@@ -3,10 +3,12 @@ import servicesBgImage from "../assets/images/services-2 1.png";
 import shirtImage from "../assets/images/shirt.png";
 import membershipImage from "../assets/images/Membership.png";
 import { useNavigate } from "react-router-dom";
+import servicesBg from "../assets/images/servicesBg.png"
+
 
 type Props = {};
 
-function ItemHub({}: Props) {
+function ItemHub({ }: Props) {
   const navigate = useNavigate();
 
   return (
@@ -22,7 +24,11 @@ function ItemHub({}: Props) {
           className="col-span-4 cursor-pointer"
           onClick={() => navigate("/itemHub/services")}
         >
-          <div className="bg-[#004D4D] p-6 rounded-3xl h-[76.5vh]">
+
+          <div
+            className="bg-[#004D4D] p-6 rounded-3xl h-[76.5vh] bg-cover bg-center"
+            style={{ backgroundImage: `url(${servicesBg})` }}
+          >
             <div className="flex items-center gap-2">
               <div className="bg-[#63F3F3] h-3 w-3 rounded-full" />
               <span className="text-sm font-medium text-[#63F3F3]">
@@ -41,6 +47,7 @@ function ItemHub({}: Props) {
               </div>
             </div>
           </div>
+
         </div>
         <div className="col-span-8">
           <div className="bg-gradient-to-b from-[#004141] to-[#006D6D] w-full h-[147px] p-6 rounded-3xl flex items-center justify-between">
@@ -58,7 +65,7 @@ function ItemHub({}: Props) {
                 </span>
               </div>
               <div className="flex items-center justify-center">
-                <img src={shirtImage} className="w-48 flex" alt="" />
+                <img src={shirtImage} className="w-52 flex" alt="" />
               </div>
               <div className="flex justify-between items-center mt-2">
                 <div>
