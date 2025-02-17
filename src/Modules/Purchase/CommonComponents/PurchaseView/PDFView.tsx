@@ -28,44 +28,44 @@ const PDFView = ({ data, page, organization }: Props) => {
   return (
     <div className="mt-4">
       <div className="flex items-center justify-center mb-4">
-        <p className="text-text_tertiary border-r-[1px] border-borderRight pr-4 text-sm font-normal">
+        <p className="text-text_tertiary border-r-[1px] border-borderRight pr-4 text-xs font-normal">
           Order Date:{" "}
-          <span className="ms-2 text-dropdownText text-sm font-semibold">
+          <span className="ms-2 text-dropdownText text-xs font-semibold">
             {data?.orderDate}
           </span>
         </p>
-        <p className="text-text_tertiary border-r-[1px] border-borderRight px-4 text-sm font-normal">
+        <p className="text-text_tertiary border-r-[1px] border-borderRight px-4 text-xs font-normal">
           Bill Date:{" "}
-          <span className="ms-3 text-dropdownText text-sm font-semibold">
+          <span className="ms-3 text-dropdownText text-xs font-semibold">
             {data?.billDate}
           </span>
         </p>
-        <p className="text-text_tertiary border-r-[1px] border-borderRight px-4 text-sm font-normal">
+        <p className="text-text_tertiary border-r-[1px] border-borderRight px-4 text-xs font-normal">
           Due Date:{" "}
-          <span className="ms-3 text-dropdownText text-sm font-semibold">
+          <span className="ms-3 text-dropdownText text-xs font-semibold">
             {data?.dueDate}
           </span>
         </p>
 
-        <p className="text-text_tertiary border-r-[1px] border-borderRight px-4 text-sm font-normal">
+        <p className="text-text_tertiary border-r-[1px] border-borderRight px-4 text-xs font-normal">
           Expected Shipment:{" "}
-          <span className="ms-3 text-dropdownText text-sm font-semibold">
+          <span className="ms-3 text-dropdownText text-xs font-semibold">
             {data?.expectedShipmentDate}
           </span>
         </p>
 
         {page == "Bills" && (
-          <p className="text-text_tertiary pl-4 text-sm font-normal">
+          <p className="text-text_tertiary pl-4 text-xs font-normal">
             Payment Terms:{" "}
-            <span className="ms-3 text-dropdownText text-sm font-semibold">
+            <span className="ms-3 text-dropdownText text-xs font-semibold">
               {data?.paymentTerms}
             </span>
           </p>
         )}
         {page === "DebitNote" && (
-          <p className="text-text_tertiary pl-4 text-sm font-normal">
+          <p className="text-text_tertiary pl-4 text-xs font-normal">
             Supplier Debit Date:{" "}
-            <span className="ms-3 text-dropdownText text-sm font-semibold">
+            <span className="ms-3 text-dropdownText text-xs font-semibold">
               {data?.supplierDebitDate}
             </span>
           </p>
@@ -89,7 +89,7 @@ const PDFView = ({ data, page, organization }: Props) => {
                   ? "BILL"
                   : "DEBIT NOTE"}
               </h2>
-              <p className="text-sm font-bold text-dropdownText mt-[5px]">
+              <p className="text-xs font-bold text-dropdownText mt-[5px]">
                 {page === "PurchaseOrder"
                   ? `Purchase Order# ${data.purchaseOrder}`
                   : page == "Bills"
@@ -112,7 +112,7 @@ const PDFView = ({ data, page, organization }: Props) => {
           <div className="mb-8 mt-8 gap-4 flex items-center justify-between">
             <div>
               <h3 className="font-normal text-xs text-pdftext">Bill From,</h3>
-              <p className="text-pdftext text-sm font-bold mt-2">
+              <p className="text-pdftext text-xs font-bold mt-2">
                 {supplier?.supplierDisplayName}
               </p>
               {(supplier?.supplierEmail || supplier?.mobile) && (
@@ -136,7 +136,7 @@ const PDFView = ({ data, page, organization }: Props) => {
             {page == "PurchaseOrder" ? (
               <div className="mt-2">
                 <h3 className="font-normal text-xs text-pdftext">Bill to</h3>
-                <p className="text-pdftext text-sm font-bold mt-2">
+                <p className="text-pdftext text-xs font-bold mt-2">
                   {supplier?.supplierDisplayName}
                 </p>
                 <p className="font-normal text-xs text-pdftext mt-2">
