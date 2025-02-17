@@ -11,6 +11,8 @@ import CheckActive from "../assets/icons/CheckActive";
 import TabClose from "../assets/icons/TabClose";
 import CopyBold from "../assets/icons/CopyBold";
 import toast from "react-hot-toast";
+import EditSupplier from "../Modules/Supplier/EditSupplier";
+import EditIcon from "../assets/icons/EditIcon";
 
 type Props = {};
 
@@ -32,7 +34,7 @@ function Supplier({ }: Props) {
   const { request: AllSuppliers } = useApi("get", 5009);
   const { supplierResponse } = useContext(SupplierResponseContext)!;
   const { loading, setLoading } = useContext(TableResponseContext)!;
-  const [activeFilter] = useState<string | null>(null);
+  // const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
   const fetchAllSuppliers = async () => {
     try {
@@ -57,13 +59,13 @@ function Supplier({ }: Props) {
     fetchAllSuppliers();
   }, [supplierResponse]);
 
-  const HandleOnSave = () =>{
+  const HandleOnSave = () => {
     fetchAllSuppliers();
-  }
+  };
 
   const { request: fetchOneItem } = useApi("get", 5009);
-  const [oneSupplierData, setOneSupplierData] = useState<any>({});
-
+  const [oneSupplierData, setOneSupplierData] = useState<Supplier | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getOneItem = async (item: Supplier) => {
     try {
@@ -71,25 +73,29 @@ function Supplier({ }: Props) {
       const { response, error } = await fetchOneItem(url);
       if (!error && response) {
         setOneSupplierData(response.data);
-        console.log(response.data);
+        setIsModalOpen(true); // Open modal only after fetching data
       } else {
-        console.error("Failed to fetch one item data.");
+        console.error("Failed to fetch supplier data.");
       }
     } catch (error) {
-      toast.error("Error in fetching one item data.");
-      console.error("Error in fetching one item data", error);
+      toast.error("Error fetching supplier data.");
+      console.error("Error fetching supplier data", error);
     }
   };
 
-  const activeSuppliers = supplierData.filter(
-    (supplier) => supplier.status === "Active"
-  ).length;
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setOneSupplierData(null);
+  };
 
-  const inactiveSuppliers = supplierData.filter(
-    (supplier) => supplier.status === "Inactive"
-  ).length;
+  const handleEdit = (supplier: Supplier) => {
+    setOneSupplierData(supplier);
+    setIsModalOpen(true);
+  };
 
-  // Find duplicate suppliers
+  const activeSuppliers = supplierData.filter((supplier) => supplier.status === "Active").length;
+  const inactiveSuppliers = supplierData.filter((supplier) => supplier.status === "Inactive").length;
+
   const findDuplicateSuppliers = (suppliers: Supplier[]) => {
     const duplicates: Supplier[] = [];
     const seen = new Set<string>();
@@ -111,20 +117,16 @@ function Supplier({ }: Props) {
 
   const duplicateSuppliers = findDuplicateSuppliers(supplierData).length;
 
- 
-
-  const filteredSuppliers = supplierData.filter((supplier) => {
-    if (activeFilter === "Active") return supplier.status === "Active";
-    if (activeFilter === "Inactive") return supplier.status === "Inactive";
-    if (activeFilter === "Duplicate") {
-      return findDuplicateSuppliers(supplierData).some(
-        (dup) => dup.supplierDisplayName === supplier.supplierDisplayName
-      );
-    }
-    return true;
-  });
-
-  console.log(filteredSuppliers)
+  // const filteredSuppliers = supplierData.filter((supplier) => {
+  //   if (activeFilter === "Active") return supplier.status === "Active";
+  //   if (activeFilter === "Inactive") return supplier.status === "Inactive";
+  //   if (activeFilter === "Duplicate") {
+  //     return findDuplicateSuppliers(supplierData).some(
+  //       (dup) => dup.supplierDisplayName === supplier.supplierDisplayName
+  //     );
+  //   }
+  //   return true;
+  // });
 
   const navigate = useNavigate();
   const columns = [
@@ -139,69 +141,34 @@ function Supplier({ }: Props) {
     navigate(`/supplier/view/${id}`);
   };
 
-  // const handleDelete = (id: string) => {
-  //   alert(`Delete clicked for ID: ${id}`);
-  // };
-
-  const handleEditClick = (id: string) => {
-    alert(`Edit clicked for ID: ${id}`);
-  };
-
-
-
   const { request: deleteAccount } = useApi("delete", 5009);
 
-
-  const handleDelete=async(id:string)=>{
+  const handleDelete = async (id: string) => {
     try {
       const url = `${endpoints.DELETE_SUPPLIER}/${id}`;
       const { response, error } = await deleteAccount(url);
       if (!error && response) {
         toast.success(response.data.message);
-        fetchAllSuppliers()
-        console.log(response.data);
+        fetchAllSuppliers();
       } else {
         toast.error(error.response.data.message);
       }
     } catch (error) {
-      toast.error("Error in fetching one item data.");
-      console.error("Error in fetching one item data", error);
+      toast.error("Error deleting supplier.");
+      console.error("Error deleting supplier", error);
     }
-  }
-
-  
-
-  
+  };
 
   const CustomerDetails = [
-    {
-      icon: <MaleIcon />, // Replace with appropriate icons if needed
-      title: "All Suppliers",
-      number: supplierData.length,
-      
-    },
-    {
-      icon: <CheckActive />,
-      title: "Active Suppliers",
-      number: activeSuppliers,
-   
-    },
-    {
-      icon: <TabClose />,
-      title: "Inactive Suppliers",
-      number: inactiveSuppliers,
-      
-    },
-    {
-      icon: <CopyBold />,
-      title: "Duplicate Suppliers",
-      number: duplicateSuppliers,
-     
-    }
+    { icon: <MaleIcon />, title: "All Suppliers", number: supplierData.length },
+    { icon: <CheckActive />, title: "Active Suppliers", number: activeSuppliers },
+    { icon: <TabClose />, title: "Inactive Suppliers", number: inactiveSuppliers },
+    { icon: <CopyBold />, title: "Duplicate Suppliers", number: duplicateSuppliers }
   ];
+
   return (
     <div>
-      <div className="flex justify-between ">
+      <div className="flex justify-between">
         <div>
           <h1 className="text-[#0B1320] text-[16px] font-bold">Supplier</h1>
           <p className="text-[#818894] text-[12px] font-normal">
@@ -213,35 +180,31 @@ function Supplier({ }: Props) {
 
       <div className="grid grid-cols-4 gap-4 py-3">
         {CustomerDetails.map((detail, index) => (
-          <HomeCard
-            key={index}
-            icon={detail.icon}
-            title={detail.title}
-            number={detail.number}
-           description=""
-          />
+          <HomeCard key={index} icon={detail.icon} title={detail.title} number={detail.number} description="" />
         ))}
-      </div>;
-
-      <div>
-        <Table
-          columns={columns}
-          data={supplierData}
-          onRowClick={handleRowClick}
-          onDelete={handleDelete}
-          onEditClick={handleEditClick}
-          searchPlaceholder="Search Supplier"
-          loading={loading.skelton}
-          searchableFields={["companyName", "supplierDisplayName", "supplierEmail"]}
-          renderActions={(item) => (
-            <div  onClick={() => {
-              getOneItem(item);
-            }}>
-            <AddSupplierModal page="Edit" fetchAllSuppliers={()=> {}}  supplierData={oneSupplierData}   id={item._id} />
-            </div>
-        )}
-        />
       </div>
+
+      <Table
+        columns={columns}
+        data={supplierData}
+        onRowClick={handleRowClick}
+        onDelete={handleDelete}
+        // onEditClick={handleEdit}
+        searchPlaceholder="Search Supplier"
+        loading={loading.skelton}
+        searchableFields={["companyName", "supplierDisplayName", "supplierEmail"]}
+        renderActions={(item) => (
+          <div onClick={() => getOneItem(item)}>
+            <div onClick={() => handleEdit(item)} className="cursor-pointer">
+              <EditIcon color={"#0B9C56"} />
+            </div>
+          </div>
+        )}
+      />
+
+      {isModalOpen && (
+        <EditSupplier isModalOpen={isModalOpen} closeModal={closeModal} supplier={oneSupplierData} />
+      )}
     </div>
   );
 }
