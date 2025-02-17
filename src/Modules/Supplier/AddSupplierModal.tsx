@@ -7,7 +7,6 @@ import CheveronDown from "../../assets/icons/CheveronDown";
 // import PhoneInput from "react-phone-input-2";
 import Trash from "../../assets/icons/Trash";
 import Upload from "../../assets/icons/Upload";
-import CirclePlus from "../../assets/icons/circleplus";
 import Select from "../../Components/Form/Select";
 import Input from "../../Components/Form/Input";
 import PhoneNumberInput from "../../Components/Form/PhoneInput";
@@ -20,6 +19,7 @@ import toast from "react-hot-toast";
 import Eye from "../../assets/icons/Eye";
 import EyeOffIcon from "../../assets/icons/EyeOffIcon";
 import EditIcon from "../../assets/icons/EditIcon";
+import CirclePlus from "../../assets/icons/CirclePlus";
 // import PhoneInput from "../../Components/Form/PhoneInput";
 
 type Props = {
@@ -98,7 +98,7 @@ type SupplierData = {
   }[];
   remarks: string;
 };
-function AddSupplierModal({ page, supplierData, fetchAllSuppliers, id }: Props) {
+function AddSupplierModal({ page,  }: Props) {
   const initializeSupplierData = (): SupplierData => ({
     supplierProfile: "",
     salutation: "",
@@ -204,7 +204,7 @@ function AddSupplierModal({ page, supplierData, fetchAllSuppliers, id }: Props) 
   const { request: getCountryData } = useApi("get", 5004);
   const { request: getCurrencyData } = useApi("get", 5004);
   const { request: CreateSupplier } = useApi("post", 5009);
-  const { request: EditSupplier } = useApi("put", 5001);
+  // const { request: EditSupplier } = useApi("put", 5001);
 
   const { request: getPaymentTerms } = useApi("get", 5004);
   const { request: getOrganization } = useApi("get", 5004);
