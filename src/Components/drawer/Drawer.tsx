@@ -36,23 +36,20 @@ const Drawer = ({
 
   return (
     <div
-      className={`fixed inset-0 z-20 flex ${
-        position === "right" ? "justify-end" : "justify-start"
-      } items-center bg-black/20 transition-opacity duration-500 ${
-        open ? "opacity-100" : "opacity-0 pointer-events-none"
-      }`}
+      className={`fixed inset-0 z-20 flex ${position === "right" ? "justify-end" : "justify-start"
+        } items-center bg-black/20 transition-opacity duration-500 ${open ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
       onClick={onClose}
     >
       <div
-        className={`relative bg-white h-full shadow-xl transform transition-transform duration-500 ${
-          position === "right"
+        className={`relative bg-[#F9F7F5] p-7 h-full shadow-xl transform transition-transform duration-500 ${position === "right"
             ? open
               ? "translate-x-0"
               : "translate-x-full"
             : open
-            ? "translate-x-0"
-            : "-translate-x-full"
-        } ${className}`} // Apply custom class name here
+              ? "translate-x-0"
+              : "-translate-x-full"
+          } ${className}`} // Apply custom class name here
         style={{ width: "444px", ...style }} // Apply custom styles here
         onClick={handleDrawerClick}
       >

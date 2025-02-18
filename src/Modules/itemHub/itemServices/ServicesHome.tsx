@@ -2,13 +2,13 @@ import { useNavigate } from "react-router-dom";
 import BackIcon from "../../../assets/icons/BackIcon";
 import AddNewService from "./AddNewService";
 import AddCategory from "./AddCategory";
-import AddParameter from "./AddParameter";
-import AddStyle from "./AddStyle";
 import Table from "../../../Components/Table/Table";
+import AddParameter from "./addParameter/AddParameter";
+import AddStyle from "./addStyle/AddStyle";
 
 type Props = {};
 
-function ServicesHome({}: Props) {
+function ServicesHome({ }: Props) {
   const Columns = [
     { id: "accountName", label: "Category", visible: true },
     { id: "accountCode", label: "Name", visible: true },

@@ -19,12 +19,13 @@ import toast from "react-hot-toast";
 import Eye from "../../assets/icons/Eye";
 import EyeOffIcon from "../../assets/icons/EyeOffIcon";
 import EditIcon from "../../assets/icons/EditIcon";
+import CirclePlus from "../../assets/icons/CirclePlus";
 // import PhoneInput from "../../Components/Form/PhoneInput";
 
 type Props = {
   supplierData: any;
   page?: string;
-  id?:string;
+  id?: string;
   fetchAllSuppliers: () => void;
 }
 
@@ -97,7 +98,7 @@ type SupplierData = {
   }[];
   remarks: string;
 };
-function AddSupplierModal({ page , supplierData , fetchAllSuppliers,id }: Props) {
+function AddSupplierModal({ page,  }: Props) {
   const initializeSupplierData = (): SupplierData => ({
     supplierProfile: "",
     salutation: "",
@@ -167,8 +168,6 @@ function AddSupplierModal({ page , supplierData , fetchAllSuppliers,id }: Props)
     ],
     remarks: "",
   });
-  console.log(supplierData);
-  
 
   // ...existing code...
 
@@ -205,7 +204,7 @@ function AddSupplierModal({ page , supplierData , fetchAllSuppliers,id }: Props)
   const { request: getCountryData } = useApi("get", 5004);
   const { request: getCurrencyData } = useApi("get", 5004);
   const { request: CreateSupplier } = useApi("post", 5009);
-  const { request: EditSupplier } = useApi("put", 5001);
+  // const { request: EditSupplier } = useApi("put", 5001);
 
   const { request: getPaymentTerms } = useApi("get", 5004);
   const { request: getOrganization } = useApi("get", 5004);
@@ -617,17 +616,11 @@ function AddSupplierModal({ page , supplierData , fetchAllSuppliers,id }: Props)
     }
 
     try {
-      const url = 
-            page === "Edit"
-            ?`${endpoints.EDIT_SUPPLIER}/${id}`
-            : endpoints.ADD_SUPPLIER;
-            const API = page === "Edit" ? EditSupplier : CreateSupplier;
-
-      const { response, error } = await API(url, supplierdata);
+      const url = `${endpoints.ADD_SUPPLIER}`;
+      const { response, error } = await CreateSupplier(url, supplierdata);
       console.log("err", error);
       if (response && !error) {
         toast.success(response.data.message);
-        fetchAllSuppliers
         setModalOpen(false);
         setsupplierResponse(response.data);
         getAdditionalData();
@@ -742,16 +735,33 @@ function AddSupplierModal({ page , supplierData , fetchAllSuppliers,id }: Props)
 
   return (
     <div>
-      {page === "Edit" ? (
+      {/* <div>
+        <div className="flex justify-between">
+          <div>
+            <h1 className="text-[#0B1320] text-[16px] font-bold">Supplier</h1>
+            <p className="text-[#818894] text-[12px] font-normal">
+              Lorem ipsum dolor sit amet consectetur. Commodo enim odio fringilla
+            </p>
+          </div>
+        </div>
+
+        <Button onClick={openModal}>
+          <CirclePlus />
+          <p>Add Supplier</p>
+        </Button>
+      </div> */}
+       {page === "Edit" ? (
         <div onClick={openModal} className="  cursor-pointer">
           <EditIcon color={"#C88000"} />
         </div>
       ) : (
         <Button onClick={openModal}>
+          <CirclePlus />
           <p> Add Suppier</p>
         </Button>
-      )}
-      
+      )} 
+
+
 
       <div>
         <Modal className="w-[1200px] text-start" open={isModalOpen} onClose={closeModal}>
@@ -1857,7 +1867,7 @@ function AddSupplierModal({ page , supplierData , fetchAllSuppliers,id }: Props)
                           className="flex my-5 gap-2 text-darkRed items-center font-bold cursor-pointer"
                           onClick={addNewBankAccount}
                         >
-                         Add New Bank
+                          <CirclePlus color="darkRed" size={22} /> Add New Bank
                           Account
                         </div>
                       </div>
