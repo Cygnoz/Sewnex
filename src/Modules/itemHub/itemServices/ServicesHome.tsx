@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import BackIcon from "../../../assets/icons/BackIcon";
-import AddNewService from "./AddNewService";
 import AddCategory from "./AddCategory";
 import Table from "../../../Components/Table/Table";
 import AddParameter from "./addParameter/AddParameter";
 import AddStyle from "./addStyle/AddStyle";
+import AddNewService from "./addService/AddNewService";
 
 type Props = {};
 

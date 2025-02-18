@@ -205,6 +205,7 @@ function AddStyle({ }: Props) {
                         {category ? category.name : ""}
                       </p>
                       <div className="flex space-x-2">
+                        <NewParameterModal fetchAllParameter={HandleOnSave} category={style} allCategory={allCategory} para="style" funtion={"edit"} />
                         <p className="cursor-pointer" onClick={() => handleDelete(style)}>
                           <EDeleteIcon />
                         </p>
