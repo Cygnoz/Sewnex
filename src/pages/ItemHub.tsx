@@ -98,7 +98,7 @@ function ItemHub({ }: Props) {
                     Plans Based on Discounts and Counts
                   </p>
                 </div>
-                <div>
+                <div  onClick={() => navigate("/itemHub/membership-plans")}>
                   <ArrowUpRighIcon bgColor="#004D4D" />
                 </div>
               </div>

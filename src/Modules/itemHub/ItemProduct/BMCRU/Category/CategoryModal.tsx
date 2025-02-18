@@ -42,6 +42,7 @@ const CategoryModal = ({category,funtion}: Props) => {
         name: "",
         description: "",
         type: "category",
+        uploadImage:""
       });
     };
   
@@ -116,17 +117,28 @@ const CategoryModal = ({category,funtion}: Props) => {
             {" "}
             <Pen size={18} color={"#818894"} />
           </button>
+        ) : funtion === "product" ? (
+          <button
+            className="text-[#c78000] flex items-center justify-start p-2 text-xs gap-2"
+            onClick={(e) => {
+              e.preventDefault();
+              openModal();
+            }}
+          >
+            <CirclePlus color="#c78000" />
+            <p>Add Category</p>
+          </button>
         ) : (
           <Button onClick={openModal}>
             <CirclePlus />
-            Add category
+            Add Category
           </Button>
         )}
   
         <Modal
           open={isModalOpen}
           onClose={closeModal}
-          className="w-[70%] text-start px-7 py-6 bg-[#f2f1ed]"
+          className="w-[600PX] text-start px-7 py-6 bg-[#f2f1ed]"
         >
           <div className="flex items-center justify-between py-1 rounded-xl">
             <p className="font-bold">Add category</p>

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import CheveronDown from "../../assets/icons/CheveronDown";
+import SearchBar from "../SearchBar";
 
 interface SelectProps {
   required?: boolean;
@@ -10,13 +11,14 @@ interface SelectProps {
   readOnly?: boolean;
   value?: string;
   onChange?: (value: string) => void;
-  size?: "sm" | "md" | "lg"; 
-  header?: string; // Add header prop
+  size?: "sm" | "md" | "lg";
+  header?: string;
+  addNew?: any;
 }
 
 const Select: React.FC<SelectProps> = ({
   label,
-  options,
+  options = [],
   error,
   placeholder,
   required,
@@ -24,11 +26,13 @@ const Select: React.FC<SelectProps> = ({
   value,
   onChange,
   size = "md",
-  header, // Add header to the props
+  header,
+  addNew,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchValue] = useState("");
-  const [filteredOptions, setFilteredOptions] = useState<{ value: any; label: string }[]>(options);
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredOptions, setFilteredOptions] =
+    useState<{ value: any; label: string }[]>(options);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -41,7 +45,7 @@ const Select: React.FC<SelectProps> = ({
 
     setFilteredOptions(
       allOptions.filter((option) =>
-        option?.label?.toLowerCase().includes(searchValue.toLowerCase())
+        option.label.toLowerCase().includes(searchValue.toLowerCase())
       )
     );
   }, [searchValue, options, placeholder]);
@@ -79,52 +83,91 @@ const Select: React.FC<SelectProps> = ({
     }
   };
 
+  const handleSearchChange = (value: string) => {
+    setSearchValue(value);
+  };
+
+  const addNewModal = () => {
+    return <div>{addNew}</div>;
+  };
+
   return (
     <div className="relative w-full" ref={dropdownRef}>
       <label className={`block text-xs text-[#495160]  ${label && "mb-1"}`}>
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <div
-        className={`relative ${readOnly ? "pointer-events-none opacity-50" : "cursor-pointer"}`}
+        className={`relative ${
+          readOnly ? "pointer-events-none opacity-50" : "cursor-pointer"
+        }`}
         onClick={() => !readOnly && setIsOpen(!isOpen)}
       >
         <div
-          className={`block ${getSizeClasses(size)} text-[#818894] bg-white border w-full flex items-center 
-          ${error ? "border-[#BC0000]" : "border-borderColor focus:border-primary-default focus:outline-none focus:ring-primary-default"}
+          className={`block ${getSizeClasses(
+            size
+          )} text-[#818894] bg-white border w-full flex items-center 
+          ${
+            error
+              ? "border-[#BC0000]"
+              : "border-borderColor focus:border-primary-default focus:outline-none focus:ring-primary-default"
+          }
           rounded-[40px] leading-tight`}
         >
           {value
-            ? options.find((option) => option.value === value)?.label || placeholder
+            ? options.find((option) => option.value === value)?.label ||
+              placeholder
             : placeholder || options[0]?.label}
         </div>
         <div className="pointer-events-none absolute inset-y-0 right-0 ml-auto flex items-center px-2 text-gray-700">
           <CheveronDown />
         </div>
       </div>
+
       {isOpen && (
         <div className="p-1">
           <div
-            className={`absolute z-10 w-[97%] ms-1 bg-white border border-gray-300 rounded-[4px] shadow-lg`}
+            className={`absolute z-10 w-[97%] ms-1 bg-white border border-gray-300 rounded-[10px] shadow-lg`}
             tabIndex={0}
           >
             {header && (
-              <div className="px-4 py-2 text-sm text-gray-700 font-bold border-b">
+              <div className="px-4 py-2 text-xs text-gray-700 font-bold border-b">
                 {header}
               </div>
             )}
-            <div ref={listRef} className="max-h-52 overflow-y-auto custom-scrollbar">
+            {searchValue && (
+              <SearchBar
+                searchValue={searchValue}
+                onSearchChange={handleSearchChange}
+              />
+            )}
+            <div
+              ref={listRef}
+              className="max-h-52 overflow-y-auto custom-scrollbar"
+            >
               {filteredOptions.map((option, index) => (
                 <div
                   key={option.value}
                   onClick={() => handleOptionSelect(option.value)}
-                  className={`px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 ${selectedIndex === index ? "bg-gray-200" : ""}`}
+                  className={`px-4 py-2 text-xs text-gray-700 cursor-pointer rounded-[10px] hover:bg-gray-100 ${
+                    selectedIndex === index ? "bg-gray-200" : ""
+                  }`}
                 >
                   {option.label}
                 </div>
               ))}
             </div>
+            {addNew && (
+                <div
+                className="hover:bg-gray-100 rounded-[10px]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+                >
+                {addNewModal()}
+                </div>
+            )}
             {filteredOptions.length === 0 && (
-              <div className="px-4 py-2 font-bold text-red-500 text-center text-sm">
+              <div className="px-4 py-2 font-bold text-red-500 text-center text-xs">
                 No options found!
               </div>
             )}

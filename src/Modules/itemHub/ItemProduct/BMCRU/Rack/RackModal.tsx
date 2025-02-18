@@ -98,10 +98,21 @@ const RackModal = ({ page, rack }: Props) => {
           {" "}
           <Pen size={18} color={"#818894"} />
         </button>
+      ) : page === "product" ? (
+        <button
+          className="text-[#c78000] flex items-center justify-start p-2 text-xs gap-2"
+          onClick={(e) => {
+            e.preventDefault();
+            openModal();
+          }}
+        >
+          <CirclePlus color="#c78000" />
+          <p>Add Rack</p>
+        </button>
       ) : (
         <Button onClick={openModal}>
           <CirclePlus />
-          Add rack
+          Add Rack
         </Button>
       )}
       <Modal

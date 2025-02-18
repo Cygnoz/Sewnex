@@ -24,7 +24,7 @@ interface TableProps {
   renderColumnContent?: (colId: string, item: any) => JSX.Element;
   searchPlaceholder?: string;
   loading?: boolean;
-  searchableFields: string[];
+  searchableFields?: string[];
   setColumns?: any;
   isDelete?: boolean;
   isPrint?: boolean

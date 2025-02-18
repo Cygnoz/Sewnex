@@ -12,7 +12,7 @@ import ManufacturerModal from "./ManufacturerModal";
 
 type Props = {}
 
-const Manufacturer = (props: Props) => {
+const Manufacturer = ({}: Props) => {
     const [isDrawerOpen, setDrawerOpen] = useState(false);
     const [searchValue, setSearchValue] = useState("");
     const [allmanufacturerData, setAllmanufacturerData] = useState<any[]>([]);
@@ -121,7 +121,7 @@ const Manufacturer = (props: Props) => {
                   key={manufacturer._id}
                 >
                   <div className="flex gap-2">
-                    <div className="flex items-center justify-center">
+                    <div className="flex items-center justify-center rounded-full">
                       <img
                         src={manufacturer.uploadImage ? manufacturer.uploadImage : image}
                         alt="manufacturer"

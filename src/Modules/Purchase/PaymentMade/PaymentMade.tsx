@@ -7,6 +7,7 @@ import useApi from "../../../Hooks/useApi";
 import { PurchaseContext, TableResponseContext } from "../../../Context/ContextShare";
 import { endpoints } from "../../../Services/apiEdpoints";
 import toast from "react-hot-toast";
+import ConfirmModal from "../../../Components/ConfirmModal";
 
 type Props = {};
 
@@ -27,7 +28,14 @@ function PaymentMade({}: Props) {
   const { loading, setLoading } = useContext(TableResponseContext)!;
     const {purchaseResponse}=useContext(PurchaseContext)!;
     const { request: deleteAccount } = useApi("delete", 5005);
-
+    const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
+    const [deleteId, setDeleteId] = useState<string >("");
+  
+   
+    const confirmDelete = (id: string) => {
+      setDeleteId(id);
+      setConfirmModalOpen(true);
+    };
   const getAllBill = async () => {
     try {
       setLoading({ ...loading, skeleton: true, noDataFound: false });
@@ -57,7 +65,7 @@ function PaymentMade({}: Props) {
 
   const handleDelete = async (id: string) => {
     try {
-      const url = `${endpoints.DELETE_BILL}/${id}`;
+      const url = `${endpoints.DELETE_PAYMENT_MADE}/${id}`;
       const { response, error } = await deleteAccount(url);
       if (!error && response) {
         toast.success(response.data.message);
@@ -68,6 +76,10 @@ function PaymentMade({}: Props) {
     } catch (error) {
       toast.error("Error in fetching one item data.");
       console.error("Error in fetching one item data", error);
+    }
+    finally {
+      setConfirmModalOpen(false);
+      setDeleteId("");
     }
   };
 
@@ -108,12 +120,18 @@ function PaymentMade({}: Props) {
           onRowClick={handleRowClick}
           searchPlaceholder={"Search payment"}
           searchableFields={["billNumber", "supplierDisplayName"]}
-          onDelete={handleDelete}
+          onDelete={confirmDelete}
           renderColumnContent={renderColumnContent}
           onEditClick={handleEditClick}
 
         />
       </div>
+      <ConfirmModal
+        open={isConfirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onConfirm={() => handleDelete(deleteId)}
+        message="Are you sure you want to delete?"
+      />
     </div>
   );
 }

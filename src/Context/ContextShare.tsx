@@ -101,6 +101,10 @@ interface BMCRContextType {
   bmcrResponse: any;
   setBmcrResponse: React.Dispatch<React.SetStateAction<any>>;
 }
+interface ProductResponseContextType {
+  productResponse: any;
+  setProductResponse: React.Dispatch<React.SetStateAction<any>>;
+}
 
 export const cashResponseContext = createContext<
   CashResponseContextType | undefined
@@ -153,6 +157,9 @@ export const SupplierDetailsContext = createContext<
 export const PurchaseContext = createContext<
   purchaseTableContextType | undefined
 >(undefined);
+export const ProductResponseContext = createContext<
+  ProductResponseContextType | undefined
+>(undefined);
 export const BmcrReponseContext = createContext<BMCRContextType | undefined>(
   undefined
 );
@@ -164,6 +171,8 @@ export const octAddItemContext = createContext<ocrAddItemContextType>({
   ocrAddItem: null,
   setOcrAddItem: () => {},
 });
+
+
 
 interface ContextShareProps {
   children: ReactNode;
@@ -190,6 +199,8 @@ const ContextShare: React.FC<ContextShareProps> = ({ children }) => {
   const [ocrAddItem, setOcrAddItem] = useState<any>({});
   const [purchaseResponse, setPurchaseResponse] = useState<any>({});
   const [bmcrResponse, setBmcrResponse] = useState<any>({});
+  const [productResponse, setProductResponse] = useState<any>({});
+
   const [loading, setLoading] = useState<any>({
     skelton: false,
     noDataFound: false,
@@ -286,7 +297,7 @@ const ContextShare: React.FC<ContextShareProps> = ({ children }) => {
                                               setBmcrResponse,
                                             }}
                                           >
-                                            {children}
+                                          <ProductResponseContext.Provider value={{productResponse,setProductResponse}}>  {children}</ProductResponseContext.Provider>
                                           </BmcrReponseContext.Provider>
                                         </PurchaseContext.Provider>
                                       </octAddItemContext.Provider>

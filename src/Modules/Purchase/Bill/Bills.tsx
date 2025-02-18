@@ -11,6 +11,7 @@ import {
   TableResponseContext,
 } from "../../../Context/ContextShare";
 import toast from "react-hot-toast";
+import ConfirmModal from "../../../Components/ConfirmModal";
 
 function Bills() {
   const [columns, setColumns] = useState([
@@ -26,8 +27,15 @@ function Bills() {
   const { request: getBills } = useApi("get", 5005);
   const { loading, setLoading } = useContext(TableResponseContext)!;
   const { purchaseResponse } = useContext(PurchaseContext)!;
+  const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string >("");
+
   const { request: deleteAccount } = useApi("delete", 5005);
 
+  const confirmDelete = (id: string) => {
+    setDeleteId(id);
+    setConfirmModalOpen(true);
+  };
   const getAllBills = async () => {
     try {
       setLoading({ ...loading, skeleton: true, noDataFound: false });
@@ -45,6 +53,10 @@ function Bills() {
     } catch (error) {
       console.error(error);
       setLoading({ ...loading, skeleton: false, noDataFound: true });
+    }
+    finally {
+      setConfirmModalOpen(false);
+      setDeleteId("");
     }
   };
 
@@ -139,9 +151,15 @@ function Bills() {
           searchableFields={["billNumber", "supplierDisplayName"]}
           setColumns={setColumns}
           onEditClick={handleEditClick}
-          onDelete={handleDelete}
+          onDelete={confirmDelete}
         />
       </div>
+      <ConfirmModal
+        open={isConfirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onConfirm={() => handleDelete(deleteId)}
+        message="Are you sure you want to delete?"
+      />
     </div>
   );
 }
