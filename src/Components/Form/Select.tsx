@@ -10,7 +10,7 @@ interface SelectProps {
   readOnly?: boolean;
   value?: string;
   onChange?: (value: string) => void;
-  size?: "sm" | "md" | "lg"; 
+  size?: "sm" | "md" | "lg";
   header?: string; // Add header prop
 }
 
@@ -102,9 +102,9 @@ const Select: React.FC<SelectProps> = ({
         </div>
       </div>
       {isOpen && (
-        <div className="p-1">
+        <div className="p-1 absolute w-[100%] z-10">
           <div
-            className={`absolute z-10 w-[97%] ms-1 bg-white border border-gray-300 rounded-[4px] shadow-lg`}
+            className={`  w-[97%] ms-1 bg-white border border-gray-300 rounded-[4px] shadow-lg`}
             tabIndex={0}
           >
             {header && (

@@ -1,14 +1,53 @@
 import { useState } from "react";
-import CirclePlus from "../../../assets/icons/CirclePlus";
-import Button from "../../../Components/Button";
-import Modal from "../../../Components/modal/Modal";
-import TickIcon from "../../../assets/icons/TickIcon";
+import CirclePlus from "../../../../assets/icons/CirclePlus";
+import Button from "../../../../Components/Button";
+import Modal from "../../../../Components/modal/Modal";
+import TickIcon from "../../../../assets/icons/TickIcon";
+import InfoTab from "./InfoTab";
+import ParameterTab from "./ParameterTab";
+import StyleTab from "./StyleTab";
+import SummaryTab from "./SummaryTab";
 
 type Props = {};
 
-const AddNewService = ({}: Props) => {
+const initialServiceData: any = {
+  organizationId: "",
+
+  categoryId: "",
+  serviceName: "",
+  serviceImage: "",
+  unit: "",
+  hsnSac: "",
+
+  parameter: [
+    {
+      parameterId: ""
+    }
+  ],
+  style: [
+    {
+      styleId: "",
+      styleRate: ""
+    }
+  ],
+
+  costPrice: "",
+  sellingPrice: "",
+  salesAccountId: "",
+  taxRate: "",
+  cgst: "",
+  sgst: "",
+  igst: "",
+  vat: "",
+};
+
+
+const AddNewService = ({ }: Props) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+  const [service,setService]=useState<any>(initialServiceData)
+  console.log(service,"service");
+  
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => {
@@ -34,7 +73,7 @@ const AddNewService = ({}: Props) => {
       </Button>
 
       <Modal
-        className="w-[77%] p-8 bg-[#F9F7F5] rounded-2xl"
+        className="w-[80%] px-8 py-6 bg-[#efedea] rounded-2xl"
         open={isModalOpen}
         onClose={closeModal}
       >
@@ -56,24 +95,22 @@ const AddNewService = ({}: Props) => {
               {/* Tab Circle */}
               <div className="flex flex-col items-center w-24">
                 <p
-                  className={`border-2 flex items-center justify-center text-sm font-semibold rounded-full w-8 h-8 ${
-                    activeTab === index
-                      ? "border-[#B47300] bg-white text-[#C88000]"
-                      : activeTab > index
+                  className={`border-2 flex items-center justify-center text-sm font-semibold rounded-full w-8 h-8 ${activeTab === index
+                    ? "border-[#B47300] bg-white text-[#C88000]"
+                    : activeTab > index
                       ? "border-[#B47300] bg-[#C88000] text-white"
                       : "border-[#A1AEBE] bg-white text-[#242E39]"
-                  }`}
+                    }`}
                 >
                   {activeTab > index ? <TickIcon /> : `0${index + 1}`}
                 </p>
 
                 {/* Tab Label */}
                 <p
-                  className={`text-center mt-1 text-sm font-medium ${
-                    activeTab >= index
-                      ? "text-[#B47300] font-bold"
-                      : "text-[#465668]"
-                  }`}
+                  className={`text-center mt-1 text-sm font-medium ${activeTab >= index
+                    ? "text-[#B47300] font-bold"
+                    : "text-[#465668]"
+                    }`}
                 >
                   {tab.label}
                 </p>
@@ -82,9 +119,8 @@ const AddNewService = ({}: Props) => {
               {/* Line between tabs (except last one) */}
               {index < tabs.length - 1 && (
                 <div
-                  className={`bg-[#A1AEBE] h-[2px] w-[80px] -mt-6 ${
-                    activeTab > index ? "bg-[#B47300]" : "bg-[#A1AEBE]"
-                  }`}
+                  className={`bg-[#A1AEBE] h-[2px] w-[80px] -mt-6 ${activeTab > index ? "bg-[#B47300]" : "bg-[#A1AEBE]"
+                    }`}
                 />
               )}
             </div>
@@ -92,45 +128,26 @@ const AddNewService = ({}: Props) => {
         </div>
 
         {/* Tab Content */}
-        <div className="mt-6 p-6 bg-white rounded-xl">
+        <div className="mt-4  rounded-xl">
           {activeTab === 0 && (
-            <div>
-              <p className="text-lg font-semibold mb-2">General Information</p>
-              <input
-                type="text"
-                placeholder="Enter service name"
-                className="border p-2 rounded w-full"
-              />
-            </div>
+            <>
+              <InfoTab state={service} setState={setService}/>
+            </>
           )}
           {activeTab === 1 && (
-            <div>
-              <p className="text-lg font-semibold mb-2">Choose Parameters</p>
-              <input
-                type="text"
-                placeholder="Enter parameter"
-                className="border p-2 rounded w-full"
-              />
-            </div>
+            <>
+              <ParameterTab state={service} setState={setService}/>
+            </>
           )}
           {activeTab === 2 && (
-            <div>
-              <p className="text-lg font-semibold mb-2">Style Selection</p>
-              <input
-                type="text"
-                placeholder="Select style"
-                className="border p-2 rounded w-full"
-              />
-            </div>
+            <>
+              <StyleTab />
+            </>
           )}
           {activeTab === 3 && (
-            <div>
-              <p className="text-lg font-semibold mb-2">Summary</p>
-              <textarea
-                placeholder="Enter summary"
-                className="border p-2 rounded w-full h-20"
-              />
-            </div>
+            <>
+              <SummaryTab />
+            </>
           )}
         </div>
 
