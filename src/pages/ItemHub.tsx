@@ -67,7 +67,7 @@ function ItemHub({}: Props) {
                     Add Your Products
                   </p>
                 </div>
-                <div>
+                <div  onClick={() => navigate("/itemHub/products")}>
                   <ArrowUpRighIcon bgColor="#A06600" />
                 </div>
               </div>

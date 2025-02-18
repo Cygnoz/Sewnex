@@ -58,14 +58,15 @@ const Table: React.FC<TableProps> = ({
     setCurrentPage(1); // Reset to first page when rows per page changes
   };
 
+
   const filteredData = Array.isArray(data)
     ? data
-      .slice()
-      .reverse()
-      .filter((item) =>
+      ?.slice()
+      ?.reverse()
+      ?.filter((item) =>
         searchableFields
-          .map((field) => item[field]?.toString().trim().toLowerCase())
-          .some((fieldValue) =>
+          ?.map((field) => item[field]?.toString().trim().toLowerCase())
+          ?.some((fieldValue) =>
             fieldValue?.includes(searchValue.toLowerCase().trim())
           )
       )
