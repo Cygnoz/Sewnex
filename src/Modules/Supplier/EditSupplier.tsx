@@ -21,7 +21,7 @@ import Eye from "../../assets/icons/Eye";
 import EyeOffIcon from "../../assets/icons/EyeOffIcon";
 // import EditIcon from "../../assets/icons/EditIcon";
 import { SupplierData } from "../../Types/Supplier";
-import CirclePlus from "../../assets/icons/circleplus";
+import CirclePlus from "../../assets/icons/CirclePlus";
 
 // import PhoneInput from "../../Components/Form/PhoneInput";
   

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import  { useContext, useEffect, useState } from "react";
 import Button from "../../../../../Components/Button";
 import Modal from "../../../../../Components/modal/Modal";
 import ArrowUpRightIcon from "../../../../../assets/icons/ArrowUpRighIcon";
@@ -11,7 +11,7 @@ import { UnitResponseContext } from "../../../../../Context/ContextShare";
 
 type Props = {};
 
-const Unit = (props: Props) => {
+const Unit = ({}: Props) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [allunitData, setAllunitData] = useState<any[]>([]);
   const { request: fetchAllunits } = useApi("get", 5003);

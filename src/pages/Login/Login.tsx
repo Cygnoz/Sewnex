@@ -105,7 +105,7 @@ function Login({}: Props) {
             </div>
             {error && <p className="text-red-500 text-sm">{error}</p>}
             <div className="flex justify-center">
-              <Button type="submit" className="px-[45%] mt-7">
+              <Button type="submit" className="px-[45%] mt-7 whitespace-nowrap ">
                 {isLoading ? "Logging in..." : "Login"}
               </Button>
             </div>

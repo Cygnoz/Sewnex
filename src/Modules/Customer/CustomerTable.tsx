@@ -4,11 +4,19 @@ import { useEffect, useState } from "react";
 import { endpoints } from "../../Services/apiEdpoints";
 import useApi from "../../Hooks/useApi";
 import toast from "react-hot-toast";
+import ConfirmModal from "../../Components/ConfirmModal";
+import Customer from "../../pages/Customer";
+import NewCustomer from "./NewCustomer";
 
 type Props = {}
 
 function CustomerTable({ }: Props) {
     const [allCustomerData, setAllCustomerData] = useState<any[]>([]);
+    const [allCustomersData, setAllCustomersData] = useState<any[]>([]);
+    const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string >("");
+
+    const { request: deleteCustomersRequest } = useApi("delete", 5002);
     const { request: fetchAllCustomers } = useApi("get", 5002);
 
      const [loading, setLoading] = useState({
@@ -16,23 +24,45 @@ function CustomerTable({ }: Props) {
        noDataFound: false,
      });
     const columns = [
-        { id: "Name", label: "Name", visible: true },
-        { id: "CompanyName", label: "Company Name", visible: true },
-        { id: "Contact", label: "Contact", visible: true },
-        { id: "email", label: "Email", visible: true },
-        { id: "Status", label: "Status", visible: true },
+        { id: "customerDisplayName", label: "Name", visible: true },
+        { id: "companyName", label: "Company Name", visible: true },
+        { id: "mobile", label: "Contact", visible: true },
+        { id: "customerEmail", label: "Email", visible: true },
+        { id: "status", label: "Status", visible: true },
     ];
-
+    const confirmDelete = (id: string) => {
+        setDeleteId(id);
+        setConfirmModalOpen(true);
+      };
 
     const navigate = useNavigate();
 
     const handleRowClick = () => {
         navigate(`customerview`);
     };
-
-    const handleDelete = (id: string) => {
-        alert(`Delete clicked for ID: ${id}`);
-    };
+    
+      const handleDelete = async () => {
+        try {
+          const url = `${endpoints.DELETE_CUSTOMER}/${deleteId}`;
+          const { response, error } = await deleteCustomersRequest(url);
+          if (!error && response) {
+            toast.success("Customers deleted successfully!");
+            loadCustomer();
+            setConfirmModalOpen(false)
+            if (allCustomersData.length == 1) {
+              setAllCustomersData((prevData) =>
+                prevData.filter((m: any) => m._id !== deleteId)
+              );
+            }
+          } else {
+            toast.error(error.response.data.message);
+          }
+        } catch (error) {
+          toast.error("Error occurred while deleting Customers.");
+        }
+      };
+    
+  
 
     const handleEditClick = (id: string) => {
         alert(`Edit clicked for ID: ${id}`);
@@ -86,14 +116,24 @@ loadCustomer()
                     columns={columns}
                     data={allCustomerData}
                     onRowClick={handleRowClick}
-                    onDelete={handleDelete}
-                    onEditClick={handleEditClick}
+                    onDelete={(item)=>confirmDelete(item)}
+                    renderActions={(item) => (
+                      <div>
+                        <NewCustomer page="edit" id={item} />
+                      </div>
+                    )}
                     renderColumnContent={renderColumnContent}
                     searchPlaceholder="Search Customer"
                     loading={false}
-                    searchableFields={["CompanyName", "Name", "email"]}
+                    searchableFields={["customerDisplayName"]}
                 />
             </div>
+            <ConfirmModal
+        open={isConfirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onConfirm={() => handleDelete()}
+        message="Are you sure you want to delete?"
+      />
         </div>
     )
 }

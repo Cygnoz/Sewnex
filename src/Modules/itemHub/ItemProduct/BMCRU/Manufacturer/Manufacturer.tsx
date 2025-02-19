@@ -60,7 +60,9 @@ const Manufacturer = ({}: Props) => {
         toast.error("Error occurred while deleting manufacturer.");
       }
     };
-  
+    const filteredManufacturerData = allmanufacturerData.filter((Manufacturer) =>
+      Manufacturer.manufacturerName.toLowerCase().includes(searchValue.toLowerCase())
+    );
     useEffect(() => {
       loadmanufacturers();
     }, [bmcrResponse]);
@@ -113,41 +115,43 @@ const Manufacturer = ({}: Props) => {
               <ManufacturerModal />
             </div>
           </div>
-          {allmanufacturerData.length > 0 ? (
+          {filteredManufacturerData.length > 0 ? (
             <div className="grid grid-cols-3 gap-4 mt-3">
-              {allmanufacturerData.map((manufacturer: any) => (
+              {filteredManufacturerData.map((manufacturer: any) => (
                 <div
                   className="bg-white rounded-lg p-3 border border-[#EAECF0]"
                   key={manufacturer._id}
                 >
-                  <div className="flex gap-2">
-                    <div className="flex items-center justify-center rounded-full">
+                  <div className="grid grid-cols-12  gap-2">
+                    <div className="flex items-center col-span-2 justify-center rounded-full">
                       <img
                         src={manufacturer.uploadImage ? manufacturer.uploadImage : image}
                         alt="manufacturer"
                         className="rounded-full w-[35px] h-[35px]"
                       />
                     </div>
-                    <div className="ms-2">
-                      <p className="text-[#0B1320] text-md font-semibold">
-                        {manufacturer.manufacturerName}
-                      </p>
-                      <p className="text-text_tertiary text-xs mt-1">
-                        {manufacturer.description}
-                      </p>
+                    <div className="col-span-10 flex">
+                      <div className="ms-2">
+                        <p className="text-[#0B1320] text-md font-semibold">
+                          {manufacturer.manufacturerName}
+                        </p>
+                        <p className="text-text_tertiary text-xs mt-1 text-balance break-words max-w-[250px]">
+                          {manufacturer.description}
+                        </p>
+                      </div>
+                      <div className="flex items-center justify-center gap-1 ml-auto">
+                        <ManufacturerModal manufacturer={manufacturer} funtion={"edit"} />
+                        <button
+                          onClick={() => {
+                            handleDelete(manufacturer);
+                          }}
+                        >
+                          {" "}
+                          <Trash size={18} color="#818894" />
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-center gap-1 ml-auto">
-                      <ManufacturerModal manufacturer={manufacturer} funtion={"edit"} />
-                      <button
-                        onClick={() => {
-                          handleDelete(manufacturer);
-                        }}
-                      >
-                        {" "}
-                        <Trash size={18} color="#818894" />
-                      </button>
                     </div>
-                  </div>
                 </div>
               ))}
             </div>

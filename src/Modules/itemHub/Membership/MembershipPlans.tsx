@@ -13,7 +13,7 @@ const MembershipPlans = ({}: Props) => {
       <BackIcon />
     </button>
     <div>
-      <h1 className="text-base font-bold text-heading">Retail Product</h1>
+      <h1 className="text-base font-bold text-heading">Membership Plan </h1>
       <p className="text-[#495160] mt-2 text-xs">
         Add and manage your styles and parameters of services
       </p>

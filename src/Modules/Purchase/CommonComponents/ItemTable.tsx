@@ -35,6 +35,7 @@ type Row = {
   itemIgstAmount: number | string;
   itemVatAmount: number | string;
   taxPreference: string;
+  purchaseAccountId: string;
 };
 
 const ItemTable = ({
@@ -68,6 +69,8 @@ const ItemTable = ({
       itemIgstAmount: "",
       itemVatAmount: "",
       taxPreference: "",
+      purchaseAccountId: "",
+
     },
   ]);
 
@@ -107,6 +110,8 @@ const ItemTable = ({
       itemIgstAmount: "",
       itemVatAmount: "",
       taxPreference: "",
+      purchaseAccountId: "",
+
     };
     const updatedRows = [...rows, newRow];
     setRows(updatedRows);
@@ -125,6 +130,7 @@ const ItemTable = ({
     newRows[index].itemSgst = item.sgst;
     newRows[index].itemIgst = item.igst;
     newRows[index].taxPreference = item.taxPreference;
+    newRows[index].purchaseAccountId = item.purchaseAccountId;
 
     const costPrice = Number(newRows[index].itemCostPrice);
     const itemDiscount = Number(newRows[index].itemDiscount);
@@ -347,6 +353,7 @@ const ItemTable = ({
         itemIgstAmount: "",
         itemVatAmount: "",
         taxPreference: "",
+        purchaseAccountId: "",
       };
 
       setRows([defaultRow]);

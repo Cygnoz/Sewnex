@@ -25,6 +25,8 @@ type Row = {
   itemVatAmount: number | string;
   taxPreference: string;
   stock: number | string;
+  purchaseAccountId:string;
+
 };
 
 type Props = {
@@ -76,6 +78,8 @@ const DebitNoteTable = ({
       itemVatAmount: "",
       taxPreference: "",
       stock: "",
+      purchaseAccountId:"",
+
     },
   ]);
 
@@ -114,6 +118,8 @@ const DebitNoteTable = ({
       itemVatAmount: "",
       taxPreference: "",
       stock: "",
+      purchaseAccountId:"",
+
     };
     const updatedRows = [...rows, newRow];
     setRows(updatedRows);
@@ -134,6 +140,7 @@ const DebitNoteTable = ({
     newRows[index].itemAmount = item.itemAmount;
     newRows[index].itemCostPrice = item.itemCostPrice;
     newRows[index].taxPreference = item.taxPreference;
+    newRows[index].purchaseAccountId=item.purchaseAccountId
 
     if (item.returnQuantity) {
       newRows[index].stock = item.itemQuantity - item.returnQuantity;
@@ -299,6 +306,8 @@ const DebitNoteTable = ({
         itemPurchaseQuantity: "",
         taxPreference: "",
         stock: "",
+        purchaseAccountId:"",
+
       };
 
       // Reset rows to default row
@@ -435,6 +444,8 @@ const DebitNoteTable = ({
         itemPurchaseQuantity: "",
         taxPreference: "",
         stock: "",
+        purchaseAccountId:"",
+
       };
 
       setRows([defaultRow]);

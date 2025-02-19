@@ -17,6 +17,7 @@ import { endpoints } from "../../Services/apiEdpoints";
 import toast from "react-hot-toast";
 import { CustomerResponseContext } from "../../Context/ContextShare";
 import useApi from "../../Hooks/useApi";
+import { useOrganization } from "../../Context/OrganizationContext";
 interface CustomerData {
   customerProfile: string;
   _id?: string;
@@ -27,32 +28,13 @@ interface CustomerData {
   companyName: string;
   customerDisplayName: string;
   customerEmail: string;
-  workPhone: string;
   mobile: string;
   dob: string;
   debitOpeningBalance: string;
   creditOpeningBalance: string;
   gstin_uin: string;
-  billingAttention: string;
-  billingCountry: string;
-  billingAddressLine1: string;
-  billingAddressLine2: string;
-  billingCity: string;
-  billingState: string;
-  billingPinCode: string;
-  billingPhone: string;
-  billingFaxNumber: string;
-  shippingAttention: string;
-  shippingCountry: string;
-  shippingAddress1: string;
-  shippingAddress2: string;
-  shippingCity: string;
-  shippingState: string;
-  shippingPinCode: string;
-  shippingPhone: string;
-  shippingFaxNumber: string;
   membershipCardNumber: string;
-  referenceCustomer: string;
+  referenceCustomerId: string;
   anniversary: string;
   profession: string;
   twitter: string;
@@ -61,8 +43,14 @@ interface CustomerData {
   facebook: string;
   companyAddress: string;
   remark: string;
+  customerAddress: string;
+  billingCountry: string;
+  taxType: string;
+  gstTreatment: string;
+  taxPreference: string;
+  placeOfSupply: string;
 }
-type Props = { page?: string; id?: string };
+type Props = { page?: string; id?: CustomerData };
 const initialCustomerData: CustomerData = {
   customerProfile: "",
   customerType: "",
@@ -72,32 +60,13 @@ const initialCustomerData: CustomerData = {
   companyName: "",
   customerDisplayName: "",
   customerEmail: "",
-  workPhone: "",
   mobile: "",
   dob: "",
   debitOpeningBalance: "",
   creditOpeningBalance: "",
   gstin_uin: "",
-  billingAttention: "",
-  billingCountry: "",
-  billingAddressLine1: "",
-  billingAddressLine2: "",
-  billingCity: "",
-  billingState: "",
-  billingPinCode: "",
-  billingPhone: "",
-  billingFaxNumber: "",
-  shippingAttention: "",
-  shippingCountry: "",
-  shippingAddress1: "",
-  shippingAddress2: "",
-  shippingCity: "",
-  shippingState: "",
-  shippingPinCode: "",
-  shippingPhone: "",
-  shippingFaxNumber: "",
   membershipCardNumber: "",
-  referenceCustomer: "",
+  referenceCustomerId: "",
   anniversary: "",
   profession: "",
   twitter: "",
@@ -106,6 +75,12 @@ const initialCustomerData: CustomerData = {
   facebook: "",
   remark: "",
   companyAddress: "",
+  customerAddress: "",
+  billingCountry: "",
+  taxType: "",
+  gstTreatment: "Consumer",
+  taxPreference: "Taxable",
+  placeOfSupply: "",
 };
 const NewCustomer = ({ page, id }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -113,14 +88,18 @@ const NewCustomer = ({ page, id }: Props) => {
   const [customerData, setCustomerData] =
     useState<CustomerData>(initialCustomerData);
   const [allcustomers, setallcustomers] = useState([]);
+  const [taxData, setTaxData] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
   const [openingBalanceType, setOpeningBalanceType] = useState(
     customerData.creditOpeningBalance ? "credit" : "debit"
   );
   const { setcustomerResponse } = useContext(CustomerResponseContext)!;
   const { request: updateCustomerRequest } = useApi("put", 5002);
   const { request: addCustomerRequest } = useApi("post", 5002);
-  const { request: fetchAllCustomers } = useApi("put", 5002);
+  const { request: fetchAllCustomers } = useApi("get", 5002);
+  const { request: fetchAllTax } = useApi("get", 5004);
 
+  const { organization } = useOrganization();
   const handleNext = () => {
     if (activeTab < 4) {
       setActiveTab(activeTab + 1);
@@ -167,8 +146,13 @@ const NewCustomer = ({ page, id }: Props) => {
       }));
     }
   };
+
   const handleSave = async () => {
+    if (loading) return;
+
     try {
+      setLoading(true);
+
       const url =
         page === "edit"
           ? `${endpoints.UPDATE_BRMC}`
@@ -190,12 +174,31 @@ const NewCustomer = ({ page, id }: Props) => {
       }
     } catch (error) {
       toast.error("Error in save operation.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchData = async (
+    url: string,
+    setData: React.Dispatch<React.SetStateAction<any>>,
+    fetchFunction: (url: string) => Promise<any>
+  ) => {
+    console.log("qwertyuiop");
+
+    try {
+      const { response, error } = await fetchFunction(url);
+      if (!error && response) {
+        setData(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   };
 
   const loadcustomers = async () => {
     try {
-      const url = `${endpoints.GET_ALL_BRMC}`;
+      const url = `${endpoints.GET_ALL_CUSTOMER}`;
       const body = { type: "manufacturer" };
       const { response, error } = await fetchAllCustomers(url, body);
       if (!error && response) {
@@ -210,8 +213,32 @@ const NewCustomer = ({ page, id }: Props) => {
   };
 
   useEffect(() => {
+    if (organization.organizationCountry) {
+      setCustomerData((prevData) => ({
+        ...prevData,
+        billingCountry: organization.organizationCountry,
+        placeOfSupply: organization.state,
+      }));
+    }
+    if (taxData) {
+      setCustomerData((prevData) => ({
+        ...prevData,
+        taxType: taxData.taxType,
+      }));
+    }
+  }, [organization, taxData]);
+
+  useEffect(() => {
     loadcustomers();
-  });
+
+    
+    const supplierUrl = `${endpoints.GET_ALL_TAX}`;
+    fetchData(supplierUrl, setTaxData, fetchAllTax);
+  }, []);
+
+  useEffect(()=>{
+    
+  })
 
   return (
     <div>
@@ -355,15 +382,17 @@ const NewCustomer = ({ page, id }: Props) => {
                   <Input
                     label="Customer Address"
                     placeholder="Enter Customer Address"
-                    // value={customerAddress}
-                    // onChange={(e: any) => setCustomerAddress(e.target.value)}
+                    value={customerData.customerAddress}
+                    onChange={(e: any) =>
+                      handleInputChange("customerAddress", e.target.value)
+                    }
                     size="md"
                   />
                 </div>
 
                 <div className="grid grid-cols-3 gap-4 mt-4">
                   <Input
-                    label="Contact"
+                    label="Mobile"
                     placeholder="Enter Contact"
                     value={customerData.mobile}
                     onChange={(e: any) =>
@@ -402,53 +431,56 @@ const NewCustomer = ({ page, id }: Props) => {
                       handleInputChange("membershipCardNumber", e.target.value)
                     }
                   />
-                 <div>
-  <label className="block mb-1 font-normal text-[12px] text-[#495160]">
-    Opening Balance
-  </label>
-  <div className="flex">
-    {/* Dropdown */}
-    <div className="relative w-20">
-      <select
-        className="block appearance-none w-full h-9 text-[#818894] bg-white border border-inputBorder text-xs pl-2 pr-2 rounded-l-3xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-        value={openingBalanceType}
-        onChange={(e) => {
-          const selectedType = e.target.value;
-          setOpeningBalanceType(selectedType);
+                  <div>
+                    <label className="block mb-1 font-normal text-[12px] text-[#495160]">
+                      Opening Balance
+                    </label>
+                    <div className="flex">
+                      {/* Dropdown */}
+                      <div className="relative w-20">
+                        <select
+                          className="block appearance-none w-full h-9 text-[#818894] bg-white border border-inputBorder text-xs pl-2 pr-2 rounded-l-3xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                          value={openingBalanceType}
+                          onChange={(e) => {
+                            setOpeningBalanceType(e.target.value);
+                          }}
+                        >
+                          <option value="credit">Cr</option>
+                          <option value="debit">Dr</option>
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                          <CheveronDown />
+                        </div>
+                      </div>
 
-          setCustomerData((prevData) => ({
-            ...prevData,
-            creditOpeningBalance: selectedType === "credit" ? prevData.creditOpeningBalance : "",
-            debitOpeningBalance: selectedType === "debit" ? prevData.debitOpeningBalance : "",
-          }));
-        }}
-      >
-        <option value="credit">Cr</option>
-        <option value="debit">Dr</option>
-      </select>
-      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-        <CheveronDown />
-      </div>
-    </div>
+                      {/* Input Field */}
+                      <input
+                        type="text"
+                        className="text-xs w-[100%] rounded-r-3xl text-start bg-white border border-slate-300 h-9 p-2 text-[#818894]"
+                        placeholder="Enter Opening Balance"
+                        value={
+                          openingBalanceType === "credit"
+                            ? customerData.creditOpeningBalance
+                            : customerData.debitOpeningBalance
+                        }
+                        onChange={(e) => {
+                          const value = e.target.value;
 
-    {/* Input Field */}
-    <input
-      type="text"
-      className="text-xs w-[100%] rounded-r-3xl text-start bg-white border border-slate-300 h-9 p-2 text-[#818894]"
-      placeholder="Enter Opening Balance"
-      value={openingBalanceType === "credit" ? customerData.creditOpeningBalance : customerData.debitOpeningBalance}
-      onChange={(e) => {
-        const value = e.target.value;
-
-        setCustomerData((prevData) => ({
-          ...prevData,
-          creditOpeningBalance: openingBalanceType === "credit" ? value : prevData.creditOpeningBalance,
-          debitOpeningBalance: openingBalanceType === "debit" ? value : prevData.debitOpeningBalance,
-        }));
-      }}
-    />
-  </div>
-</div>
+                          setCustomerData((prevData) => ({
+                            ...prevData,
+                            creditOpeningBalance:
+                              openingBalanceType === "credit"
+                                ? value
+                                : prevData.creditOpeningBalance,
+                            debitOpeningBalance:
+                              openingBalanceType === "debit"
+                                ? value
+                                : prevData.debitOpeningBalance,
+                          }));
+                        }}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -481,9 +513,9 @@ const NewCustomer = ({ page, id }: Props) => {
                 <Select
                   placeholder="Select Customer"
                   onChange={(value) => {
-                    handleInputChange("referenceCustomer", value);
+                    handleInputChange("referenceCustomerId", value);
                   }}
-                  value={customerData.referenceCustomer}
+                  value={customerData.referenceCustomerId}
                   label="Customer"
                   options={allcustomers?.map((customer: any) => ({
                     label: customer?.customerDisplayName,
@@ -564,9 +596,9 @@ const NewCustomer = ({ page, id }: Props) => {
                       label="Company Address"
                       placeholder="Enter Company Address"
                       size="lg"
-                      value={customerData.companyName}
+                      value={customerData.companyAddress}
                       onChange={(e) => {
-                        handleInputChange("companyName", e.target.value);
+                        handleInputChange("companyAddress", e.target.value);
                       }}
                     />
                   </div>

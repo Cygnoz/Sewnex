@@ -456,7 +456,7 @@ console.log(errors)
               {openDropdownIndex === "supplier" && (
                 <div
                   ref={dropdownRef}
-                  className="absolute z-10 bg-white  shadow  rounded-[36px] mt-1 p-2 w-[30%] space-y-1 max-h-72 overflow-y-auto  hide-scrollbar"
+                  className="absolute z-10 bg-white  shadow  rounded-[12px] mt-1 p-2 w-[30%] space-y-1 max-h-72 overflow-y-auto  hide-scrollbar"
                 >
                   <SearchBar
                     searchValue={searchValue}

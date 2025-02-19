@@ -1,30 +1,53 @@
-import  { useState } from 'react'
-import Modal from '../../../Components/modal/Modal'
-import Button from '../../../Components/Button'
-import Input from '../../../Components/Form/Input'
-import CirclePlus from '../../../assets/icons/CirclePlus'
+import { useState } from "react";
+import Modal from "../../../Components/modal/Modal";
+import Button from "../../../Components/Button";
+import Input from "../../../Components/Form/Input";
+import CirclePlus from "../../../assets/icons/CirclePlus";
+import RadioButton from "../../../Components/Form/RadioButton";
 
-type Props = {}
+type Props = {};
 
 function AddPlans({}: Props) {
-      const [isModalOpen, setModalOpen] = useState(false);
-    
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [type,setType]=useState<string>("")
+  const [innputData,setInputdata]=useState("")
 
-    const closeModal = () => {
-        setModalOpen(false);
-       
-      };
+  const closeModal = () => {
+    setModalOpen(false);
+  };
   const openModal = () => {
-   
     setModalOpen(true);
+  };
+
+  const handleInputChange = (name: string, value: string | boolean | File) => {
+    if (name === "uploadImage" && value instanceof File) {
+      const reader = new FileReader();
+      reader.readAsDataURL(value);
+
+      reader.onload = () => {
+        setInputdata((prevData:any) => ({
+          ...prevData,
+          [name]: reader.result as string,
+        }));
+      };
+
+      reader.onerror = (error) => {
+        console.error("Error converting file to Base64:", error);
+      };
+    } else {
+      setInputdata((prevData:any) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
   return (
     <div>
-        <Button onClick={openModal}>
-    <CirclePlus />
-    Add Membership
-  </Button>
-        
+      <Button onClick={openModal}>
+        <CirclePlus />
+        Add Membership
+      </Button>
+
       <Modal
         open={isModalOpen}
         onClose={closeModal}
@@ -42,7 +65,21 @@ function AddPlans({}: Props) {
           </div>
         </div>
         <div className=" gap-4 mt-1">
-        <Input placeholder='Enter Name' />
+          <Input label="Plan Name" placeholder="Enter Name" />
+          <Input label="Description" placeholder="Enter Description" />
+          <p className="text-text_primary text-xs font-semibold my-3">
+            Select Plan Type
+          </p>
+          <div>
+            {/* <RadioButton
+              id="orderwise"
+              label="Order Wise"
+              name="AssignmenDate"
+              // onChange={(e)=>handleInputChange("",e.target.value)}
+              selected={type}
+              className="text-[#495160] text-[14px] font-semibold"
+            /> */}
+          </div>
         </div>
         <div className="flex justify-end gap-2 mt-4">
           <Button
@@ -52,11 +89,11 @@ function AddPlans({}: Props) {
           >
             Cancel
           </Button>
-          <Button >Save</Button>
+          <Button>Save</Button>
         </div>
       </Modal>
     </div>
-  )
+  );
 }
 
-export default AddPlans
+export default AddPlans;

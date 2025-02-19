@@ -64,7 +64,10 @@ const Brand = () => {
     }
   };
 
-
+  const filteredBrandData = allBrandData.filter((brand) =>
+    brand.brandName.toLowerCase().includes(searchValue.toLowerCase())
+  );
+  
 
   useEffect(() => {
     loadBrands();
@@ -118,39 +121,43 @@ const Brand = () => {
            <BrandModal/>
           </div>
         </div>
-        {allBrandData.length > 0 ? (
+        {filteredBrandData.length > 0 ? (
           <div className="grid grid-cols-3 gap-4 mt-3">
-            {allBrandData.map((brand: any) => (
+            {filteredBrandData.map((brand: any) => (
               <div
                 className="bg-white rounded-lg p-3 border border-[#EAECF0]"
                 key={brand._id}
               >
-                <div className="flex gap-2">
-                  <div className="flex items-center justify-center">
+                <div className="grid grid-cols-12 gap-2">
+                  <div className="flex items-center col-span-2 justify-center">
                     <img
                       src={brand.uploadImage ? brand.uploadImage : image}
                       alt="Brand"
                       className="rounded-full w-[35px] h-[35px]"
                     />
                   </div>
-                  <div className="ms-2">
-                    <p className="text-[#0B1320] text-md font-semibold">
-                      {brand.brandName}
-                    </p>
-                    <p className="text-text_tertiary text-xs mt-1">
-                      {brand.description}
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-center gap-1 ml-auto">
-                   <BrandModal brand={brand} funtion={"edit"}/>
-                    <button
-                      onClick={() => {
-                        handleDelete(brand);
-                      }}
-                    >
-                      {" "}
-                      <Trash size={18} color="#818894" />
-                    </button>
+                  <div className="col-span-10 flex">
+                    <div className="">
+                      <p className="text-[#0B1320] text-md font-semibold">
+                        {brand.brandName}
+                      </p>
+                      <p className="text-text_tertiary text-xs mt-1 text-balance break-words max-w-[250px]">
+                        {brand.description}
+                      </p>
+                    </div>
+                    <div className="flex items-start justify-center gap-1 ml-auto">
+                     <BrandModal brand={brand} funtion={"edit"}/>
+                      <button className="mt-1" >
+                        <button
+                          onClick={() => {
+                            handleDelete(brand);
+                          }}
+                        >
+                          {" "}
+                          <Trash size={19} color="#818894" />
+                        </button>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -58,7 +58,9 @@ const Category = () => {
       toast.error("Error occurred while deleting category.");
     }
   };
-
+  const filteredCategoryData = allcategoryData.filter((category) =>
+    category?.categoriesName?.toLowerCase()?.includes(searchValue.toLowerCase())
+  );
   useEffect(() => {
     loadcategorys();
   }, [bmcrResponse]);
@@ -111,39 +113,41 @@ const Category = () => {
             <CategoryModal />
           </div>
         </div>
-        {allcategoryData.length > 0 ? (
+        {filteredCategoryData?.length > 0 ? (
           <div className="grid grid-cols-3 gap-4 mt-3">
-            {allcategoryData.map((category: any) => (
+            {filteredCategoryData?.map((category: any) => (
               <div
                 className="bg-white rounded-lg p-3 border border-[#EAECF0]"
                 key={category._id}
               >
-                <div className="flex gap-2">
-                  <div className="flex items-center justify-center">
+                <div className="grid grid-cols-12 gap-2">
+                  <div className="flex items-center justify-center col-span-2">
                     <img
                       src={category.uploadImage ? category.uploadImage : image}
                       alt="category"
                       className="rounded-full w-[35px] h-[35px]"
                     />
                   </div>
-                  <div className="ms-2">
-                    <p className="text-[#0B1320] text-md font-semibold">
-                      {category.categoriesName}
-                    </p>
-                    <p className="text-text_tertiary text-xs mt-1">
-                      {category.description}
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-center gap-1 ml-auto">
-                    <CategoryModal category={category} funtion={"edit"} />
-                    <button
-                      onClick={() => {
-                        handleDelete(category);
-                      }}
-                    >
-                      {" "}
-                      <Trash size={18} color="#818894" />
-                    </button>
+                  <div className="col-span-10 flex">
+                    <div className="ms-2">
+                      <p className="text-[#0B1320] text-md font-semibold">
+                        {category.categoriesName}
+                      </p>
+                      <p className="text-text_tertiary text-xs mt-1 text-balance break-words max-w-[250px]">
+                        {category.description}
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-center gap-1 ml-auto">
+                      <CategoryModal category={category} funtion={"edit"} />
+                      <button
+                        onClick={() => {
+                          handleDelete(category);
+                        }}
+                      >
+                        {" "}
+                        <Trash size={18} color="#818894" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
