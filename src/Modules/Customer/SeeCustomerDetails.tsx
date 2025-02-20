@@ -10,14 +10,17 @@ import SquereScissorIcon from "../../assets/icons/SquereScissorIcon"
 import History from "../../assets/icons/History"
 import LineChart from "../../assets/icons/LineChart"
 import NewsPaperIcon from "../../assets/icons/NewsPaperIcon"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Overview from "./Overview"
 import ItemMeasurement from "./ItemMeasurement"
 import OrderHistory from "./OrderHistory"
 import ViewPayment from "./ViewPayment"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import ChevronLeft from "../../assets/icons/ChevronLeft"
 import SalesHistory from "./SalesHistory"
+import useApi from "../../Hooks/useApi"
+import { endpoints } from "../../Services/apiEdpoints"
+import toast from "react-hot-toast"
 interface CardData {
   icon: string;
   title: string;
@@ -29,7 +32,29 @@ const SeeCustomerDetails = () => {
   const [selectedTab, setSelectedTab] = useState("Overview");
 
 
+  const [customerData, setCustomerdata] = useState<any>([]);
+  const { request: customer } = useApi("get", 5002);
 
+  const { id } = useParams();
+
+  const getOne = async () => {
+    try {
+      const url = `${endpoints.GET_ONE_CUSTOMER}/${id}`;
+      const { response, error } = await customer(url);
+      if (!error && response) {
+        setCustomerdata(response.data);
+      } else {
+        toast.error(error.response.data.message);
+      }
+    } catch (error) {
+      toast.error("Error in fetching one item data.");
+      console.error("Error in fetching one item data", error);
+    }
+  };
+
+  useEffect(() => {
+    getOne();
+  }, []);
 
 
 
@@ -102,25 +127,23 @@ const SeeCustomerDetails = () => {
         >
           <div className="absolute inset-0 bg-gradient-to-br from-[#004D4D] to-[#0CA65B] opacity-5 rounded-2xl"></div>
           <div className="relative z-10">
-            <p className="text-membershipText text-sm  text-[#E8E8E8] mt-1">
+            <p className="text-membershipText text-sm whitespace-nowrap  text-[#E8E8E8] mt-1">
               Privilege Membership Card
             </p>
             <div className=" items-center mt-3">
               <img
-                //   src={customerData.customerProfile ? customerData.customerProfile : "https://i.postimg.cc/MHh2tQ41/avatar-3814049-1280.webp"}
-                src={CustomerProfile}
+                  src={customerData.customerProfile ? customerData.customerProfile : CustomerProfile}
                 alt="Profile"
                 className="w-8 h-8 object-cover rounded-full mr-3"
               />
 
               <div>
-                <p className="text-[#E8E8E8] text-sm font-semibold mt-1">
-                  {/* {customerData?.customerDisplayName} */}
-                  SARATH
+                <p className="text-[#E8E8E8] text-sm font-semibold mt-1 whitespace-nowrap">
+                  {customerData?.customerDisplayName}
+                  
                 </p>
                 <p className="text-membershipText text-[#E8E8E8] text-xs mt-1">
-                  {/* {customerData.mobile} */}
-                  123333333333333
+                  {customerData.mobile}
 
                 </p>
               </div>
@@ -129,11 +152,11 @@ const SeeCustomerDetails = () => {
         </div>
 
         {/* 2nd card */}
-        <div className="flex  w-full  ">
+        <div className="flex mx-6 w-full gap-6 ">
           {
             cards.length > 0
               ? cards.map((card) => (
-                <div className=" p-5 w-[145px] h-[150px] ms-11 bg-[#F5F8FC] rounded-[20px] ">
+                <div className=" p-5 w-[145px] h-[150px]  bg-[#F5F8FC] rounded-[20px] ">
                   <img className="w-8 h-8" src={card.icon} alt="" />
                   <h1 className="text-[#4B5C79] text-sm font-semibold my-2">{card.title}</h1>
                   <h1>{card.count}</h1>
@@ -171,7 +194,7 @@ const SeeCustomerDetails = () => {
           {/* Pass the required props to the Overview component */}
           {selectedTab === "Overview" && (
             <Overview
-            // customerData={customerData}
+            customerData={customerData}
             // statusData={statusData}
             // customerId={customerId}
             // handleStatusSubmit={handleStatusSubmit}

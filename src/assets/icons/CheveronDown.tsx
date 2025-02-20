@@ -1,6 +1,6 @@
-type Props = { color?: string, strokeWidth?: string; size?: string };
+type Props = { color?: string, strokeWidth?: string; size?: string, className?:string };
 
-function CheveronDown({ color, strokeWidth, size }: Props) {
+function CheveronDown({ color, strokeWidth, size, className }: Props) {
   return (
     <div>
       <svg
@@ -9,6 +9,7 @@ function CheveronDown({ color, strokeWidth, size }: Props) {
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        className={className?className:""}
       >
         <path
           d="M6 9L12 15L18 9"
