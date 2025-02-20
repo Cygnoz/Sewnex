@@ -106,7 +106,12 @@ const NewCustomer = ({ page, id }: Props) => {
     }
   };
 
-  console.log(id);
+  const steps = [
+    { id: 1, label: "General Info" },
+    { id: 2, label: "Reference" },
+    { id: 3, label: "Additional Details" },
+    { id: 4, label: "Social Media" },
+  ];
 
   const handleBack = () => {
     if (activeTab > 1) {
@@ -152,10 +157,10 @@ const NewCustomer = ({ page, id }: Props) => {
 
     try {
       setLoading(true);
-
+      const customerId = id?._id;
       const url =
         page === "edit"
-          ? `${endpoints.UPDATE_BRMC}`
+          ? `${endpoints.EDIT_CUSTOMER}/${customerId}`
           : `${endpoints.ADD_CUSTOMER}`;
       const apiCall =
         page === "edit" ? updateCustomerRequest : addCustomerRequest;
@@ -213,32 +218,47 @@ const NewCustomer = ({ page, id }: Props) => {
   };
 
   useEffect(() => {
-    if (organization.organizationCountry) {
-      setCustomerData((prevData) => ({
-        ...prevData,
-        billingCountry: organization.organizationCountry,
-        placeOfSupply: organization.state,
+    if (page !== "edit") {
+      if (organization?.organizationCountry) {
+        setCustomerData((prevData) => ({
+          ...prevData,
+          billingCountry: organization?.organizationCountry,
+          placeOfSupply: organization?.state,
+        }));
+      }
+      if (taxData) {
+        setCustomerData((prevData) => ({
+          ...prevData,
+          taxType: taxData.taxType,
+        }));
+      }
+    }
+    if (page === "edit" && id) {
+      if (id.creditOpeningBalance !== "") {
+        setOpeningBalanceType("credit");
+      } else {
+        setOpeningBalanceType("debit");
+      }
+      setCustomerData((prevdata) => ({
+        ...prevdata,
+        ...id,
       }));
     }
-    if (taxData) {
-      setCustomerData((prevData) => ({
-        ...prevData,
-        taxType: taxData.taxType,
-      }));
-    }
-  }, [organization, taxData]);
+  }, [
+    organization,
+    taxData,
+    id?.creditOpeningBalance,
+    id?.debitOpeningBalance,
+  ]);
 
   useEffect(() => {
     loadcustomers();
 
-    
     const supplierUrl = `${endpoints.GET_ALL_TAX}`;
     fetchData(supplierUrl, setTaxData, fetchAllTax);
   }, []);
 
-  useEffect(()=>{
-    
-  })
+  useEffect(() => {});
 
   return (
     <div>
@@ -275,93 +295,39 @@ const NewCustomer = ({ page, id }: Props) => {
           </div>
           <div className="p-2 w-[1111px] h-[56px] rounded-lg shadow-sm bg-[#FAF7F2] mb-6">
             <div className="flex p-2 items-center justify-between mb-6">
-              <div className="flex items-center">
-                <div
-                  className={`w-6 h-6 flex items-center justify-center rounded-full border-2 ${
-                    activeTab === 1
-                      ? "border-[#C88000] bg-[#C88000] text-[#FFFFFF]"
-                      : "border-[##4B5C79] text-[##4B5C79]"
-                  } ${
-                    activeTab !== 1 ? "cursor-not-allowed" : "cursor-pointer"
-                  }`}
-                >
-                  1
+              {steps.map((step, index) => (
+                <div key={step.id} className="flex items-center">
+                  {/* Step Circle */}
+                  <div
+                    className={`w-6 h-6 flex items-center justify-center rounded-full border-2 ${
+                      activeTab === step.id
+                        ? "border-[#C88000] bg-[#C88000] text-[#FFFFFF]"
+                        : "border-[#4B5C79] text-[#4B5C79]"
+                    } ${
+                      activeTab < step.id
+                        ? "cursor-not-allowed"
+                        : "cursor-pointer"
+                    }`}
+                  >
+                    {step.id}
+                  </div>
+                  {/* Step Label */}
+                  <span
+                    className={`ml-2 font-medium ${
+                      activeTab === step.id
+                        ? "text-[#C88000]"
+                        : "text-[#303F58]"
+                    }`}
+                  >
+                    {step.label}
+                  </span>
+
+                  {/* Line Between Steps */}
+                  {index !== steps.length - 1 && (
+                    <div className="flex-1 h-0.5 bg-gray-300 mx-2"></div>
+                  )}
                 </div>
-                <span
-                  className={`ml-2 font-bold text-[14px] ${
-                    activeTab === 1 ? "text-[#C88000]" : "text-[#303F58]"
-                  }`}
-                >
-                  General Info
-                </span>
-              </div>
-
-              {/* Line */}
-              <div className="flex-1 h-0.5 bg-gray-300 mx-2"></div>
-
-              <div className="flex items-center">
-                <div
-                  className={`w-6 h-6 flex items-center justify-center rounded-full border-2 ${
-                    activeTab === 2
-                      ? "border-[#C88000] bg-[#C88000] text-[#FFFFFF]"
-                      : "border-[##4B5C79] text-[##4B5C79]"
-                  } ${activeTab < 2 ? "cursor-not-allowed" : "cursor-pointer"}`}
-                >
-                  2
-                </div>
-                <span
-                  className={`ml-2 font-medium ${
-                    activeTab === 2 ? "text-[#C88000]" : "text-[#303F58]"
-                  }`}
-                >
-                  Reference
-                </span>
-              </div>
-
-              {/* Line */}
-              <div className="flex-1 h-0.5 bg-gray-300 mx-2"></div>
-
-              <div className="flex items-center">
-                <div
-                  className={`w-6 h-6 flex items-center justify-center rounded-full border-2 ${
-                    activeTab === 3
-                      ? "border-[#C88000] bg-[#C88000] text-[#FFFFFF]"
-                      : "border-[##4B5C79] text-[##4B5C79]"
-                  } ${activeTab < 3 ? "cursor-not-allowed" : "cursor-pointer"}`}
-                >
-                  3
-                </div>
-                <span
-                  className={`ml-2 font-medium ${
-                    activeTab === 3 ? "text-[#C88000]" : "text-[#303F58]"
-                  }`}
-                >
-                  Additional Details
-                </span>
-              </div>
-
-              {/* Line */}
-              <div className="flex-1 h-0.5 bg-gray-300 mx-2"></div>
-
-              {/* Step 4 */}
-              <div className="flex items-center">
-                <div
-                  className={`w-6 h-6 flex items-center justify-center rounded-full border-2 ${
-                    activeTab === 4
-                      ? "border-[#C88000] bg-[#C88000] text-[#FFFFFF]"
-                      : "border-[##4B5C79] text-[##4B5C79]"
-                  } ${activeTab < 4 ? "cursor-not-allowed" : "cursor-pointer"}`}
-                >
-                  4
-                </div>
-                <span
-                  className={`ml-2 font-medium ${
-                    activeTab === 4 ? "text-[#C88000]" : "text-[#303F58]"
-                  }`}
-                >
-                  Social Media
-                </span>
-              </div>
+              ))}
             </div>
           </div>
 
