@@ -7,17 +7,26 @@ import { useEffect, useState } from "react";
 import defaultCategoryImage from "../../../../assets/images/defaultCategoryImage.png";
 import Checkbox from "../../../../Components/Form/Checkbox";
 
-type Props = {};
+type Props = {
+    state: any;
+    setState: any;
+    setSelectedStyle: (parameters: any[]) => void;
+};
 
-function StyleTab({ }: Props) {
+function StyleTab({ state, setState, setSelectedStyle }: Props) {
     const [allCategory, setAllCategory] = useState<any>([]);
     const [allParameter, setAllParameter] = useState<any>([]);
     const [selectedCategory, setSelectedCategory] = useState<string | null>("all");
     const [selectedParameters, setSelectedParameters] = useState<any[]>([]);
+    const [searchQuery, setSearchQuery] = useState<string>("");
 
     const { request: fetchAllParameter } = useApi("get", 5003);
 
-    // Fetch all categories
+    useEffect(() => {
+        getAllCategory();
+        getAllParameter();
+    }, []);
+
     const getAllCategory = async () => {
         try {
             const url = `${endpoints.GET_ALL_CPS}/style-category`;
@@ -33,7 +42,6 @@ function StyleTab({ }: Props) {
         }
     };
 
-    // Fetch all parameters
     const getAllParameter = async () => {
         try {
             const url = `${endpoints.GET_ALL_CPS}/style`;
@@ -49,23 +57,45 @@ function StyleTab({ }: Props) {
         }
     };
 
-    useEffect(() => {
-        getAllCategory();
-        getAllParameter();
-    }, []);
-
-    // Handle checkbox toggle
     const handleParameterToggle = (param: any) => {
-        if (selectedParameters.some((p) => p._id === param._id)) {
-            setSelectedParameters((prev) => prev.filter((p) => p._id !== param._id));
-        } else {
-            setSelectedParameters((prev) => [...prev, param]);
-        }
+        setState((prevState: any) => {
+            const isSelected = prevState.style.some((p: any) => p.styleId === param._id);
+
+            if (isSelected) {
+                const updatedStyles = prevState.style.filter((p: any) => p.styleId !== param._id);
+                return { ...prevState, style: updatedStyles.length ? updatedStyles : [] };
+            } else {
+                const newStyle = { styleId: param._id, styleRate: param.price };
+                const currentStyles = prevState.style.filter((p: any) => p.styleId !== "");
+                return { ...prevState, style: [...currentStyles, newStyle] };
+            }
+        });
     };
 
-    const [searchQuery, setSearchQuery] = useState<string>("");
 
-    // Handle search input change
+    const handleInputChange = (styleId: string, newRate: string) => {
+        setState((prevState: any) => ({
+            ...prevState,
+            style: prevState.style.map((p: any) =>
+                p.styleId === styleId ? { ...p, styleRate: newRate } : p
+            ),
+        }));
+    };
+
+    useEffect(() => {
+        if (state?.style) {
+            const selected = state.style
+                .map((p: any) => {
+                    const foundParam = allParameter.find((param: any) => param._id === p.styleId);
+                    return foundParam ? { ...foundParam, styleRate: p.styleRate } : null;
+                })
+                .filter(Boolean);
+
+            setSelectedParameters(selected);
+            setSelectedStyle(selected)
+        }
+    }, [state, allParameter]);
+
     const handleSearchChange = (value: string) => {
         setSearchQuery(value);
     };
@@ -80,28 +110,27 @@ function StyleTab({ }: Props) {
     return (
         <div>
             <p className="text-[#0B1320] font-bold text-base">Select Parameter</p>
-            <p className="text-[#0B1320] text-xs mt-3">Filter by Category:</p>
 
             {/* Category Tabs */}
             <div className="mt-3 flex gap-2 overflow-x-scroll hide-scrollbar">
                 <div
-                    className={`cursor-pointer bg-white rounded-lg py-1.5 px-3  flex gap-2 justify-between items-center border
+                    className={`cursor-pointer bg-white rounded-lg py-1.5 px-3 flex gap-2 justify-between items-center border
                         ${selectedCategory === "all" ? "border-[#C88000] bg-[#f4e9d9]" : "border-[#EAECF0]"}`}
                     onClick={() => setSelectedCategory("all")}
                 >
                     <img src={defaultCategoryImage} className="w-6 h-6 rounded-full object-cover" alt="All" />
-                    <p className="text-[#2C3E50] font-medium text-xs w-20 overflow-x-scroll hide-scrollbar">All</p>
+                    <p className="text-[#2C3E50] font-medium text-xs">All</p>
                 </div>
 
                 {allCategory.map((category: any) => (
                     <div
                         key={category._id}
-                        className={`cursor-pointer bg-white rounded-lg py-1.5 px-3  flex gap-2 justify-between items-center border
+                        className={`cursor-pointer bg-white rounded-lg py-1.5 px-3 flex gap-2 justify-between items-center border
                             ${selectedCategory === category._id ? "border-[#C88000] bg-[#f4e9d9]" : "border-[#EAECF0]"}`}
                         onClick={() => setSelectedCategory(category._id)}
                     >
-                        <img src={category?.uploadImage ? category?.uploadImage : defaultCategoryImage} className="w-6 h-6 rounded-full object-cover" alt={category.name} />
-                        <p className="text-[#2C3E50] font-medium text-xs w-20 overflow-x-scroll hide-scrollbar">{category.name}</p>
+                        <img src={category.uploadImage || defaultCategoryImage} className="w-6 h-6 rounded-full object-cover" alt={category.name} />
+                        <p className="text-[#2C3E50] font-medium text-xs">{category.name}</p>
                     </div>
                 ))}
             </div>
@@ -126,11 +155,7 @@ function StyleTab({ }: Props) {
                                         className="bg-white border border-[#EAECF0] py-3 px-4 flex justify-between items-center rounded-lg cursor-pointer"
                                         onClick={() => handleParameterToggle(param)}
                                     >
-                                        <img
-                                            src={param?.uploadImage ? param?.uploadImage : defaultCategoryImage}
-                                            className="w-9 h-9 object-cover rounded-full"
-                                            alt={param.name}
-                                        />
+                                        <img src={param.uploadImage || defaultCategoryImage} className="w-9 h-9 object-cover rounded-full" alt={param.name} />
                                         <p className="text-[#495160] font-semibold text-xs">{param.name}</p>
                                         <Checkbox
                                             id={param._id}
@@ -140,7 +165,6 @@ function StyleTab({ }: Props) {
                                     </div>
                                 </div>
                             ))}
-
                         </div>
                     </div>
                 </div>
@@ -150,15 +174,20 @@ function StyleTab({ }: Props) {
                     <div className="bg-white p-4 rounded-[14px] overflow-y-scroll hide-scrollbar max-h-56">
                         <p className="text-[#495160] text-xs font-medium">Selected Parameters</p>
                         {selectedParameters.length > 0 ? (
-                            selectedParameters.map((param) => (
+                            selectedParameters.map((param: any) => (
                                 <div key={param._id} className="mt-2 bg-[#F9F7F5] rounded-lg py-2 px-4 flex justify-between items-center">
-                                    <div className="flex gap-4 items-center">
-                                        <img src={param?.uploadImage ? param?.uploadImage : defaultCategoryImage} className="w-9 h-9 object-cover rounded-full" alt={param.name} />
-                                        <p className="text-[#495160] font-semibold text-xs">{param.name}</p>
-                                    </div>
-                                    <input className="text-[#818894] text-[13px] bg-[#FFFFFF] border border-[#CECECE] w-28 rounded-[32px] py-2 px-3">
-                                        {param.price}
-                                    </input>
+                                    <img
+                                        src={param?.uploadImage ? param.uploadImage : defaultCategoryImage}
+                                        className="w-9 h-9 object-cover rounded-full"
+                                        alt={param.name}
+                                    />
+                                    <p className="text-[#495160] font-semibold text-xs">{param.name}</p>
+                                    <input
+                                        type="text"
+                                        className="text-[#818894] text-[13px] bg-[#FFFFFF] border border-[#CECECE] w-28 rounded-[32px] py-2 px-3"
+                                        value={param.styleRate}
+                                        onChange={(e) => handleInputChange(param._id, e.target.value)}
+                                    />
                                     <p
                                         className="text-3xl font-light text-[#818894] cursor-pointer"
                                         onClick={() => handleParameterToggle(param)}

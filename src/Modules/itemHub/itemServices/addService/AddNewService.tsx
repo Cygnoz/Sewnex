@@ -7,6 +7,9 @@ import InfoTab from "./InfoTab";
 import ParameterTab from "./ParameterTab";
 import StyleTab from "./StyleTab";
 import SummaryTab from "./SummaryTab";
+import { endpoints } from "../../../../Services/apiEdpoints";
+import toast from "react-hot-toast";
+import useApi from "../../../../Hooks/useApi";
 
 type Props = {};
 
@@ -30,24 +33,31 @@ const initialServiceData: any = {
       styleRate: ""
     }
   ],
-
-  costPrice: "",
-  sellingPrice: "",
-  salesAccountId: "",
+  taxType: "Exclusive",
   taxRate: "",
   cgst: "",
   sgst: "",
   igst: "",
-  vat: "",
+  styleTotal: "",
+  serviceCharge: "",
+  sellingPrice: "",
+  salesAccountId: "67b57126bf6e5cc904b202bf",
+  grandTotal: "",
 };
 
 
 const AddNewService = ({ }: Props) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
-  const [service,setService]=useState<any>(initialServiceData)
-  console.log(service,"service");
-  
+  const [service, setService] = useState<any>(initialServiceData)
+  const [selectedParameter, setSelectedParameter] = useState<any[]>([]);
+  const [selectedStyle, setSelectedStyle] = useState<any[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<any>("");
+
+  const { request: addService } = useApi("post", 5003);
+
+  console.log(service, "service");
+
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => {
@@ -65,6 +75,21 @@ const AddNewService = ({ }: Props) => {
     { id: 3, label: "Summary" },
   ];
 
+  const handleSave = async () => {
+    try {
+      const url = `${endpoints.ADD_SERVICE}`;
+      const { response, error } = await addService(url, service);
+      if (!error && response) {
+        toast.success(response.data.message);
+        closeModal();
+      } else {
+        toast.error(error.response?.data?.message || "An error occurred.");
+      }
+    } catch (error) {
+      toast.error("Error in save operation.");
+    }
+  };
+
   return (
     <div>
       <Button onClick={openModal}>
@@ -73,7 +98,7 @@ const AddNewService = ({ }: Props) => {
       </Button>
 
       <Modal
-        className="w-[80%] px-8 py-6 bg-[#efedea] rounded-2xl"
+        className="w-[80%] px-8 py-6 bg-[#f0eeea] rounded-2xl"
         open={isModalOpen}
         onClose={closeModal}
       >
@@ -131,22 +156,27 @@ const AddNewService = ({ }: Props) => {
         <div className="mt-4  rounded-xl">
           {activeTab === 0 && (
             <>
-              <InfoTab state={service} setState={setService}/>
+              <InfoTab state={service} setState={setService} setSelectedCategory={setSelectedCategory} />
             </>
           )}
           {activeTab === 1 && (
             <>
-              <ParameterTab state={service} setState={setService}/>
+              <ParameterTab state={service} setState={setService} setSelectedParameter={setSelectedParameter} />
             </>
           )}
           {activeTab === 2 && (
             <>
-              <StyleTab />
+              <StyleTab state={service} setState={setService} setSelectedStyle={setSelectedStyle} />
             </>
           )}
           {activeTab === 3 && (
             <>
-              <SummaryTab />
+              <SummaryTab
+                state={service}
+                setState={setService}
+                selectedParameter={selectedParameter}
+                selectedStyle={selectedStyle}
+                selectedCategory={selectedCategory} />
             </>
           )}
         </div>
@@ -171,8 +201,8 @@ const AddNewService = ({ }: Props) => {
             </Button>
           )}
           {activeTab === 3 ? (
-            <Button onClick={closeModal} className="pl-11 pr-11">
-              Finish
+            <Button onClick={handleSave} className="pl-11 pr-11">
+              Done
             </Button>
           ) : (
             <Button onClick={nextTab} className="pl-11 pr-11">

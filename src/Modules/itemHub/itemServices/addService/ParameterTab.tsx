@@ -9,15 +9,16 @@ import Checkbox from "../../../../Components/Form/Checkbox";
 
 type Props = {
     state?: any;
-    setState?: any
+    setState?: any;
+    setSelectedParameter: (parameters: any[]) => void; 
 }
 
 
-function ParameterTab({  setState }: Props) {
+function ParameterTab({ state, setState,setSelectedParameter }: Props) {
     const [allCategory, setAllCategory] = useState<any>([]);
     const [allParameter, setAllParameter] = useState<any>([]);
     const [selectedCategory, setSelectedCategory] = useState<string | null>("all");
-    const [selectedParameters] = useState<any[]>([]);
+    const [selectedParameters, setSelectedParameters] = useState<any[]>([]);
 
     const { request: fetchAllParameter } = useApi("get", 5003);
 
@@ -64,12 +65,25 @@ function ParameterTab({  setState }: Props) {
             const isSelected = prevState.parameter.some((p: any) => p.parameterId === param._id);
 
             const updatedParameters = isSelected
-                ? prevState.parameter.filter((p: any) => p.parameterId !== param._id) // Remove if already selected
-                : [...prevState.parameter, { parameterId: param._id }]; // Add if not selected
+                ? prevState.parameter.filter((p: any) => p.parameterId !== param._id)
+                : [...prevState.parameter, { parameterId: param._id }];
+            const cleanedParameters = updatedParameters.filter((p: any) => p.parameterId);
 
-            return { ...prevState, parameter: updatedParameters };
+            return { ...prevState, parameter: cleanedParameters };
         });
     };
+
+    useEffect(() => {
+        if (state?.parameter) {
+            const selected = state.parameter
+                .map((p: any) => allParameter.find((param: any) => param._id === p.parameterId))
+                .filter(Boolean);
+
+            setSelectedParameters(selected);
+            setSelectedParameter(selected);
+        }
+    }, [state, allParameter]);
+
 
     const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -159,9 +173,13 @@ function ParameterTab({  setState }: Props) {
                     <div className="bg-white p-4 rounded-[14px] overflow-y-scroll hide-scrollbar max-h-56">
                         <p className="text-[#495160] text-xs font-medium">Selected Parameters</p>
                         {selectedParameters.length > 0 ? (
-                            selectedParameters.map((param) => (
+                            selectedParameters.map((param: any) => (
                                 <div key={param._id} className="mt-2 bg-[#F9F7F5] rounded-lg py-2 px-4 flex justify-between items-center">
-                                    <img src={param?.uploadImage ? param?.uploadImage : defaultCategoryImage} className="w-9 h-9 object-cover rounded-full" alt={param.name} />
+                                    <img
+                                        src={param?.uploadImage ? param.uploadImage : defaultCategoryImage}
+                                        className="w-9 h-9 object-cover rounded-full"
+                                        alt={param.name}
+                                    />
                                     <p className="text-[#495160] font-semibold text-xs">{param.name}</p>
                                     <p
                                         className="text-3xl font-light text-[#818894] cursor-pointer"
@@ -176,6 +194,7 @@ function ParameterTab({  setState }: Props) {
                         )}
                     </div>
                 </div>
+
             </div>
         </div>
     );

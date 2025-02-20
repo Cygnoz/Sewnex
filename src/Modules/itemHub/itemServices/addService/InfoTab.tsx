@@ -1,19 +1,26 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Img from "../../../../assets/icons/Img"
 import { endpoints } from "../../../../Services/apiEdpoints";
 import toast from "react-hot-toast";
 import useApi from "../../../../Hooks/useApi";
 import Select from "../../../../Components/Form/Select";
 import Input from "../../../../Components/Form/Input";
+import UnitModal from "../../ItemProduct/BMCRU/Unit/UnitModal";
+import { UnitResponseContext } from "../../../../Context/ContextShare";
 
 type Props = {
     state?: any;
-    setState?: any
+    setState?: any;
+    setSelectedCategory: (categoryName: string) => void;
 }
 
 
-function InfoTab({ state, setState }: Props) {
+function InfoTab({ state, setState, setSelectedCategory }: Props) {
     const [allCategory, setAllCategory] = useState<any>([]);
+    const [unitData, setUnitData] = useState<any>([]);
+    const { unitResponse } = useContext(UnitResponseContext)!;
+
+
     const { request: fetchAllCategory } = useApi("get", 5003);
 
     const getAllCategory = async () => {
@@ -30,12 +37,32 @@ function InfoTab({ state, setState }: Props) {
             console.error("Error in fetching category data", error);
         }
     };
+    const getAllUnit = async () => {
+        try {
+            const url = `${endpoints.GET_ALL_UNIT}`;
+            const { response, error } = await fetchAllCategory(url);
+            if (!error && response) {
+                setUnitData(response.data);
+            } else {
+                console.error("Failed to fetch category data.");
+            }
+        } catch (error) {
+            toast.error("Error in fetching category data.");
+            console.error("Error in fetching category data", error);
+        }
+    };
 
     useEffect(() => {
         getAllCategory();
-    }, []);
+        getAllUnit();
+    }, [unitResponse]);
 
     const handleInputChange = (name: string, value: string | boolean | File) => {
+        if (name === "categoryId") {
+            const selectedCategory = allCategory.find((category: any) => category._id === value);
+            setSelectedCategory(selectedCategory ? selectedCategory.name : "");
+        }
+
         if (name === "serviceImage" && value instanceof File) {
             const reader = new FileReader();
             reader.readAsDataURL(value);
@@ -57,6 +84,7 @@ function InfoTab({ state, setState }: Props) {
             }));
         }
     };
+
 
     return (
         <div>
@@ -128,11 +156,15 @@ function InfoTab({ state, setState }: Props) {
                     <div className="mt-4 flex justify-between items-center gap-4">
                         <div className="w-[50%]">
                             <Select
-                                placeholder="Select"
-                                onChange={(value: string) => handleInputChange("unit", value)}
+                                options={unitData.map((unit: any) => ({
+                                    label: unit.unitName,
+                                    value: unit.unitName,
+                                }))}
+                                label="Unit "
+                                placeholder="Select Unit"
                                 value={state.unit}
-                                label="UNIT"
-                                options={[]}
+                                onChange={(value) => handleInputChange("unit", value)}
+                                addNew={<UnitModal funtion={"product"} />}
                             />
                         </div>
                         <div className="w-[50%]">
