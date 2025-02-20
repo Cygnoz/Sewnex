@@ -85,6 +85,15 @@ function InfoTab({ state, setState, setSelectedCategory }: Props) {
         }
     };
 
+    useEffect(() => {
+        if (state.categoryId && allCategory.length > 0) {
+          const selectedCategory = allCategory.find((cat: any) => cat._id === state.categoryId);
+          if (selectedCategory) {
+            setSelectedCategory(selectedCategory.name);
+          }
+        }
+      }, [state.categoryId, allCategory]);
+      
 
     return (
         <div>

@@ -255,4 +255,8 @@ export const endpoints = {
   UPDATE_CPS: "edit-cps",
   DELETE_CPS: "delete-cps",
   ADD_SERVICE: "add-service",
+  GET_ALL_SERVICES: "get-all-service",
+  DELETE_SERVICE: "delete-service",
+  EDIT_SERVICE: "edit-service",
+  GET_ONE_SERVICE: "get-one-service",
 };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CirclePlus from "../../../../assets/icons/CirclePlus";
 import Button from "../../../../Components/Button";
 import Modal from "../../../../Components/modal/Modal";
@@ -10,11 +10,12 @@ import SummaryTab from "./SummaryTab";
 import { endpoints } from "../../../../Services/apiEdpoints";
 import toast from "react-hot-toast";
 import useApi from "../../../../Hooks/useApi";
+import EditIcon from "../../../../assets/icons/EditIcon";
 
-type Props = {};
+type Props = { page?: string; oneServiceData?: string };
 
 const initialServiceData: any = {
-  organizationId: "",
+  _id: "",
 
   categoryId: "",
   serviceName: "",
@@ -33,7 +34,7 @@ const initialServiceData: any = {
       styleRate: ""
     }
   ],
-  taxType: "Exclusive",
+  taxType: "Inclusive",
   taxRate: "",
   cgst: "",
   sgst: "",
@@ -46,23 +47,35 @@ const initialServiceData: any = {
 };
 
 
-const AddNewService = ({ }: Props) => {
+const AddNewService = ({ page, oneServiceData }: Props) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [service, setService] = useState<any>(initialServiceData)
   const [selectedParameter, setSelectedParameter] = useState<any[]>([]);
   const [selectedStyle, setSelectedStyle] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<any>("");
+  console.log(selectedCategory,"selectedCategory");
+  
 
   const { request: addService } = useApi("post", 5003);
+  const { request: editService } = useApi("put", 5003);
 
-  console.log(service, "service");
+  console.log(service,"service");
+  
+  
+  useEffect(() => {
+    if (page === "Edit" && oneServiceData) {
+      setService(oneServiceData);
+    }
+  }, [page, oneServiceData, isModalOpen]);
+
 
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => {
     setModalOpen(false);
     setActiveTab(0);
+    setService(initialServiceData)
   };
 
   const nextTab = () => setActiveTab((prev) => Math.min(prev + 1, 3));
@@ -77,8 +90,12 @@ const AddNewService = ({ }: Props) => {
 
   const handleSave = async () => {
     try {
-      const url = `${endpoints.ADD_SERVICE}`;
-      const { response, error } = await addService(url, service);
+      const url =
+        page === "Edit"
+          ? `${endpoints.EDIT_NEW_ACCOUNT}/${service._id}`
+          : endpoints.ADD_SERVICE;
+      const API = page === "Edit" ? editService : addService;
+      const { response, error } = await API(url, service);
       if (!error && response) {
         toast.success(response.data.message);
         closeModal();
@@ -92,13 +109,19 @@ const AddNewService = ({ }: Props) => {
 
   return (
     <div>
-      <Button onClick={openModal}>
-        <CirclePlus />
-        <p> Add service</p>
-      </Button>
+      {page === "Edit" ? (
+        <div onClick={openModal} className="cursor-pointer">
+          <EditIcon color={"#C88000"} />
+        </div>
+      ) : (
+        <Button onClick={openModal}>
+          <CirclePlus />
+          <p> Add service</p>
+        </Button>
+      )}
 
       <Modal
-        className="w-[80%] px-8 py-6 bg-[#f0eeea] rounded-2xl"
+        className="w-[80%] px-8 py-6 bg-[#f0eeea] rounded-2xl text-start"
         open={isModalOpen}
         onClose={closeModal}
       >

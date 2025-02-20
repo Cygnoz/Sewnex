@@ -5,17 +5,91 @@ import Table from "../../../Components/Table/Table";
 import AddParameter from "./addParameter/AddParameter";
 import AddStyle from "./addStyle/AddStyle";
 import AddNewService from "./addService/AddNewService";
+import { useEffect, useState } from "react";
+import { endpoints } from "../../../Services/apiEdpoints";
+import useApi from "../../../Hooks/useApi";
+import toast from "react-hot-toast";
 
 type Props = {};
 
 function ServicesHome({ }: Props) {
+
+  const [serviceData, setserviceData] = useState<any[]>([]);
+  console.log(serviceData, "serviceData");
+
+  const [loading, setLoading] = useState({
+    skeleton: false,
+    noDataFound: false
+  });
+  const [oneServiceData, setOneServiceData] = useState<any>({});
+
+  const { request: fetchOneService } = useApi("get", 5003);
+  const { request: Allservices } = useApi("get", 5003);
+  const { request: deleteService } = useApi("delete", 5003);
+
+
+
+  const fetchAllServices = async () => {
+    try {
+      const url = `${endpoints.GET_ALL_SERVICES}`;
+      setLoading({ ...loading, skeleton: true });
+      const { response, error } = await Allservices(url);
+      if (error || !response) {
+        setLoading({ ...loading, skeleton: false, noDataFound: true });
+        return;
+      }
+      setserviceData(response.data);
+      setLoading({ ...loading, skeleton: false });
+
+    } catch (error) {
+      console.error("Error fetching accounts:", error);
+      setLoading({ ...loading, skeleton: false, noDataFound: true });
+    }
+  };
+  const getOneService = async (item: any) => {
+    try {
+      const url = `${endpoints.GET_ONE_SERVICE}/${item._id}`;
+      const { response, error } = await fetchOneService(url);
+      if (!error && response) {
+        setOneServiceData(response.data);
+        console.log(response.data);
+      } else {
+        console.error("Failed to fetch one item data.");
+      }
+    } catch (error) {
+      toast.error("Error in fetching one item data.");
+      console.error("Error in fetching one item data", error);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const url = `${endpoints.DELETE_SERVICE}/${id}`;
+      const { response, error } = await deleteService(url);
+      if (!error && response) {
+        toast.success(response.data.message);
+        fetchAllServices()
+        console.log(response.data);
+      } else {
+        toast.error(error.response.data.message);
+      }
+    } catch (error) {
+      toast.error("Error in fetching one item data.");
+      console.error("Error in fetching one item data", error);
+    }
+  }
+
+
   const Columns = [
-    { id: "accountName", label: "Category", visible: true },
-    { id: "accountCode", label: "Name", visible: true },
-    { id: "accountSubhead", label: "Parameter category", visible: true },
-    { id: "accountHead", label: "Unit", visible: true },
-    { id: "accountHead", label: "Price", visible: true },
+    { id: "categoryName", label: "Category", visible: true },
+    { id: "serviceName", label: "Name", visible: true },
+    { id: "parameter.parameterName", label: "Parameter category", visible: true },
+    { id: "unit", label: "Unit", visible: true },
+    { id: "grandTotal", label: "Price", visible: true },
   ];
+  useEffect(() => {
+    fetchAllServices();
+  }, []);
 
   const navigate = useNavigate();
   return (
@@ -44,7 +118,23 @@ function ServicesHome({ }: Props) {
         <AddStyle />
       </div>
       <div className="mt-5">
-        <Table columns={Columns} data={[]} searchableFields={[]} />
+        <Table columns={Columns}
+          data={serviceData}
+          searchableFields={["categoryName", "serviceName"]}
+          onDelete={handleDelete}
+          renderActions={(item) => (
+            <div
+              onClick={() => {
+                getOneService(item);
+              }}
+            >
+              <AddNewService
+                page="Edit"
+                oneServiceData={oneServiceData}
+              />
+            </div>
+          )}
+        />
       </div>
     </div>
   );
