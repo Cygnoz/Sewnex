@@ -80,13 +80,19 @@ function ServicesHome({ }: Props) {
   }
 
 
+  const processedData = serviceData.map((row) => ({
+    ...row,
+    parameterCategory: row.parameter?.map((p: any) => p.parameterName).join(", ") || "-",
+  }));
+
   const Columns = [
     { id: "categoryName", label: "Category", visible: true },
     { id: "serviceName", label: "Name", visible: true },
-    { id: "parameter.parameterName", label: "Parameter category", visible: true },
+    { id: "parameterCategory", label: "Parameter category", visible: true },
     { id: "unit", label: "Unit", visible: true },
     { id: "grandTotal", label: "Price", visible: true },
   ];
+
   useEffect(() => {
     fetchAllServices();
   }, []);
@@ -109,7 +115,7 @@ function ServicesHome({ }: Props) {
           </div>
         </div>
         <div>
-          <AddNewService />
+          <AddNewService fetchService={() => fetchAllServices()} />
         </div>
       </div>
       <div className="mt-5 flex justify-between items-center gap-4">
@@ -119,7 +125,9 @@ function ServicesHome({ }: Props) {
       </div>
       <div className="mt-5">
         <Table columns={Columns}
-          data={serviceData}
+          loading={loading.skeleton}
+          data={processedData}
+          searchPlaceholder={"Search Service"}
           searchableFields={["categoryName", "serviceName"]}
           onDelete={handleDelete}
           renderActions={(item) => (
@@ -129,6 +137,7 @@ function ServicesHome({ }: Props) {
               }}
             >
               <AddNewService
+                fetchService={() => fetchAllServices()}
                 page="Edit"
                 oneServiceData={oneServiceData}
               />

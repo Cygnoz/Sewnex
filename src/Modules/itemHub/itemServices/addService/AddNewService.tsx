@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 import useApi from "../../../../Hooks/useApi";
 import EditIcon from "../../../../assets/icons/EditIcon";
 
-type Props = { page?: string; oneServiceData?: string };
+type Props = { page?: string; oneServiceData?: string, fetchService: () => void; };
 
 const initialServiceData: any = {
   _id: "",
@@ -47,22 +47,22 @@ const initialServiceData: any = {
 };
 
 
-const AddNewService = ({ page, oneServiceData }: Props) => {
+const AddNewService = ({ page, oneServiceData, fetchService }: Props) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [service, setService] = useState<any>(initialServiceData)
   const [selectedParameter, setSelectedParameter] = useState<any[]>([]);
   const [selectedStyle, setSelectedStyle] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<any>("");
-  console.log(selectedCategory,"selectedCategory");
-  
+  console.log(selectedCategory, "selectedCategory");
+
 
   const { request: addService } = useApi("post", 5003);
   const { request: editService } = useApi("put", 5003);
 
-  console.log(service,"service");
-  
-  
+  console.log(service, "service");
+
+
   useEffect(() => {
     if (page === "Edit" && oneServiceData) {
       setService(oneServiceData);
@@ -92,12 +92,13 @@ const AddNewService = ({ page, oneServiceData }: Props) => {
     try {
       const url =
         page === "Edit"
-          ? `${endpoints.EDIT_NEW_ACCOUNT}/${service._id}`
+          ? `${endpoints.EDIT_SERVICE}/${service._id}`
           : endpoints.ADD_SERVICE;
       const API = page === "Edit" ? editService : addService;
       const { response, error } = await API(url, service);
       if (!error && response) {
         toast.success(response.data.message);
+        fetchService();
         closeModal();
       } else {
         toast.error(error.response?.data?.message || "An error occurred.");
@@ -127,7 +128,7 @@ const AddNewService = ({ page, oneServiceData }: Props) => {
       >
         {/* Header */}
         <div className="bg-white rounded-2xl p-4 flex justify-between items-center">
-          <p className="text-[#0B1320] font-bold text-lg">Add service</p>
+          <p className="text-[#0B1320] font-bold text-lg">{page === "Edit" ? "Edit" : "Add"} service</p>
           <p
             className="text-3xl cursor-pointer font-light"
             onClick={closeModal}
