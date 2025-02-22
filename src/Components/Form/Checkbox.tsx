@@ -28,7 +28,10 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
 
     return (
       <div className="flex flex-col">
-        <label htmlFor={id} className="flex items-center text-xs text-[#495160] mb-1 font-normal cursor-pointer">
+        <label
+          htmlFor={id}
+          className="flex items-center text-xs text-[#495160] mb-1 font-normal cursor-pointer"
+        >
           <input
             ref={ref}
             id={id}
@@ -39,18 +42,15 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             className="hidden"
           />
           <div
-            onClick={handleToggle}
             className={`mr-2 w-5 h-5 border rounded flex items-center justify-center cursor-pointer 
               ${isChecked ? "bg-[#c78000] border-[#c78000]" : "border bg-white"} 
               ${error ? "border-[#BC0000]" : ""} ${className}`}
           >
             {isChecked && <CheckMark />}
           </div>
-          {label && (
-            <span>
-              {label} {required && <span className="text-red-500">*</span>}
-            </span>
-          )}
+          <span>
+            {label} {required && <span className="text-red-500">*</span>}
+          </span>
         </label>
         {error && <p className="text-[#BC0000] text-sm mt-1">{error}</p>}
       </div>

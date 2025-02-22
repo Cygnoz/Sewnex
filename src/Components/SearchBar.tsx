@@ -5,17 +5,22 @@ type Props = {
   searchValue: string;
   onSearchChange: (value: string) => void;
   placeholder?: string;
-  className?:string
+  className?: string;
 };
 
-const SearchBar = ({ searchValue, onSearchChange, placeholder = "search" ,className }: Props) => {
+const SearchBar = ({
+  searchValue,
+  onSearchChange,
+  placeholder = "search",
+  className,
+}: Props) => {
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     onSearchChange(e.target.value);
   };
 
   return (
     <div className="relative w-full h-[44px] rounded-lg flex items-center">
-      <SearchIcon/>
+      <SearchIcon />
       <input
         className={`${className} pl-9 text-sm w-full rounded-md text-start text-gray-800 h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400`}
         style={{

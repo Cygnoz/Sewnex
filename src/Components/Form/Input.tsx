@@ -47,7 +47,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={props.name}
           readOnly={readOnly}
-          className={`w-full ${sizeClasses[size]} rounded-[40px] text-textPrimary border px-2
+          className={`w-full ${sizeClasses[size]} rounded-[40px] text-textPrimary border px-2 bg-[white]
             ${error ? "border-[#BC0000]" : "border-borderColor focus:border-primary-default focus:outline-none focus:ring-primary-default"} 
             ${type === "number" ? "appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" : ""}
           `}

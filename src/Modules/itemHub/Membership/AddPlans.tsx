@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../../../Components/modal/Modal";
 import Button from "../../../Components/Button";
 import Input from "../../../Components/Form/Input";
@@ -6,106 +6,263 @@ import CirclePlus from "../../../assets/icons/CirclePlus";
 import RadioButton from "../../../Components/Form/RadioButton";
 import CheveronDown from "../../../assets/icons/CheveronDown";
 import Checkbox from "../../../Components/Form/Checkbox";
+import SearchBar from "../../../Components/SearchBar";
+import { endpoints } from "../../../Services/apiEdpoints";
+import useApi from "../../../Hooks/useApi";
+import toast from "react-hot-toast";
 
-type Props = {};
+type Props = { page?: string };
 
-interface Service {
+type Service = {
+  serviceName: string;
   serviceId: string;
-  price: string;
+  price: number;
   count: string;
-  total: string;
-}
+};
 
 interface MembershipPlan {
   planName: string;
   description: string;
-  planType: string;
-  discount: string;
-  discountAmount: string;
+  planType: "Currency" | "Percentage";
+  discount: number;
+  discountAmount: number;
   duration: string;
   services: Service[];
-  actualRate: string;
-  sellingRate: string;
+  actualRate: number;
+  sellingPrice: number;
 }
 
 const initialMembershipPlan: MembershipPlan = {
   planName: "",
   description: "",
-  planType: "",
-  discount: "",
-  discountAmount: "",
+  planType: "Currency",
+  discount: 0,
+  discountAmount: 0,
   duration: "",
   services: [],
-  actualRate: "",
-  sellingRate: "",
+  actualRate: 0,
+  sellingPrice: 0,
 };
 
-function AddPlans({}: Props) {
+function AddPlans({ page }: Props) {
   const [isModalOpen, setModalOpen] = useState(false);
-  const [type, setType] = useState<string>("");
-  const [discountApplication, setdiscountApplication] = useState("");
+  const [type, setType] = useState<"Currency" | "Percentage">("Currency");
+  const [discountApplication, setDiscountApplication] = useState("");
   const [inputData, setInputData] = useState(initialMembershipPlan);
   const [isExpand, setIsExpand] = useState(false);
-  const dummyServices = [
-    {
-      serviceId: "65d1234567890abcdef12345",
-      price: 100,
-      count: 2,
-      total: 200,
-      image: "https://i.postimg.cc/nL5mDzK7/963188-12541739.avif",
-      name: "shirt",
-    },
-    {
-      serviceId: "65d1234567890abcdef12346",
-      price: 150,
-      count: 3,
-      total: 450,
-      image: "https://i.postimg.cc/nL5mDzK7/963188-12541739.avif",
-      name: "shirt",
-    },
-    {
-      serviceId: "65d1234567890abcdef12347",
-      price: 200,
-      count: 1,
-      total: 200,
-      image: "https://i.postimg.cc/nL5mDzK7/963188-12541739.avif",
-    },
-    {
-      serviceId: "65d1234567890abcdef12348",
-      price: 250,
-      count: 4,
-      total: 1000,
-      image: "https://i.postimg.cc/nL5mDzK7/963188-12541739.avif",
-    },
-    {
-      serviceId: "65d1234567890abcdef12349",
-      price: 300,
-      count: 5,
-      total: 1500,
-      image: "https://i.postimg.cc/nL5mDzK7/963188-12541739.avif",
-    },
-  ];
-
-  console.log(dummyServices);
+  const [selectedServices, setSelectedServices] = useState<Service[]>([]);
+  const [search, setSearch] = useState("");
+  const [allServices, setAllServices] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const { request: updatePlan } = useApi("put", 5003);
+  const { request: addPlan } = useApi("post", 5003);
+  const { request: getAllServices } = useApi("get", 5003);
 
   const closeModal = () => {
     setModalOpen(false);
+    setInputData(initialMembershipPlan);
+    setDiscountApplication("");
+    setSelectedServices([]);
+  };
+  const openModal = () => setModalOpen(true);
+  const handleExpand = () => setIsExpand((prev) => !prev);
+
+  // Fetch all services
+  const fetchData = async () => {
+    try {
+      const { response, error } = await getAllServices(
+        endpoints.GET_ALL_SERVICES
+      );
+      if (!error && response) setAllServices(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
-  const openModal = () => {
-    setModalOpen(true);
+  // Helper function to calculate total price
+  const calculateTotalPrice = (
+    services: any[],
+    planType: string,
+    discount: number
+  ) => {
+    let totalPrice = 0;
+    let discountPrice = 0;
+
+    if (planType === "Currency") {
+      totalPrice = services.reduce(
+        (sum, service) =>
+          sum + (Number(service.count) * Number(service.price) || 0),
+        0
+      );
+      discountPrice = discount;
+    } else if (planType === "Percentage") {
+      totalPrice = services.reduce(
+        (sum, service) => sum + Number(service.price),
+        0
+      );
+      discountPrice = (totalPrice * discount) / 100;
+    }
+
+    return {
+      totalPrice: totalPrice.toFixed(2),
+      discountPrice: discountPrice.toFixed(2),
+      sellingPrice: (totalPrice - discountPrice).toFixed(2),
+    };
   };
 
-  const handleExpand = () => {
-    setIsExpand((prev) => !prev);
-  };
-
+  // Function to handle input changes
   const handleInputChange = (name: string, value: string | boolean | File) => {
     setInputData((prevData) => ({
       ...prevData,
       [name]: value instanceof File ? URL.createObjectURL(value) : value,
     }));
   };
+
+  // Function to handle service selection
+  const handleSelectService = (service: any) => {
+    setSelectedServices((prevSelected = []) => {
+      const isAlreadySelected = prevSelected.some(
+        (s) => s.serviceId === service._id
+      );
+
+      const updatedServices = isAlreadySelected
+        ? prevSelected.filter((s) => s.serviceId !== service._id)
+        : [
+            ...prevSelected,
+            {
+              serviceName: service.serviceName,
+              serviceId: service._id,
+              price: service.sellingPrice,
+              count: inputData.planType === "Currency" ? "1" : "",
+            },
+          ];
+
+      setInputData((prevData: any) => {
+        const { totalPrice, discountPrice, sellingPrice } = calculateTotalPrice(
+          updatedServices,
+          prevData.planType,
+          Number(inputData.discount)
+        );
+
+        return {
+          ...prevData,
+          services: updatedServices,
+          actualRate: totalPrice,
+          discountAmount: discountPrice,
+          sellingPrice,
+        };
+      });
+
+      return updatedServices;
+    });
+  };
+
+  // Function to handle count updates
+  const handleEditCount = (serviceId: string, newCount: string) => {
+    setSelectedServices((prevSelected) => {
+      const updatedServices = prevSelected.map((service) =>
+        service.serviceId === serviceId
+          ? { ...service, count: newCount }
+          : service
+      );
+
+      setInputData((prevData: any) => {
+        const { totalPrice, discountPrice, sellingPrice } = calculateTotalPrice(
+          updatedServices,
+          prevData.planType,
+          Number(inputData.discount)
+        );
+
+        return {
+          ...prevData,
+          services: updatedServices,
+          actualRate: totalPrice,
+          discountAmount:
+            prevData.planType === "Currency" ? discountPrice : "0",
+          sellingPrice,
+        };
+      });
+
+      return updatedServices;
+    });
+  };
+
+  const handleDiscountApplication = (type: string) => {
+    setDiscountApplication(type);
+  
+    if (type === "all") {
+      const updatedServices = allServices.map((service: any) => ({
+        serviceName: service.serviceName,
+        serviceId: service._id,
+        price: service.sellingPrice,
+        count: inputData.planType === "Currency" ? "1" : "",
+      }));
+  
+      setSelectedServices(updatedServices);
+  
+      setInputData((prevData: any) => {
+        const { totalPrice, discountPrice, sellingPrice } = calculateTotalPrice(
+          updatedServices,
+          prevData.planType,
+          Number(prevData.discount) // Use prevData to avoid stale state issues
+        );
+  
+        return {
+          ...prevData,
+          services: updatedServices,
+          actualRate: totalPrice,
+          discountAmount: discountPrice,
+          sellingPrice,
+        };
+      });
+    } else {
+      // If "Selected Services" is chosen, clear selectedServices and reset inputData
+      setSelectedServices([]);
+      setInputData((prevData: any) => ({
+        ...prevData,
+        services: [],
+        actualRate: 0,
+        discountAmount: 0,
+        sellingPrice: 0, // Reset pricing to avoid leftover values
+      }));
+    }
+  };
+  
+
+
+  const handleSave = async () => {
+    if (loading) return;
+    try {
+      setLoading(true);
+      const url =
+        page === "edit"
+          ? endpoints.EDIT_MEMBERSHIP_PLAN
+          : endpoints.ADD_MEMBERSHIP_PLANS;
+      const apiCall = page === "edit" ? updatePlan : addPlan;
+
+      const { response, error } = await apiCall(url, inputData);
+
+      if (!error && response) {
+        toast.success(response.data.message);
+        closeModal();
+        setInputData(initialMembershipPlan);
+        setDiscountApplication("");
+        setSelectedServices([]);
+      } else {
+        toast.error(error.response.data.message);
+      }
+    } catch (error) {
+      toast.error("Error in save operation.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  console.log(inputData, "inputdata");
   return (
     <div>
       <Button onClick={openModal}>
@@ -204,85 +361,132 @@ function AddPlans({}: Props) {
             </div>
           </div>
 
-          {inputData.planType === "Percentage" && (
-            <Input
-              label="Discount %"
-              placeholder="Enetr Discount"
-              value={inputData.discount}
-              onChange={(e) => handleInputChange("discount", e.target.value)}
-            />
-          )}
+          <Input
+            label="Discount "
+            placeholder="Enetr Discount"
+            value={inputData.discount}
+            onChange={(e) => handleInputChange("discount", e.target.value)}
+          />
 
           <Input
             label="Duration"
-            placeholder="Enetr Duration"
+            placeholder="Enter Duration"
             value={inputData.duration}
             onChange={(e) => handleInputChange("duration", e.target.value)}
           />
 
-          <p className="text-text_primary text-xs font-semibold mt-3">
-            Discount is Applicable for
-          </p>
+{inputData.planType === "Percentage" && (
+  <>
+    <p className="text-text_primary text-xs font-semibold mt-3">
+      Discount is Applicable for
+    </p>
 
-          <div className="flex items-start gap-[22px] text-[#495160] mt-2">
-            <div className="flex items-center">
-              <RadioButton
-                id="GST"
-                name="taxType"
-                label=""
-                selected={discountApplication}
-                onChange={() => {
-                  handleInputChange("planType", "Percentage");
-                  setdiscountApplication("Percentage");
-                }}
-                className="text-base text-[#495160] font-semibold cursor-pointer"
+    <div className="flex items-start gap-[22px] text-[#495160] mt-2">
+      {/* All Services */}
+      <label htmlFor="all" className="flex items-center cursor-pointer">
+        <RadioButton
+          id="all"
+          name="discountApplication"
+          label=""
+          selected={discountApplication}
+          onChange={() => handleDiscountApplication("all")}
+          className="text-base text-[#495160] font-semibold cursor-pointer"
+        />
+        <p className="text-xs cursor-pointer ml-2">All Services</p>
+      </label>
+
+      {/* Selected Services */}
+      <label htmlFor="selected" className="flex items-center cursor-pointer">
+        <RadioButton
+          id="selected"
+          name="discountApplication"
+          label=""
+          selected={discountApplication}
+          onChange={() => handleDiscountApplication("selected")}
+          className="text-base text-[#495160] font-semibold cursor-pointer"
+        />
+        <p className="text-xs cursor-pointer ml-2">Selected Services</p>
+      </label>
+    </div>
+  </>
+)}
+
+
+          <div className="flex my-1">
+            <p className="text-text_primary text-xs font-semibold my-3">
+              Select Service
+            </p>
+            <div className="w-[50%] ml-auto">
+              <SearchBar
+                placeholder="Search Service"
+                onSearchChange={setSearch}
+                searchValue={search}
+                className="h-8 rounded-[36px] bg-[white]"
               />
-              <p className="text-xs">All Services</p>
-            </div>
-            <div className="flex items-center">
-              <RadioButton
-                id="VAT"
-                name="taxType"
-                label=""
-                selected={discountApplication}
-                onChange={() => {
-                  handleInputChange("planType", "Percentage");
-                  setdiscountApplication("Percentage");
-                }}
-                className="text-base text-[#495160] font-semibold cursor-pointer"
-              />
-              <p className="text-xs">Selected Services</p>
             </div>
           </div>
-
-          <p className="text-text_primary text-xs font-semibold my-3">
-            Select Service
-          </p>
-          <div className="flex gap-2  ">
-            {dummyServices.map((service) => (
-              <div className="relative bg-white rounded-lg text-center items-center justify-center p-3 w-[132px] ">
-                {/* Image Centered */}
-                <div className="flex items-center justify-center">
-                  <img
-                    src={service.image}
-                    alt=""
-                    className="w-8 h-8 rounded-full"
+          <div className="flex gap-2 overflow-x-auto custom-scrollbar">
+            {allServices.map((service: any) => (
+              <div
+                key={service._id}
+                className="relative bg-white rounded-lg text-center p-3 w-[150px] mb-3 flex-shrink-0"
+              >
+                <div className="absolute top-2 right-2">
+                  <Checkbox
+                    checked={selectedServices.some(
+                      (s) => s.serviceId === service._id
+                    )}
+                    onChange={() => handleSelectService(service)}
+                    className="cursor-pointer"
                   />
                 </div>
 
-                <div className="absolute top-2 right-2">
-                  <Checkbox />
+                <div className="flex items-center justify-center">
+                  <img
+                    src={service.image}
+                    alt={service.name}
+                    className="w-9 h-9 rounded-full"
+                  />
                 </div>
 
-                <p className="text-center font-semibold">{service.name}</p>
-                <p className="text-xs text-text_tertiary mt-3">Price</p>
-                <p className="text-text_fourthiry font-semibold">$200</p>
+                <p className="text-center mt-2 text-sm font-semibold text-text_fourthiry">
+                  {service.serviceName}
+                </p>
+
+                <p className="text-[10px] text-text_tertiary mt-2">Price</p>
+
+                <p className="text-text_fourthiry text-xs mt-0.5 font-semibold">
+                  ${service.sellingPrice}
+                </p>
+
+                {inputData.planType === "Currency" && (
+                  <div className="mt-2">
+                    <p className="text-[10px] text-text_secondary mb-1.5">
+                      Set Count
+                    </p>
+                    <input
+                      placeholder="Set Count"
+                      type="text"
+                      value={
+                        selectedServices.find(
+                          (s) => s.serviceId === service._id
+                        )?.count
+                      }
+                      className="rounded-lg border w-[60%] text-[9px] py-2 px-4 text-center"
+                      onChange={(e) =>
+                        handleEditCount(service._id, e.target.value)
+                      }
+                    />
+                  </div>
+                )}
               </div>
             ))}
           </div>
+
           {inputData.planType === "Currency" && (
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 mt-2">
               <Input
+                disabled
                 label="Actual Rate"
                 name="actualRate"
                 placeholder="Enter Rate"
@@ -292,12 +496,13 @@ function AddPlans({}: Props) {
                 }
               />
               <Input
+                disabled
                 label="Selling Rate"
-                name="sellingRate"
+                name="sellingPrice"
                 placeholder="Enter Rate"
-                value={inputData.sellingRate}
+                value={inputData.sellingPrice}
                 onChange={(e) =>
-                  handleInputChange("sellingRate", e.target.value)
+                  handleInputChange("sellingPrice", e.target.value)
                 }
               />
             </div>
@@ -309,18 +514,22 @@ function AddPlans({}: Props) {
                 {" "}
                 <p> Plan Name</p>
                 <p className="font-semibold text-text_fourthiry">
-                  Silver Plan - Discount Based
+                  {inputData.planName}
                 </p>
               </div>
               <div className="col-span-2 space-y-2">
                 {" "}
                 <p> Plan Type</p>
-                <p className="font-semibold text-text_fourthiry">Discount</p>
+                <p className="font-semibold text-text_fourthiry">
+                  {inputData.planType === "Currency" ? "Count" : "Discount"}
+                </p>
               </div>
               <div className="col-span-2 space-y-2 ">
                 {" "}
                 <p>Duration</p>
-                <p className="font-semibold text-text_fourthiry">3 Months</p>
+                <p className="font-semibold text-text_fourthiry">
+                  {inputData.duration} Days
+                </p>
               </div>
               <div className="col-span-1 space-y-2 flex items-center justify-center">
                 <button onClick={handleExpand}>
@@ -335,10 +544,9 @@ function AddPlans({}: Props) {
             </div>
             {isExpand && (
               <div className="text-text_primary mt-2">
-                <p className="font-semibold mt-3 mb-1">Desccription</p>
+                <p className="font-semibold mt-3 mb-1">Description</p>
                 <p>
-                  This membership includes a limited number of uses for selected
-                  services over the plan duration
+                 {inputData.description}
                 </p>
                 <div className="flex items-end justify-end my-2 pt-2 mx-2 border-b border-r-text_secondary">
                   <table className="w-[70%]">
@@ -353,37 +561,37 @@ function AddPlans({}: Props) {
                       )}
                     </tr>
                     <tbody>
-                      <tr>
-                        <td className="font-semibold text-end">Shirt </td>
-                        {inputData.planType === "Currency" && (
-                          <td className="font-semibold text-end">4 </td>
-                        )}
-                        <td className="font-semibold text-end">400 </td>
-                        {inputData.planType === "Currency" && (
-                          <td className="font-semibold text-end">16000 </td>
-                        )}
-                      </tr>
-                      <tr>
-                        <td className="font-semibold text-end">Shirt </td>
-                        {inputData.planType === "Currency" && (
-                          <td className="font-semibold text-end">4 </td>
-                        )}
-                        <td className="font-semibold text-end">400 </td>
-                        {inputData.planType === "Currency" && (
-                          <td className="font-semibold text-end">16000 </td>
-                        )}
-                      </tr>
+                      {selectedServices?.map((service) => (
+                        <tr>
+                          <td className="font-semibold text-end">
+                            {service.serviceName}{" "}
+                          </td>
+                          {inputData.planType === "Currency" && (
+                            <td className="font-semibold text-end">
+                              {service.count}{" "}
+                            </td>
+                          )}
+                          <td className="font-semibold text-end">
+                            {service.price}{" "}
+                          </td>
+                          {inputData.planType === "Currency" && (
+                            <td className="font-semibold text-end">
+                              {Number(service.count) * service.price}{" "}
+                            </td>
+                          )}
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
                 <div className="flex justify-end ga-3">
                   <div className="h-12 rounded-lg w-32 text-white text-end bg-gradient-to-b from-[#004D4D] to-[#0CA65B] p-2 ">
                     <p className="">Top Selling Price</p>
-                    <p className="font-semibold">50000</p>
+                    <p className="font-semibold">{inputData.sellingPrice}</p>
                   </div>
                   <div className="h-12 rounded-lg w-32  text-end  p-2 ">
                     <p className="">Top Service Price</p>
-                    <p className="font-semibold">50000</p>
+                    <p className="font-semibold">{inputData.actualRate}</p>
                   </div>
                 </div>
               </div>
@@ -399,7 +607,7 @@ function AddPlans({}: Props) {
           >
             Cancel
           </Button>
-          <Button>Save</Button>
+          <Button onClick={handleSave}>Save</Button>
         </div>
       </Modal>
     </div>

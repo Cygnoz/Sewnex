@@ -254,4 +254,14 @@ export const endpoints = {
   GET_ALL_CPS: "get-all-cps",
   UPDATE_CPS: "edit-cps",
   DELETE_CPS: "delete-cps",
+
+  // membership plans
+
+  GET_ALL_SERVICES:`get-all-service`,
+
+  ADD_MEMBERSHIP_PLANS:`add-membership`,
+  GET_ALL_MEMBERSHIP_PLANS:`get-all-membership`,
+  GET_ONE_MEMBERSHIP_PLANS:`get-one-membership`,
+  EDIT_MEMBERSHIP_PLAN:`edit-membership`,
+  DELETE_MEMBERSHIP_PLAN: `delete-membership`
 };

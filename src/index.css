@@ -14,4 +14,25 @@ body {
     font-weight: 700;
   }
 
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 11px;
+
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: white;
+    border-radius: 10px;
+     margin-top: 10px; 
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #E9E9E9;
+    border-radius: 10px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background:#E9E9E9;
+  }
+  
+
   
