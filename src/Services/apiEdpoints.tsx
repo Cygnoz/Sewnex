@@ -256,12 +256,16 @@ export const endpoints = {
   DELETE_CPS: "delete-cps",
 
   // membership plans
-
-  GET_ALL_SERVICES:`get-all-service`,
-
   ADD_MEMBERSHIP_PLANS:`add-membership`,
   GET_ALL_MEMBERSHIP_PLANS:`get-all-membership`,
   GET_ONE_MEMBERSHIP_PLANS:`get-one-membership`,
   EDIT_MEMBERSHIP_PLAN:`edit-membership`,
-  DELETE_MEMBERSHIP_PLAN: `delete-membership`
+  DELETE_MEMBERSHIP_PLAN: `delete-membership`,
+  
+
+  ADD_SERVICE: "add-service",
+  GET_ALL_SERVICES: "get-all-service",
+  DELETE_SERVICE: "delete-service",
+  EDIT_SERVICE: "edit-service",
+  GET_ONE_SERVICE: "get-one-service",
 };

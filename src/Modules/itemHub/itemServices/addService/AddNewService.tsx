@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CirclePlus from "../../../../assets/icons/CirclePlus";
 import Button from "../../../../Components/Button";
 import Modal from "../../../../Components/modal/Modal";
@@ -7,11 +7,15 @@ import InfoTab from "./InfoTab";
 import ParameterTab from "./ParameterTab";
 import StyleTab from "./StyleTab";
 import SummaryTab from "./SummaryTab";
+import { endpoints } from "../../../../Services/apiEdpoints";
+import toast from "react-hot-toast";
+import useApi from "../../../../Hooks/useApi";
+import EditIcon from "../../../../assets/icons/EditIcon";
 
-type Props = {};
+type Props = { page?: string; oneServiceData?: string, fetchService: () => void; };
 
 const initialServiceData: any = {
-  organizationId: "",
+  _id: "",
 
   categoryId: "",
   serviceName: "",
@@ -30,29 +34,48 @@ const initialServiceData: any = {
       styleRate: ""
     }
   ],
-
-  costPrice: "",
-  sellingPrice: "",
-  salesAccountId: "",
+  taxType: "Inclusive",
   taxRate: "",
   cgst: "",
   sgst: "",
   igst: "",
-  vat: "",
+  styleTotal: "",
+  serviceCharge: "",
+  sellingPrice: "",
+  salesAccountId: "67b57126bf6e5cc904b202bf",
+  grandTotal: "",
 };
 
 
-const AddNewService = ({ }: Props) => {
+const AddNewService = ({ page, oneServiceData, fetchService }: Props) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
-  const [service,setService]=useState<any>(initialServiceData)
-  console.log(service,"service");
-  
+  const [service, setService] = useState<any>(initialServiceData)
+  const [selectedParameter, setSelectedParameter] = useState<any[]>([]);
+  const [selectedStyle, setSelectedStyle] = useState<any[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<any>("");
+  console.log(selectedCategory, "selectedCategory");
+
+
+  const { request: addService } = useApi("post", 5003);
+  const { request: editService } = useApi("put", 5003);
+
+  console.log(service, "service");
+
+
+  useEffect(() => {
+    if (page === "Edit" && oneServiceData) {
+      setService(oneServiceData);
+    }
+  }, [page, oneServiceData, isModalOpen]);
+
+
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => {
     setModalOpen(false);
     setActiveTab(0);
+    setService(initialServiceData)
   };
 
   const nextTab = () => setActiveTab((prev) => Math.min(prev + 1, 3));
@@ -65,21 +88,47 @@ const AddNewService = ({ }: Props) => {
     { id: 3, label: "Summary" },
   ];
 
+  const handleSave = async () => {
+    try {
+      const url =
+        page === "Edit"
+          ? `${endpoints.EDIT_SERVICE}/${service._id}`
+          : endpoints.ADD_SERVICE;
+      const API = page === "Edit" ? editService : addService;
+      const { response, error } = await API(url, service);
+      if (!error && response) {
+        toast.success(response.data.message);
+        fetchService();
+        closeModal();
+      } else {
+        toast.error(error.response?.data?.message || "An error occurred.");
+      }
+    } catch (error) {
+      toast.error("Error in save operation.");
+    }
+  };
+
   return (
     <div>
-      <Button onClick={openModal}>
-        <CirclePlus />
-        <p> Add service</p>
-      </Button>
+      {page === "Edit" ? (
+        <div onClick={openModal} className="cursor-pointer">
+          <EditIcon color={"#C88000"} />
+        </div>
+      ) : (
+        <Button onClick={openModal}>
+          <CirclePlus />
+          <p> Add service</p>
+        </Button>
+      )}
 
       <Modal
-        className="w-[80%] px-8 py-6 bg-[#efedea] rounded-2xl"
+        className="w-[80%] px-8 py-6 bg-[#f0eeea] rounded-2xl text-start"
         open={isModalOpen}
         onClose={closeModal}
       >
         {/* Header */}
         <div className="bg-white rounded-2xl p-4 flex justify-between items-center">
-          <p className="text-[#0B1320] font-bold text-lg">Add service</p>
+          <p className="text-[#0B1320] font-bold text-lg">{page === "Edit" ? "Edit" : "Add"} service</p>
           <p
             className="text-3xl cursor-pointer font-light"
             onClick={closeModal}
@@ -131,22 +180,27 @@ const AddNewService = ({ }: Props) => {
         <div className="mt-4  rounded-xl">
           {activeTab === 0 && (
             <>
-              <InfoTab state={service} setState={setService}/>
+              <InfoTab state={service} setState={setService} setSelectedCategory={setSelectedCategory} />
             </>
           )}
           {activeTab === 1 && (
             <>
-              <ParameterTab state={service} setState={setService}/>
+              <ParameterTab state={service} setState={setService} setSelectedParameter={setSelectedParameter} />
             </>
           )}
           {activeTab === 2 && (
             <>
-              <StyleTab />
+              <StyleTab state={service} setState={setService} setSelectedStyle={setSelectedStyle} />
             </>
           )}
           {activeTab === 3 && (
             <>
-              <SummaryTab />
+              <SummaryTab
+                state={service}
+                setState={setService}
+                selectedParameter={selectedParameter}
+                selectedStyle={selectedStyle}
+                selectedCategory={selectedCategory} />
             </>
           )}
         </div>
@@ -171,8 +225,8 @@ const AddNewService = ({ }: Props) => {
             </Button>
           )}
           {activeTab === 3 ? (
-            <Button onClick={closeModal} className="pl-11 pr-11">
-              Finish
+            <Button onClick={handleSave} className="pl-11 pr-11">
+              Done
             </Button>
           ) : (
             <Button onClick={nextTab} className="pl-11 pr-11">
