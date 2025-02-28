@@ -9,6 +9,7 @@ import PrinterIcon from "../../assets/icons/PrinterIcon";
 import TrashIcon from "../../assets/icons/TrashIcon";
 import EditIcon from "../../assets/icons/EditIcon";
 import NoDataFoundTable from "./NoDataFoundTable";
+import FilterIcon from "../../assets/icons/FilterIcon";
 
 interface Column {
   id: string;
@@ -31,6 +32,10 @@ interface TableProps {
   onEditClick?: (id: string) => void;
   onPrintClick?: (id: string) => void;
   renderActions?: (item: any) => JSX.Element;
+
+  filterBy?: string; // Label for the filter (e.g., "Status")
+  dropdownContents?: string[]; // Values inside the dropdown (e.g., ["Pending", "Completed"])
+  onFilterChange?: (selectedFilter: string) => void;
 }
 
 const Table: React.FC<TableProps> = ({
@@ -45,33 +50,64 @@ const Table: React.FC<TableProps> = ({
   searchableFields,
   onEditClick,
   onPrintClick,
-  renderActions
+  renderActions,
+
+  filterBy,
+  dropdownContents,
+  onFilterChange,
+
 }) => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+
 
   const totalPages = Math.ceil(data.length / rowsPerPage);
 
   const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setRowsPerPage(Number(event.target.value));
-    setCurrentPage(1); // Reset to first page when rows per page changes
+    setCurrentPage(1); 
   };
 
+  const applySearchFilter = (data: any[]) => {
+    if (!searchableFields || searchableFields.length === 0) return data; 
+
+    return data.filter((item: any) =>
+      searchableFields
+        .map((field) => item[field]?.toString().trim().toLowerCase() || "") 
+        .some((fieldValue) =>
+          fieldValue.includes(searchValue.toLowerCase().trim())
+        )
+    );
+  };
+
+  const applyDropdownFilter = (data: any[]) => {
+    if (!filterBy) return applySearchFilter(data); 
+
+    return data.filter((item: any) => {
+      const matchesFilter =
+        !selectedFilter ||
+        (item[filterBy]?.toString().trim().toLowerCase() || "") === selectedFilter.toLowerCase();
+
+      const matchesSearch =
+        searchValue.trim() === "" ||
+        (searchableFields || []).some((field) => 
+          (item[field]?.toString().trim().toLowerCase() || "").includes(searchValue.toLowerCase().trim())
+        );
+
+      return matchesFilter && matchesSearch;
+    });
+  };
 
   const filteredData = Array.isArray(data)
-    ? data
-      ?.slice()
-      ?.reverse()
-      ?.filter((item) =>
-        searchableFields
-          ?.map((field) => item[field]?.toString().trim().toLowerCase())
-          ?.some((fieldValue) =>
-            fieldValue?.includes(searchValue.toLowerCase().trim())
-          )
-      )
+    ? (filterBy ? applyDropdownFilter(data) : applySearchFilter(data))
+      .slice()
+      .reverse()
       .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
     : [];
+
 
   const visibleColumns = columns.filter((col) => col.visible);
   const skeletonColumns = [...visibleColumns, {}, {}, {}];
@@ -79,21 +115,68 @@ const Table: React.FC<TableProps> = ({
   return (
     <div className="border border-b bg-white rounded-lg">
       <div className="flex items-center gap-4 justify-between px-6 mt-6 mb-4">
-        {searchPlaceholder && <SearchBar
-          placeholder={searchPlaceholder}
-          searchValue={searchValue}
-          onSearchChange={(value) => {
-            setSearchValue(value);
-          }}
-        />}
-        {
-          isPrint && (
-            <Button size="sm" variant="secondary">
-              <PrinterIcon />
-              <p className="text-xs font-semibold">Print</p>
-            </Button>
-          )
-        }
+        <div className="w-[50%]">
+          {searchPlaceholder && <SearchBar
+            placeholder={searchPlaceholder}
+            searchValue={searchValue}
+            onSearchChange={(value) => {
+              setSearchValue(value);
+            }}
+          />}
+        </div>
+        <div className="flex  items-center gap-4">
+          {filterBy && dropdownContents && (
+            <div className="relative">
+              <div className="flex items-center gap-2">
+                <p className="text-xs text-[#495160]">Filter by {filterBy} : </p>
+                <Button onClick={() => setIsDropdownOpen(!isDropdownOpen)} variant="secondary" className="text-xs">
+                  <FilterIcon />
+                  {selectedFilter ? `${selectedFilter}` : `${filterBy}`}
+                </Button>
+              </div>
+
+              {isDropdownOpen && (
+                <div className="absolute left-0 mt-1 w-48 bg-white rounded-lg border border-gray-200 shadow-lg z-10">
+                  <ul className="py-2 text-sm text-[#495160]">
+                    <li
+                      onClick={() => {
+                        setSelectedFilter(null);
+                        setIsDropdownOpen(false);
+                        onFilterChange && onFilterChange("");
+                      }}
+                      className="px-4 py-2 cursor-pointer border-b border-[#EAECF0]"
+                    >
+                      All
+                    </li>
+                    {dropdownContents.map((option) => (
+                      <li
+                        key={option}
+                        onClick={() => {
+                          setSelectedFilter(option);
+                          setIsDropdownOpen(false);
+                          onFilterChange && onFilterChange(option);
+                        }}
+                        className="px-4 py-2 cursor-pointer border-b border-[#EAECF0]  last:border-b-0"
+                      >
+                        {option}
+                      </li>
+                    ))}
+                  </ul>
+
+                </div>
+              )}
+            </div>
+          )}
+
+          {
+            isPrint && (
+              <Button size="sm" variant="secondary">
+                <PrinterIcon />
+                <p className="text-xs font-semibold">Print</p>
+              </Button>
+            )
+          }
+        </div>
       </div>
 
       <div className="overflow-x-auto mt-3 hide-scrollbar overflow-y-scroll max-h-[25rem]">

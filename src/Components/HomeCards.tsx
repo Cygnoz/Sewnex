@@ -1,7 +1,7 @@
 interface HomeCardProps {
     icon: React.ReactNode; // Accepts rendered JSX, e.g., <CheckIcon color="green" />
     title: string;
-    description: string; // Description text below the title
+    description?: string; // Description text below the title
     number: any;
     iconFrameColor?: string; // Frame background color for the icon
     bgColor?: string; // Background color for the card
